@@ -68,7 +68,7 @@
   preference. Larger absolute values signal stronger preference.
   
   \code{mscale} provides the underlying measurement scale. It must
-  be a symmatric sequence of integers of type \code{(-i):i} where
+  be a symmetric sequence of integers of type \code{(-i):i} where
   \code{i} must be at least \code{1}. However, it may exclude
   \code{0} (i.e., forced choice).
   
