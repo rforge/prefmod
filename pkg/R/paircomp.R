@@ -1,4 +1,12 @@
-paircomp <- function(data, labels = NULL, scale = NULL, ordered = FALSE)
+## paircomp() is the class constructor:
+##   - data: integer coded matrix of n subjects (rows) and
+##            choose(k, 2) paired comparisons (columns)
+##   - labels: labels of k objects
+##   - mscale: measurement scale for comparisons (centered around 0)
+##   - ordered: logical. Is a:b different from b:a?
+##   - covariates: data frame with k rows for object covariates
+
+paircomp <- function(data, labels = NULL, mscale = NULL, ordered = FALSE, covariates = NULL)
 {
   ## data should be matrix(-like)
   npc <- NCOL(data)
@@ -11,12 +19,19 @@ paircomp <- function(data, labels = NULL, scale = NULL, ordered = FALSE)
   nsubj <- NROW(data)
   nobj <- 0.5 + sqrt(0.25 + if(ordered) npc else 2 * npc)
   
+  ## covariates should be data.frame(-like)
+  if(!is.null(covariates)) covariates <- as.data.frame(covariates)
+  
   ## sanity checks
   stopifnot(is.matrix(data), nobj >= 2, isTRUE(all.equal(nobj, round(nobj))),
     isTRUE(all.equal(data_unique, round(data_unique))))
+  if(!is.null(covariates)) stopifnot(nrow(covariates) == nobj)
 
-  ## coerce to integer
-  data <- structure(as.integer(data), .Dim = c(nsubj, npc), .Dimnames = list(rownames(data), NULL))
+  ## coerce to integer and set dimnames
+  cnam <- which(upper.tri(diag(nobj)), arr.ind = TRUE)
+  if(ordered) cnam <- rbind(cnam, cnam[,2:1])
+  cnam <- apply(cnam, 1, paste, collapse = ":")
+  data <- structure(as.integer(data), .Dim = c(nsubj, npc), .Dimnames = list(rownames(data), cnam))
   data_unique <- as.integer(data_unique)
 
   ## process labels
@@ -24,51 +39,57 @@ paircomp <- function(data, labels = NULL, scale = NULL, ordered = FALSE)
     if(length(labels) != nobj) stop("length of labels does not match number of objects")
   }
 
-  ## process scale
-  if(is.null(scale)) {
-    scale <- if(length(data_unique) < 1) c(-1, 1) else {
-      scale <- max(abs(data_unique))
-      if(!(scale > 0)) scale <- 1
-      scale <- (-scale):scale
-      if(!(0 %in% data_unique)) scale <- scale[-(length(scale)+1)/2]
-      scale
+  ## process mscale
+  if(is.null(mscale)) {
+    mscale <- if(length(data_unique) < 1) c(-1, 1) else {
+      mscale <- max(abs(data_unique))
+      if(!(mscale > 0)) mscale <- 1
+      mscale <- (-mscale):mscale
+      if(!(0 %in% data_unique)) mscale <- mscale[-(length(mscale)+1)/2]
+      mscale
       }
   } else {
-    if(!all(data_unique %in% scale)) stop("scale does not match data")
-    scale <- as.integer(sort(scale))
+    if(!all(data_unique %in% mscale)) stop("mscale does not match data")
+    mscale <- as.integer(sort(mscale))
+    if(max(abs(mscale)) <= 0) stop("mscale needs to have non-zero elements")
+    if(abs(head(mscale, 1)) != tail(mscale, 1)) stop("mscale must by symmetric")
   }
+
+  ## process covariates
+  if(!is.null(covariates)) rownames(covariates) <- seq_along(labels)
 
   rval <- list(
     data = data,
     labels = labels,
-    scale = scale,
-    ordered = ordered)
+    mscale = mscale,
+    ordered = ordered,
+    covariates = covariates)
   class(rval) <- "paircomp"
   return(rval)
 }
 
-## FIXME: scale?
+
+
+## Methods: format() handles character formatting
+##   utilized in print() and as.character() method.
 
 format.paircomp <- function(x, sep = ", ", brackets = TRUE,
   abbreviate = NULL, width = getOption("width") - 7, ...)
 {
-  ## FIXME: handle NAs!
-  ## write: "NA" or "a ? b"
-
   ## process brackets
   if(is.null(brackets)) brackets <- TRUE
   if(is.logical(brackets)) brackets <- if(brackets) c("{", "}") else ""
   brackets <- rep(as.character(brackets), length.out = 2)
 
   ## set up comparison symbols
-  scale <- as.integer(sort(unique(c(x$scale, 0))))
-  scale_max <- tail(scale, 1)
-  scale_symbol <- if(scale_max > 2L) {
-    paste(ifelse(abs(scale) > 1L, abs(scale), ""), c("<", "=", ">")[sign(scale) + 2L], sep = "")
-  } else if(scale_max == 2L) {
-    c("<<", "<", "=", ">", ">>")[scale + 3L]
+  mscale <- as.integer(sort(unique(c(mscale(x), 0))))
+  mscale_max <- tail(mscale, 1)
+  mscale_symbol <- if(mscale_max > 2L) {
+    paste(ifelse(abs(mscale) > 1L, abs(mscale), ""), c("<", "=", ">")[sign(mscale) + 2L], sep = "")
+  } else if(mscale_max == 2L) {
+    c("<<", "<", "=", ">", ">>")[mscale + 3L]
   } else {
-    c("<", "=", ">")[scale + 2L]
+    c("<", "=", ">")[mscale + 2L]
   }
 
   ## process labels
@@ -90,8 +111,11 @@ format.paircomp <- function(x, sep = ", ", brackets = TRUE,
   }
   
   pc <- x$data
-  pc <- pc + scale_max + 1
-  pc <- apply(pc, 1, function(x) paste(lab1, scale_symbol[x], lab2, sep = " ", collapse = ", "))
+  pc <- pc + mscale_max + 1
+  pc <- apply(pc, 1, function(x) paste(
+    ifelse(is.na(x), "NA", paste(lab1, mscale_symbol[x], lab2, sep = " ")),
+    collapse = ", "))
+  ## Handle NAs differently? Maybe via "a ? b"?
 
   ## check width
   if(is.null(width)) width <- TRUE
@@ -117,6 +141,72 @@ print.paircomp <- function(x, quote = FALSE, ...)
   invisible(x)
 }
 
+
+
+## Basic summaries:
+## str() just shows structure (no data),
+## summary() shows frequency table for each comparison.
+
+str.paircomp <- function(object, width = getOption("width") - 7, ...)
+{
+  rval <- sprintf(" Paired comparisons from %d subjects for %d objects: %s.\n",
+    nrow(object$data), length(labels(object)), paste(labels(object), collapse = ", "))
+  
+  if(is.null(width)) width <- TRUE
+  if(is.logical(width)) width <- if(width) getOption("width") - 7 else Inf
+  if(nchar(rval) > width) rval <- paste(substr(rval, 1, width - 3), "...\n", sep = "")
+  
+  cat(rval)
+  invisible(NULL)
+}
+
+summary.paircomp <- function(object, abbreviate = FALSE, ...)
+{
+  ## process labels
+  lab <- labels(object)
+  ## abbreviate
+  if(is.null(abbreviate)) abbreviate <- TRUE
+  if(is.logical(abbreviate)) {
+    nlab <- max(nchar(lab))
+    abbreviate <- if(abbreviate) as.numeric(cut(nlab, c(-Inf, 1.5, 4.5, 7.5, Inf))) else nlab
+  }
+  lab <- abbreviate(lab, abbreviate)  
+
+  ## rownames
+  ix <- which(upper.tri(diag(length(lab))), arr.ind = TRUE)
+  lab1 <- lab[ix[,1]]
+  lab2 <- lab[ix[,2]]
+  if(object$ordered) {
+    lab1 <- c(lab1, lab2)
+    lab2 <- c(lab2, lab1)
+  }
+  rnam <- paste(format(lab1), ":", format(lab2))
+
+  ## colnames
+  mscale <- mscale(object)
+  mscale_max <- tail(mscale, 1)
+  cnam <- if(mscale_max > 2L) {
+    paste(ifelse(abs(mscale) > 1L, abs(mscale), ""), c("<", "=", ">")[sign(mscale) + 2L], sep = "")
+  } else if(mscale_max == 2L) {
+    c("<<", "<", "=", ">", ">>")[mscale + 3L]
+  } else {
+    c("<", "=", ">")[mscale + 2L]
+  }
+  if(any(is.na(object$data))) cnam <- c(cnam, "NA's")
+
+  rval <- t(apply(object$data, 2, function(x) table(factor(x, levels = mscale(object)))))
+  if(any(is.na(object$data))) rval <- cbind(rval, apply(object$data, 2, function(x) sum(is.na(x))))
+  dimnames(rval) <- list(rnam, cnam)
+  
+  rval
+}
+
+
+
+## extract and combine observations
+
+length.paircomp <- function(x) nrow(x$data)
+
 "[.paircomp" <- function(x, i) {
   x$data <- x$data[i,,drop=FALSE]
   return(x)
@@ -132,17 +222,57 @@ c.paircomp <- function(...)
     all(sapply(2:length(x), function(i) identical(x[[i]], x1)))
   }
   if(!check_list(lapply(args, function(x) x$labels))) stop("objects have different labels")
-  if(!check_list(lapply(args, function(x) x$scale))) stop("objects have different scales")
+  if(!check_list(lapply(args, function(x) x$mscale))) stop("objects have different mscales")
   if(!check_list(lapply(args, function(x) x$ordered))) stop("objects have differently ordered")
+  if(!check_list(lapply(args, function(x) x$covariates))) stop("objects have different covariates")
 
   rval <- args[[1]]
   rval$data <- do.call("rbind", lapply(args, function(x) x$data))
   return(rval)  
 }
 
-length.paircomp <- function(x) nrow(x$data)
+
+
+## mscale(): new generic with extractor method for paircomp
+
+mscale <- function(object, ...) UseMethod("mscale")
+
+mscale.paircomp <- function(object, ...) object$mscale
+
+
+
+## covariates(): new generic with extractor method for paircomp
+
+covariates <- function(object, ...) UseMethod("covariates")
+
+"covariates<-" <- function(object, ...) UseMethod("covariates<-")
+
+covariates.paircomp <- function(object, ...) {
+  if(is.null(object$covariates)) return(NULL)
+  rval <- object$covariates
+  rownames(rval) <- labels(object)
+  return(rval)
+}
+
+"covariates<-.paircomp" <- function(object, value) {
+  if(!is.data.frame(value)) {
+    dval <- as.data.frame(value)
+    if(ncol(dval) == 1) names(dval) <- paste(deparse(substitute(value), width.cutoff = 500), collapse = " ")
+    value <- dval
+  }
+  if(nrow(value) != length(labels(object))) stop("Number of rows in covariates does not match number of objects.")
+  rownames(value) <- 1:length(labels(object))
+  object$covariates <- value
+  return(object)
+}
+
+
+## names() queries/sets subject names,
+## labels() queries/sets object names, (new generic labels<-)
+## levels() is an alias for labels() (but discouraged to avoid confusion with mscale)
 
 names.paircomp <- function(x) rownames(x$data)
+
 "names<-.paircomp" <- function(x, value) {
   rownames(x$data) <- value
   x
@@ -158,15 +288,116 @@ labels.paircomp <- function(object, ...) object$labels
   object
 }
 
-levels.paircomp <- function(x, ...) object$labels
+levels.paircomp <- function(x, ...) x$labels
 
 "levels<-.paircomp" <- function(x, value) {
   labels(x) <- value
   x
 }
 
-## TODO: str, summary, subset, na.*, reorder
 
+
+## reorder() method enables selection of subsets
+## of objects to be compared and/or re-ordering of
+## objects.
+## subset() currently just calls reorder(), in addition
+## selection of subsets of subjects would be nice to have.
+
+reorder.paircomp <- function(x, labels, ...)
+{
+  xlab <- labels(x)
+  if(missing(labels)) labels <- xlab
+  if(is.character(labels)) labels <- sapply(labels, match.arg, choices = xlab)
+  if(is.character(labels)) labels <- match(labels, xlab)
+  if(length(labels) < 2) stop("Need to compare at least two objects.")
+  
+  ## select relevant columns
+  nlab <- labels
+  ix <- which(upper.tri(diag(length(xlab))), arr.ind = TRUE)
+  wi <- apply(ix, 1, function(z) all(z %in% nlab))
+  ndat <- if(x$ordered) x$data[, c(wi, wi), drop = FALSE] else x$data[, wi, drop = FALSE]
+  
+  ## re-order comparisons (if necessary)
+  if(!identical(nlab, sort(nlab))) {
+    ## set up indexes
+    ix <- ix[wi,, drop = FALSE]
+    nix <- which(upper.tri(diag(length(nlab))), arr.ind = TRUE)
+    nix <- matrix(nlab[nix], ncol = 2)
+    ## match
+    wi <- apply(nix, 1, function(x) x[1] > x[2])
+    nix[wi,] <- nix[wi, 2:1]
+    onam <- apply(ix, 1, paste, collapse = ":")
+    nnam <- apply(nix, 1, paste, collapse = ":")
+    ord <- match(nnam, onam)
+    
+    ## re-order
+    if(x$ordered) {
+      ndat <- ndat[, c(ord, ord), drop = FALSE]
+      ndat[, c(wi, wi)] <- -1 * ndat[, c(wi, wi)]
+    } else {
+      ndat <- ndat[, ord, drop = FALSE]
+      ndat[, wi] <- -1 * ndat[, wi]
+    }    
+  }
+
+  ## call constructor to setup proper new paircomp object
+  paircomp(ndat,
+    labels = x$labels[nlab], mscale = mscale(x),
+    ordered = x$ordered, covariates = x$covariates[nlab,,drop=FALSE])
+}
+
+subset.paircomp <- function(x, subset, select, ...)
+{
+  if(!missing(subset)) stop("'subset' argument not yet implemented.")
+  ## FIXME: This should enable the user to select all observations with, say:
+  ## "a > b" or "a : b > -1" etc.
+
+  reorder(x, labels = select, ...)
+}
+
+
+## coercion functions, all fairly straightforward
+
+as.character.paircomp <- function(x, ...) {
+  format(x, abbreviate = FALSE, width = FALSE, ...)
+}
+
+as.integer.paircomp <-
+as.matrix.paircomp <- function(x, ...) {
+  rval <- x$data
+
+  ## colnames
+  lab <- labels(x)
+  ix <- which(upper.tri(diag(length(lab))), arr.ind = TRUE)
+  lab1 <- lab[ix[,1]]
+  lab2 <- lab[ix[,2]]
+  if(x$ordered) {
+    lab1 <- c(lab1, lab2)
+    lab2 <- c(lab2, lab1)
+  }
+  colnames(rval) <- paste(lab1, ":", lab2, sep = "")
+  return(rval)  
+}
+
+as.double.paircomp <- function(x, ...) {
+  rval <- as.matrix(x, ...)
+  rval[] <- as.double(rval)
+  return(rval)
+}
+
+as.data.frame.paircomp <- function(x, ...) {
+  rval <- as.data.frame(numeric(length(x)), ...)
+  rval[[1]] <- x
+  names(rval)[1] <- paste(deparse(substitute(x), width.cutoff = 500), collapse = " ")
+  return(rval)
+}
+
+
+## FIXME: na.* methods needed
+
+
+
+## Examples
 pc <- paircomp(rbind(
   c(1,  1,  1), # a > b > c
   c(1,  1, -1), # a > c > b
@@ -180,8 +411,15 @@ pc2 <- paircomp(rbind(
   c(0,  0,  0)),
   labels = c("Nordrhein-Westfalen", "Schleswig-Holstein", "Baden-Wuerttemberg"))
   
+pc3 <- paircomp(rbind(
+  c(4,  1,  0),
+  c(1,  2, -1),
+  c(1, -2, -1),
+  c(0,  0,  -3)),
+  labels = c("New York", "Rio", "Tokyo"),
+  covariates = data.frame(hemisphere = factor(c(1, 2, 1), labels = c("North", "South"))))
+
 dat <- data.frame(
   x = rnorm(4),
   y = factor(c(1, 2, 1, 1), labels = c("hansi", "beppi")))
 dat$pc <- pc
-
