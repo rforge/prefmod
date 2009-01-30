@@ -395,31 +395,3 @@ as.data.frame.paircomp <- function(x, ...) {
 
 ## FIXME: na.* methods needed
 
-
-
-## Examples
-pc <- paircomp(rbind(
-  c(1,  1,  1), # a > b > c
-  c(1,  1, -1), # a > c > b
-  c(1, -1, -1), # c > a > b
-  c(1,  1,  1)))
-
-pc2 <- paircomp(rbind(
-  c(2,  1,  0),
-  c(1,  1, -1),
-  c(1, -2, -1),
-  c(0,  0,  0)),
-  labels = c("Nordrhein-Westfalen", "Schleswig-Holstein", "Baden-Wuerttemberg"))
-  
-pc3 <- paircomp(rbind(
-  c(4,  1,  0),
-  c(1,  2, -1),
-  c(1, -2, -1),
-  c(0,  0,  -3)),
-  labels = c("New York", "Rio", "Tokyo"),
-  covariates = data.frame(hemisphere = factor(c(1, 2, 1), labels = c("North", "South"))))
-
-dat <- data.frame(
-  x = rnorm(4),
-  y = factor(c(1, 2, 1, 1), labels = c("hansi", "beppi")))
-dat$pc <- pc
