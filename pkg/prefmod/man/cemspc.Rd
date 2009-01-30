@@ -7,8 +7,8 @@ A survey of 303 students was carried out to examine the student's
 preferences of 6 universities (London, Paris, Milano, St.Gallen,
 Barcelona and Stockholm). The first 15 variables of the 17 indicate
 the preferences of the subjects. For a given comparison the reponses
-are coded by 1 if the first university was preferred, 2 if the second
-university was preferred and 0 if no decision was made. The variable
+are coded by 0 if the first university was preferred, 2 if the second
+university was preferred and 1 if no decision was made. The variable
 ENG characterises the knowledge of English and the variable
 SEX characterises the gender.
 }
