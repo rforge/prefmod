@@ -118,16 +118,37 @@ pc
 ## objects and/or reorders the objects
 reorder(pc, c("ce", "ah"))
 
+
+## include paircomp object in a data.frame
+## (i.e., with subject covariates)
+dat <- data.frame(
+  x = rnorm(4),
+  y = factor(c(1, 2, 1, 1), labels = c("hansi", "beppi")))
+dat$pc <- pc
+
+
 ## formatting with long(er) labels and extended scale
 pc2 <- paircomp(rbind(
   c(4,  1,  0),
   c(1,  2, -1),
   c(1, -2, -1),
   c(0,  0,  -3)),
-  labels = c("New York", "Rio", "Tokyo"))
+  labels = c("Nordrhein-Westfalen", "Schleswig-Holstein", "Baden-Wuerttemberg"))
 ## default: abbreviate
 print(pc2)
 print(pc2, abbreviate = FALSE)
+print(pc2, abbreviate = FALSE, width = FALSE)
+
+
+## paired comparisons with object covariates
+pc3 <- paircomp(rbind(
+  c(2,  1,  0),
+  c(1,  1, -1),
+  c(1, -2, -1),
+  c(0,  0,  0)),
+  labels = c("New York", "Rio", "Tokyo"),
+  covariates = data.frame(hemisphere = factor(c(1, 2, 1), labels = c("North", "South"))))
+covariates(pc3)
 }
 
 \keyword{classes}
