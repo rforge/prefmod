@@ -1,0 +1,59 @@
+`generatePCpatterns` <-
+function()
+#######################################################################
+# all possible response patterns and/or difference patterns
+#######################################################################
+#
+# CASE PAIRED COMPARISONS
+{
+
+   # data: not necessary here to calculate differences
+   #       but shift data to 0:(ncatPC-1)
+
+   ncomp<-get("ncomp",get("ENV",environment(patt.design)))
+   diffsdat<-get("dat",get("ENV",environment(patt.design)))[,1:ncomp]
+   diffsdat<-diffsdat-min(diffsdat)+1   # shift to 1, ..., ncatPC
+
+
+#   diffsdat<-diffsdat-min(diffsdat)   # shift to 0, ..., ncatPC-1
+   ncatPC<-get("ncatPC",get("ENV",environment(patt.design)))
+   mid<-(ncatPC+1)/2
+   if(ncatPC%%2>0){      # odd number of categories - possibly undecided responses
+      tab<-tabulate(diffsdat,ncatPC)
+      if(tab[mid]==0){           # no undecided responses
+        assign("blnUndec",FALSE,envir=sys.frame(-1))
+        assign("ncatPC",2,envir=sys.frame(-1))
+        diffsdat<-ifelse(diffsdat<mid,-1,1)
+        diffs<-all_patterns(0,1,ncomp)       # here the diffs are pc responses
+        diffs<-ifelse(diffs==0,1,-1)
+
+      } else {                   # undecided responses
+        assign("blnUndec",TRUE,envir=sys.frame(-1))
+        assign("ncatPC",3,envir=sys.frame(-1))
+        diffsdat<-ifelse(diffsdat<mid,0,ifelse(diffsdat>mid,2,1))
+        diffs<-all_patterns(0,2,ncomp)       # here the diffs are pc responses
+        diffs <- 1 - all_patterns(0,2,ncomp)   # here the diffs are pc responses
+        diffsdat<-  (1 - diffsdat)
+      }
+
+    } else {             # even number of categories - no undecided responses
+        assign("blnUndec",FALSE,envir=sys.frame(-1))
+        assign("ncatPC",2,envir=sys.frame(-1))
+        diffsdat<-ifelse(diffsdat<mid,1,-1)
+        diffs<-all_patterns(0,1,ncomp)       # here the diffs are pc responses
+        diffs<-ifelse(diffs==0,1,-1)
+        #diffsdat<-ifelse(diffsdat==0,1,-1)
+    }
+
+
+   # convert diffs (patterns) to string
+   dpattStr <- convert2strings(diffs)
+   assign("datStr",convert2strings(diffsdat),envir=sys.frame(-1))
+
+
+   # add to searchpath
+   assign("dpattStr",dpattStr,envir=sys.frame(-1))       # character representation
+   assign("npatt",length(dpattStr),envir=sys.frame(-1))  # number of unique possible patterns
+   assign("diffs",diffs,envir=sys.frame(-1))             # numeric representation
+
+}
