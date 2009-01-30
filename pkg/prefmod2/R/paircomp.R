@@ -245,7 +245,7 @@ mscale.paircomp <- function(object, ...) object$mscale
 
 covariates <- function(object, ...) UseMethod("covariates")
 
-"covariates<-" <- function(object, ...) UseMethod("covariates<-")
+"covariates<-" <- function(object, value) UseMethod("covariates<-")
 
 covariates.paircomp <- function(object, ...) {
   if(is.null(object$covariates)) return(NULL)

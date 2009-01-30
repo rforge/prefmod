@@ -1,6 +1,7 @@
 \name{covariates}
 
 \alias{covariates}
+\alias{covariates<-}
 
 \title{Extract/Set Covariates}
 

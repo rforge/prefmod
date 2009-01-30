@@ -125,6 +125,7 @@ dat <- data.frame(
   x = rnorm(4),
   y = factor(c(1, 2, 1, 1), labels = c("hansi", "beppi")))
 dat$pc <- pc
+dat
 
 
 ## formatting with long(er) labels and extended scale

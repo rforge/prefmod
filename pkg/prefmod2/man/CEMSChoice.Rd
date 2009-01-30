@@ -76,7 +76,7 @@ Dittrich R., Hatzinger R., Katzenbeisser W. (2001).
 
 \examples{
 data("CEMSChoice", package = "prefmod2")
-summary(CEMSChoice)
+summary(CEMSChoice$preference)
 covariates(CEMSChoice$preference)
 }
 
