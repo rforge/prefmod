@@ -5,6 +5,7 @@
 \alias{length.paircomp}
 \alias{c.paircomp}
 \alias{[.paircomp}
+\alias{rep.paircomp}
 
 \alias{as.character.paircomp}
 \alias{as.data.frame.paircomp}
