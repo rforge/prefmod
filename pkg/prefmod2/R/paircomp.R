@@ -160,7 +160,7 @@ str.paircomp <- function(object, width = getOption("width") - 7, ...)
   invisible(NULL)
 }
 
-summary.paircomp <- function(object, abbreviate = FALSE, ...)
+summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, ...)
 {
   ## process labels
   lab <- labels(object)
@@ -192,9 +192,11 @@ summary.paircomp <- function(object, abbreviate = FALSE, ...)
   } else {
     c("<", "=", ">")[mscale + 2L]
   }
+  if(decreasing) cnam <- rev(cnam)
   if(any(is.na(object$data))) cnam <- c(cnam, "NA's")
 
   rval <- t(apply(object$data, 2, function(x) table(factor(x, levels = mscale(object)))))
+  if(decreasing) rval <- rval[,ncol(rval):1]
   if(any(is.na(object$data))) rval <- cbind(rval, apply(object$data, 2, function(x) sum(is.na(x))))
   dimnames(rval) <- list(rnam, cnam)
   
@@ -231,6 +233,10 @@ c.paircomp <- function(...)
   return(rval)  
 }
 
+rep.paircomp <- function(x, ...) {
+  ix <- if(length(x) > 0) 1:length(x) else 0
+  x[rep(ix, ...)]
+}
 
 
 ## mscale(): new generic with extractor method for paircomp
