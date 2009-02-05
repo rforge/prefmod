@@ -409,6 +409,69 @@ as.data.frame.paircomp <- function(x, ...) {
 }
 
 
+## visualization of aggregated data
+plot.paircomp <- function(x, off = 0.05,
+  xlab = "Proportion of comparisons", ylab = "",
+  abbreviate = TRUE, hue = NULL, chroma = 40, luminance = 80)
+{
+  ## tabulate
+  tab <- summary(x)   
+  ## omit NAs
+  if(nrow(tab) > length(mscale(x))) tab <- tab[,-ncol(tab)]
+
+  ## basic dimensions
+  lab <- labels(x)
+  nobj <- length(lab)
+  ix <- which(upper.tri(diag(nobj)), arr.ind = TRUE)
+  npc <- nrow(ix)
+
+  ## labeling
+  if(is.logical(abbreviate)) {
+    nlab <- max(nchar(lab))
+    abbreviate <- if(abbreviate) as.numeric(cut(nlab, c(-Inf, 1.5, 4.5, 7.5, Inf))) else nlab
+  }
+  alab <- abbreviate(lab, abbreviate)  
+
+  ## coordinates: (cumulative) proportions
+  xcprob <- t(apply(tab, 1, function(z) as.vector(cumsum(z)[-length(z)]/sum(z))))
+  yprob <- as.vector(rowSums(tab)/sum(tab))
+  ycprob <- 1 + (npc-1) * off - c(0, cumsum(yprob[-npc] + off))
+
+  ## HCL-based sequential palette
+  if(is.null(hue)) hue <- seq(0, by = 360/nobj, length = nobj)
+  hue <- rep(hue, length.out = nobj)
+  chroma <- c(chroma, 0)
+  luminance <- c(luminance, 95)[1:2]
+  ns <- max(mscale(x)) + 1
+  col <- sapply(hue, function(z) {
+   rval <- seq(1, 0, length = ns)
+   hcl(z, chroma[2] - diff(chroma) * rval,
+     luminance[2] - diff(luminance) * rval^0.8, fixup = TRUE)
+  })
+
+  ## raw plot
+  plot(0, 0, type = "n", axes = FALSE,
+    xlim = c(0, 1), ylim = c(0, 1 + (npc-1) * off), xaxs = "i", yaxs = "i",
+    xlab = xlab, ylab = ylab)
+
+  ## actual rectangles
+  for(i in 1:npc) {
+    rect(c(0, xcprob[i,]), ycprob[i] - yprob[i], c(xcprob[i,], 1), ycprob[i],
+      col = c(col[,ix[i,1]], rev(col[,ix[i,2]])[-1]))
+  }
+  
+  ## labeling
+  axis(1)
+  axis(3)
+  axis(2, at = ycprob - yprob/2, labels = alab[ix[,1]], tick = FALSE, las = 1)
+  axis(4, at = ycprob - yprob/2, labels = alab[ix[,2]], tick = FALSE, las = 1)
+  box()
+
+  ## return centered y coordinates invisibly
+  invisible(ycprob - yprob/2)
+}
+
+
 ## default NA handling
 is.na.paircomp <- function(x) apply(is.na(as.matrix(x)), 1, all)
 
