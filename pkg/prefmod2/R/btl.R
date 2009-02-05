@@ -1,3 +1,35 @@
+## simple formula interface
+btl <- function(formula, data, subset, na.action, weights, offset,
+  model = FALSE, y = TRUE, x = FALSE, ...)
+{
+  ## remember original call
+  cl <- match.call()
+
+  ## formula parsing
+  m <- match.call(expand.dots = FALSE)
+  m <- m[c(1, match(c("formula", "data", "subset", "weights", "na.action"), names(m), 0))]
+  m[[1]] <- as.name("model.frame")
+  mf <- eval.parent(m)
+
+  ## extract data
+  yy <- model.response(mf)  
+  ww <- model.weights(mf)
+  xx <- NULL ## FIXME: covariates not yet implemented
+
+  ## call workhorse
+  rval <- btl.fit(x = xx, y = yy, weights = ww, ...)
+
+  ## add usual fitted model properties
+  rval$call <- cl
+  rval$terms <- terms(formula, data = data)
+  rval$y <- if(y) yy else NULL
+  rval$x <- if(x) xx else NULL
+  rval$model <- if(model) mf else NULL
+  class(rval) <- "btl"
+
+  return(rval)
+}
+
 ## workhorse function
 btl.fit <- function(x, y, weights = NULL,
   type = c("loglin", "logit", "probit"), ref = NULL, ties = NULL,
@@ -97,8 +129,8 @@ btl.fit <- function(x, y, weights = NULL,
   logp <- t(sapply(1:npc, par2logprob))
   loglik <- sum(logp * ytab)
 
-  ## weighted y not needed anymore
-  if(!is.null(weights)) y <- yorig
+  ## raw original data
+  ymat <- if(is.null(weights)) as.matrix(y) else as.matrix(yorig)
 
   ## estimating functions
   if(type == "probit") {
@@ -111,7 +143,7 @@ btl.fit <- function(x, y, weights = NULL,
     ct <- matrix(c(1, 0, 0.5, 0, 1, 0.5, 0, 0, 1), ncol = 3)
     for(i in 1:npc) gradp[i*3 - (2:0), c(ix[i,], nobj)] <- t(t(ct) + as.vector(cf %*% exp(logp[i,])))
     ef <- t(sapply(1:length(y), function(i) {
-      wi <- (0:(npc - 1)) * 3 + c(2, 3, 1)[y$data[i,] + 2]
+      wi <- (0:(npc - 1)) * 3 + c(2, 3, 1)[ymat[i,] + 2]
       colSums(gradp[wi,], na.rm = TRUE)
     }))
     if(!ties) ef <- ef[,-nobj]
@@ -133,8 +165,16 @@ btl.fit <- function(x, y, weights = NULL,
     ties = ties,
     labels = lab
   )     
-  class(rval) <- "btl"
   return(rval)
+}
+
+## FIXME: first draft only!
+print.btl <- function(x, digits = max(3, getOption("digits") - 3), ...) {
+  cat("Bradley-Terry-Luce model\n\nCoefficients:\n")
+  print(coef(x), digits = digits)
+  cat("\nAssociated worth parameters:\n")
+  print(worth(x), digits = digits)
+  invisible(x)
 }
 
 vcov.btl <- function(object, ...) object$vcov

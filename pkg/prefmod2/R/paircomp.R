@@ -409,5 +409,7 @@ as.data.frame.paircomp <- function(x, ...) {
 }
 
 
-## FIXME: na.* methods needed
+## default NA handling
+is.na.paircomp <- function(x) apply(is.na(as.matrix(x)), 1, all)
 
+## FIXME: need more flexible na.* methods
