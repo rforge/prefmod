@@ -81,8 +81,9 @@
 
 \value{
   \code{paircomp} returns an object of class \code{"paircomp"} which is
-  a list containing the arguments of \code{paircomp} (after being
-  checked and potentially suitably coerced or transformed.
+  a matrix (essentially \code{data}) with all remaining arguments
+  of \code{paircomp} as attributes (after being
+  checked and potentially suitably coerced or transformed).
 }
 
 
