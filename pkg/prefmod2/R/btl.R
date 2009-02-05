@@ -1,3 +1,4 @@
+## workhorse function
 btl.fit <- function(x, y, weights = NULL,
   type = c("loglin", "logit", "probit"), ref = NULL, ties = NULL,
   ...)
@@ -109,7 +110,7 @@ btl.fit <- function(x, y, weights = NULL,
     cf <- -matrix(c(1, 0, 0, 0, 1, 0, 0.5, 0.5, 1), ncol = 3)
     ct <- matrix(c(1, 0, 0.5, 0, 1, 0.5, 0, 0, 1), ncol = 3)
     for(i in 1:npc) gradp[i*3 - (2:0), c(ix[i,], nobj)] <- t(t(ct) + as.vector(cf %*% exp(logp[i,])))
-    ef <- t(sapply(1:nsubj, function(i) {
+    ef <- t(sapply(1:length(y), function(i) {
       wi <- (0:(npc - 1)) * 3 + c(2, 3, 1)[y$data[i,] + 2]
       colSums(gradp[wi,], na.rm = TRUE)
     }))
