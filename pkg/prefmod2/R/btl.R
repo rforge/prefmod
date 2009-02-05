@@ -1,5 +1,6 @@
 ## simple formula interface
 btl <- function(formula, data, subset, na.action, weights, offset,
+  type = c("loglin", "logit", "probit"), ref = NULL, ties = NULL,
   model = FALSE, y = TRUE, x = FALSE, ...)
 {
   ## remember original call
@@ -17,7 +18,8 @@ btl <- function(formula, data, subset, na.action, weights, offset,
   xx <- NULL ## FIXME: covariates not yet implemented
 
   ## call workhorse
-  rval <- btl.fit(x = xx, y = yy, weights = ww, ...)
+  rval <- btl.fit(x = xx, y = yy, weights = ww,
+    type = type, ref = ref, ties = ties, ...)
 
   ## add usual fitted model properties
   rval$call <- cl
@@ -25,7 +27,6 @@ btl <- function(formula, data, subset, na.action, weights, offset,
   rval$y <- if(y) yy else NULL
   rval$x <- if(x) xx else NULL
   rval$model <- if(model) mf else NULL
-  class(rval) <- "btl"
 
   return(rval)
 }
@@ -165,18 +166,11 @@ btl.fit <- function(x, y, weights = NULL,
     ties = ties,
     labels = lab
   )     
+  class(rval) <- "btl"
   return(rval)
 }
 
-## FIXME: first draft only!
-print.btl <- function(x, digits = max(3, getOption("digits") - 3), ...) {
-  cat("Bradley-Terry-Luce model\n\nCoefficients:\n")
-  print(coef(x), digits = digits)
-  cat("\nAssociated worth parameters:\n")
-  print(worth(x), digits = digits)
-  invisible(x)
-}
-
+## standard methods
 vcov.btl <- function(object, ...) object$vcov
 
 logLik.btl <- function(object, ...) structure(object$loglik, df = object$df, class = "logLik")
@@ -191,12 +185,80 @@ estfun.btl <- function(x, ...) {
 
 bread.btl <- function(x, ...) x$vcov * x$n
 
+## more elaborate methods
+## FIXME: first draft only!
+print.btl <- function(x, digits = max(3, getOption("digits") - 3), ...) {
+  cat("Bradley-Terry-Luce model\n\nParameters:\n")
+  print(coef(x), digits = digits)
+  cat("\nAssociated worth parameters:\n")
+  print(worth(x), digits = digits)
+  invisible(x)
+}
+
+coef.btl <- function(object, all = TRUE, ref = !all, ...) {
+  lab <- object$labels
+  nobj <- length(lab)
+  acf <- object$coefficients
+  cf <- structure(rep(0, nobj), .Names = lab)
+  ocf <- acf[1:(nobj-1)]
+  cf[names(ocf)] <- ocf
+  cf <- c(cf, acf[-(1:(nobj-1))])
+  if(!all) cf <- cf[1:nobj]
+  if(!ref) cf <- cf[-match(object$ref, lab)]
+  return(cf)
+}
+
 worth <- function(object, ...) UseMethod("worth")
 
 worth.btl <- function(x, ...) {
+  if(x$type == "probit") stop("Worth parameters for probit model not (yet) available.")
   lab <- x$labels
-  rval <- structure(rep(0, length(lab)), .Names = lab)
-  cf <- coef(x)[1:(length(lab)-1)]
-  rval[names(cf)] <- cf
-  exp(rval)/sum(exp(rval))
+  cf <- coef(x, all = FALSE, ref = TRUE)
+  exp(cf)/sum(exp(cf))
+}
+
+plot.btl <- function(x, 
+  worth = TRUE, index = TRUE, names = TRUE, ref = TRUE, abbreviate = FALSE,
+  type = NULL, lty = NULL, xlab = "Objects", ylab = NULL, ...)
+{
+  ## parameters to be plotted
+  if(worth) {
+    cf <- worth(x)
+  } else {
+    cf <- coef(x, all = FALSE, ref = TRUE)
+    if(is.character(ref) | is.numeric(ref)) {
+      reflab <- ref
+      ref <- TRUE
+    } else {
+      reflab <- x$ref
+    }
+    if(is.character(reflab)) reflab <- match(reflab, x$labels)
+    cf <- cf - cf[reflab]
+  }
+
+  ## labeling
+  cf_ref <- if(!worth) 0 else 1/length(cf)
+  if(is.character(names)) {
+    names(cf) <- names
+    names <- TRUE
+  }
+  if(is.null(ylab)) ylab <- if(worth) "Worth parameters" else "Parameters"
+    
+  ## raw plot
+  ix <- if(index) seq(along = cf) else rep(0, length(cf))
+  plot(ix, cf, xlab = xlab, ylab = ylab, type = "n", axes = FALSE, ...)
+  if(ref) abline(h = cf_ref, col = "lightgray")
+  axis(2)
+  box()  
+
+  ## actual data
+  if(index) {
+    if(is.null(type)) type <- "b"
+    if(is.null(lty)) lty <- 2  
+    lines(ix, cf, type = type, lty = lty)
+    axis(1, at = ix, labels = if(names) names(cf) else TRUE)
+  } else {
+    if(is.null(type)) type <- "p"
+    if(names) text(names(cf), x = ix, y = cf, ...) else lines(ix, cf, type = type, lty = lty)
+  }
 }
