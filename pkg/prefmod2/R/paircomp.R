@@ -58,12 +58,13 @@ paircomp <- function(data, labels = NULL, mscale = NULL, ordered = FALSE, covari
   ## process covariates
   if(!is.null(covariates)) rownames(covariates) <- seq_along(labels)
 
-  rval <- list(
-    data = data,
+  rval <- data
+  class(rval) <- "paircomp"
+  attributes(rval) <- c(attributes(rval), list(
     labels = labels,
     mscale = mscale,
     ordered = ordered,
-    covariates = covariates)
+    covariates = covariates))
   class(rval) <- "paircomp"
   return(rval)
 }
@@ -105,12 +106,12 @@ format.paircomp <- function(x, sep = ", ", brackets = TRUE,
   ix <- which(upper.tri(diag(length(lab))), arr.ind = TRUE)
   lab1 <- lab[ix[,1]]
   lab2 <- lab[ix[,2]]
-  if(x$ordered) {
+  if(attr(x, "ordered")) {
     lab1 <- c(lab1, lab2)
     lab2 <- c(lab2, lab1)
   }
   
-  pc <- x$data
+  pc <- as.matrix(x)
   pc <- pc + mscale_max + 1
   pc <- apply(pc, 1, function(x) paste(
     ifelse(is.na(x), "NA", paste(lab1, mscale_symbol[x], lab2, sep = " ")),
@@ -130,7 +131,7 @@ format.paircomp <- function(x, sep = ", ", brackets = TRUE,
   pc <- paste(brackets[1], pc, brackets[2], sep = "")
 
   ## assure names (if any)
-  names(pc) <- rownames(x$data)
+  names(pc) <- rownames(unclass(x))
 
   return(pc)
 }
@@ -150,7 +151,7 @@ print.paircomp <- function(x, quote = FALSE, ...)
 str.paircomp <- function(object, width = getOption("width") - 7, ...)
 {
   rval <- sprintf(" Paired comparisons from %d subjects for %d objects: %s.\n",
-    nrow(object$data), length(labels(object)), paste(labels(object), collapse = ", "))
+    nrow(unclass(object)), length(labels(object)), paste(labels(object), collapse = ", "))
   
   if(is.null(width)) width <- TRUE
   if(is.logical(width)) width <- if(width) getOption("width") - 7 else Inf
@@ -162,6 +163,9 @@ str.paircomp <- function(object, width = getOption("width") - 7, ...)
 
 summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, ...)
 {
+  ## data
+  dat <- as.matrix(object)
+  
   ## process labels
   lab <- labels(object)
   ## abbreviate
@@ -176,7 +180,7 @@ summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, ...)
   ix <- which(upper.tri(diag(length(lab))), arr.ind = TRUE)
   lab1 <- lab[ix[,1]]
   lab2 <- lab[ix[,2]]
-  if(object$ordered) {
+  if(attr(object, "ordered")) {
     lab1 <- c(lab1, lab2)
     lab2 <- c(lab2, lab1)
   }
@@ -193,11 +197,11 @@ summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, ...)
     c("<", "=", ">")[mscale + 2L]
   }
   if(decreasing) cnam <- rev(cnam)
-  if(any(is.na(object$data))) cnam <- c(cnam, "NA's")
+  if(any(is.na(dat))) cnam <- c(cnam, "NA's")
 
-  rval <- t(apply(object$data, 2, function(x) table(factor(x, levels = mscale(object)))))
+  rval <- t(apply(dat, 2, function(x) table(factor(x, levels = mscale(object)))))
   if(decreasing) rval <- rval[,ncol(rval):1]
-  if(any(is.na(object$data))) rval <- cbind(rval, apply(object$data, 2, function(x) sum(is.na(x))))
+  if(any(is.na(dat))) rval <- cbind(rval, apply(dat, 2, function(x) sum(is.na(x))))
   dimnames(rval) <- list(rnam, cnam)
   
   rval
@@ -207,11 +211,13 @@ summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, ...)
 
 ## extract and combine observations
 
-length.paircomp <- function(x) nrow(x$data)
+length.paircomp <- function(x) nrow(unclass(x))
 
-"[.paircomp" <- function(x, i) {
-  x$data <- x$data[i,,drop=FALSE]
-  return(x)
+"[.paircomp" <- function(x, i, ...) {
+  xattr <- attributes(x)[c("labels", "mscale", "ordered", "covariates")]
+  x <- unclass(x)[i,,drop=FALSE]
+  attributes(x) <- c(attributes(x), xattr)
+  structure(x, class = "paircomp")
 }
 
 c.paircomp <- function(...)
@@ -223,14 +229,16 @@ c.paircomp <- function(...)
     x1 <- x[[1]]
     all(sapply(2:length(x), function(i) identical(x[[i]], x1)))
   }
-  if(!check_list(lapply(args, function(x) x$labels))) stop("objects have different labels")
-  if(!check_list(lapply(args, function(x) x$mscale))) stop("objects have different mscales")
-  if(!check_list(lapply(args, function(x) x$ordered))) stop("objects have differently ordered")
-  if(!check_list(lapply(args, function(x) x$covariates))) stop("objects have different covariates")
+  if(!check_list(lapply(args, attr, "labels"))) stop("objects have different labels")
+  if(!check_list(lapply(args, attr, "mscale"))) stop("objects have different mscales")
+  if(!check_list(lapply(args, attr, "ordered"))) stop("objects have differently ordered")
+  if(!check_list(lapply(args, attr, "covariates"))) stop("objects have different covariates")
 
   rval <- args[[1]]
-  rval$data <- do.call("rbind", lapply(args, function(x) x$data))
-  return(rval)  
+  xattr <- attributes(rval)[c("labels", "mscale", "ordered", "covariates")]
+  rval <- do.call("rbind", lapply(args, function(x) as.matrix(x)))
+  attributes(rval) <- c(attributes(rval), xattr)
+  structure(rval, class = "paircomp")
 }
 
 rep.paircomp <- function(x, ...) {
@@ -243,7 +251,7 @@ rep.paircomp <- function(x, ...) {
 
 mscale <- function(object, ...) UseMethod("mscale")
 
-mscale.paircomp <- function(object, ...) object$mscale
+mscale.paircomp <- function(object, ...) attr(object, "mscale")
 
 
 
@@ -254,8 +262,8 @@ covariates <- function(object, ...) UseMethod("covariates")
 "covariates<-" <- function(object, value) UseMethod("covariates<-")
 
 covariates.paircomp <- function(object, ...) {
-  if(is.null(object$covariates)) return(NULL)
-  rval <- object$covariates
+  if(is.null(attr(object, "covariates"))) return(NULL)
+  rval <- attr(object, "covariates")
   rownames(rval) <- labels(object)
   return(rval)
 }
@@ -268,7 +276,7 @@ covariates.paircomp <- function(object, ...) {
   }
   if(nrow(value) != length(labels(object))) stop("Number of rows in covariates does not match number of objects.")
   rownames(value) <- 1:length(labels(object))
-  object$covariates <- value
+  attr(object, "covariates") <- value
   return(object)
 }
 
@@ -277,24 +285,25 @@ covariates.paircomp <- function(object, ...) {
 ## labels() queries/sets object names, (new generic labels<-)
 ## levels() is an alias for labels() (but discouraged to avoid confusion with mscale)
 
-names.paircomp <- function(x) rownames(x$data)
+names.paircomp <- function(x) rownames(unclass(x))
 
 "names<-.paircomp" <- function(x, value) {
-  rownames(x$data) <- value
-  x
+  x <- unclass(x)
+  rownames(x) <- value
+  structure(x, class = "paircomp")
 }
 
 "labels<-" <- function(object, value) UseMethod("labels<-")
   
-labels.paircomp <- function(object, ...) object$labels
+labels.paircomp <- function(object, ...) attr(object, "labels")
 
 "labels<-.paircomp" <- function(object, value) {
-  if(!(length(value) == length(object$labels))) stop("length of labels does not match")
-  object$labels <- value
+  if(!(length(value) == length(attr(object, "labels")))) stop("length of labels does not match")
+  attr(object, "labels") <- value
   object
 }
 
-levels.paircomp <- function(x, ...) x$labels
+levels.paircomp <- function(x, ...) attr(object, "labels")
 
 "levels<-.paircomp" <- function(x, value) {
   labels(x) <- value
@@ -321,7 +330,7 @@ reorder.paircomp <- function(x, labels, ...)
   nlab <- labels
   ix <- which(upper.tri(diag(length(xlab))), arr.ind = TRUE)
   wi <- apply(ix, 1, function(z) all(z %in% nlab))
-  ndat <- if(x$ordered) x$data[, c(wi, wi), drop = FALSE] else x$data[, wi, drop = FALSE]
+  ndat <- if(attr(x, "ordered")) as.matrix(x)[, c(wi, wi), drop = FALSE] else as.matrix(x)[, wi, drop = FALSE]
   
   ## re-order comparisons (if necessary)
   if(!identical(nlab, sort(nlab))) {
@@ -337,7 +346,7 @@ reorder.paircomp <- function(x, labels, ...)
     ord <- match(nnam, onam)
     
     ## re-order
-    if(x$ordered) {
+    if(attr(x, "ordered")) {
       ndat <- ndat[, c(ord, ord), drop = FALSE]
       ndat[, c(wi, wi)] <- -1 * ndat[, c(wi, wi)]
     } else {
@@ -348,8 +357,8 @@ reorder.paircomp <- function(x, labels, ...)
 
   ## call constructor to setup proper new paircomp object
   paircomp(ndat,
-    labels = x$labels[nlab], mscale = mscale(x),
-    ordered = x$ordered, covariates = x$covariates[nlab,,drop=FALSE])
+    labels = attr(x, "labels")[nlab], mscale = mscale(x),
+    ordered = attr(x, "ordered"), covariates = attr(x, "covariates")[nlab,,drop=FALSE])
 }
 
 subset.paircomp <- function(x, subset, select, ...)
@@ -370,14 +379,15 @@ as.character.paircomp <- function(x, ...) {
 
 as.integer.paircomp <-
 as.matrix.paircomp <- function(x, ...) {
-  rval <- x$data
+  rval <- unclass(x)
+  attr(rval, "labels") <- attr(rval, "mscale") <- attr(rval, "ordered") <- attr(rval, "covariates") <- NULL
 
   ## colnames
-  lab <- labels(x)
+  lab <- attr(x, "labels")
   ix <- which(upper.tri(diag(length(lab))), arr.ind = TRUE)
   lab1 <- lab[ix[,1]]
   lab2 <- lab[ix[,2]]
-  if(x$ordered) {
+  if(attr(x, "ordered")) {
     lab1 <- c(lab1, lab2)
     lab2 <- c(lab2, lab1)
   }
