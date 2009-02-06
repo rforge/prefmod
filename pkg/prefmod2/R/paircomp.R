@@ -414,7 +414,7 @@ as.data.frame.paircomp <- function(x, ...) {
 
 ## visualization of aggregated data
 plot.paircomp <- function(x, off = 0.05,
-  xlab = "Proportion of comparisons", ylab = "",
+  xlab = "Proportion of comparisons", ylab = "", tol.xlab = 0.05,
   abbreviate = TRUE, hue = NULL, chroma = 40, luminance = 80)
 {
   ## tabulate
@@ -463,9 +463,13 @@ plot.paircomp <- function(x, off = 0.05,
       col = c(col[,ix[i,1]], rev(col[,ix[i,2]])[-1]))
   }
   
+  ## position for x axis labels
+  xat <- c(xcprob[1,], 1) - diff(c(0, xcprob[1,], 1))/2
+  if(any(diff(xat) < tol.xlab)) xat <- 1:ncol(tab)/(ncol(tab) + 1)
+  
   ## labeling
   axis(1)
-  axis(3)
+  axis(3, at = xat, labels = colnames(tab), tick = FALSE)
   axis(2, at = ycprob - yprob/2, labels = alab[ix[,1]], tick = FALSE, las = 1)
   axis(4, at = ycprob - yprob/2, labels = alab[ix[,2]], tick = FALSE, las = 1)
   box()

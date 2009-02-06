@@ -9,7 +9,7 @@
 
 \usage{
   \method{plot}{paircomp}(x, off = 0.05,
-  xlab = "Proportion of comparisons", ylab = "",
+  xlab = "Proportion of comparisons", ylab = "", tol.xlab = 0.05,
   abbreviate = TRUE, hue = NULL, chroma = 40, luminance = 80)
 }
 
@@ -17,6 +17,9 @@
   \item{x}{an object of class \code{"paircomp"}.}
   \item{off}{numeric. Offset between segments on the y-axis.}
   \item{xlab, ylab}{character. Axis labels.}
+  \item{tol.xlab}{numeric. convenience tolerance parameter for x-axis annotation.
+    If the distance between two labels drops under this threshold, they
+    are plotted equidistantly.}
   \item{abbreviate}{logical or integer. Should object labels be abbreviated?
     Alternative an integer with the desired abbreviation length. The default
     is some heuristic based on the length of the labels.}
