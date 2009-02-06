@@ -6,6 +6,7 @@
 \alias{c.paircomp}
 \alias{[.paircomp}
 \alias{rep.paircomp}
+\alias{xtfrm.paircomp}
 
 \alias{as.character.paircomp}
 \alias{as.data.frame.paircomp}

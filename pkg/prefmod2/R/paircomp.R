@@ -246,6 +246,9 @@ rep.paircomp <- function(x, ...) {
   x[rep(ix, ...)]
 }
 
+xtfrm.paircomp <- function(x) {
+  if(length(x) > 0) 1:length(x) else 0
+}
 
 ## mscale(): new generic with extractor method for paircomp
 
@@ -303,7 +306,7 @@ labels.paircomp <- function(object, ...) attr(object, "labels")
   object
 }
 
-levels.paircomp <- function(x, ...) attr(object, "labels")
+levels.paircomp <- function(x, ...) attr(x, "labels")
 
 "levels<-.paircomp" <- function(x, value) {
   labels(x) <- value

@@ -119,19 +119,20 @@ btl.fit <- function(x, y, weights = NULL,
     "logit" = function(i) {
       p <- rep(0, nobj)
       p[-ref] <- par
-      plogis(c(1, -1) * diff(p[ix[i,]]))
+      plogis(c(-1, 1) * diff(p[ix[i,]]), log.p = TRUE)
     },
     "probit" = function(i) {
       p <- rep(0, nobj)
       p[-ref] <- par
-      pnorm(c(1, -1) * diff(p[ix[i,]]))
+      pnorm(c(-1, 1) * diff(p[ix[i,]]), log.p = TRUE)
     }
   )
   logp <- t(sapply(1:npc, par2logprob))
   loglik <- sum(logp * ytab)
 
   ## raw original data
-  ymat <- if(is.null(weights)) as.matrix(y) else as.matrix(yorig)
+  if(!is.null(weights)) y <- yorig
+  ymat <- as.matrix(y)
 
   ## estimating functions
   if(type == "probit") {
@@ -188,12 +189,60 @@ bread.btl <- function(x, ...) x$vcov * x$n
 ## more elaborate methods
 ## FIXME: first draft only!
 print.btl <- function(x, digits = max(3, getOption("digits") - 3), ...) {
-  cat("Bradley-Terry-Luce model\n\nParameters:\n")
+  if(is.null(x$call)) {
+    cat("\nBradley-Terry-Luce model\n\n")  
+  } else {
+    cat("\nCall:\n")
+    cat(paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
+  }
+  cat("Parameters:\n")
   print(coef(x), digits = digits)
   cat("\nAssociated worth parameters:\n")
   print(worth(x), digits = digits)
+  cat("\n")
   invisible(x)
 }
+
+summary.btl <- function(object, vcov. = NULL, ...)
+{
+  ## coefficients
+  cf <- coef(object)
+
+  ## covariance matrix
+  if(is.null(vcov.)) 
+      vc <- vcov(object)
+  else {
+      if(is.function(vcov.)) vc <- vcov.(object)
+        else vc <- vcov.
+  }
+  
+  ## Wald test of each coefficient
+  cf <- cbind(cf, sqrt(diag(vc)), cf/sqrt(diag(vc)), 2 * pnorm(-abs(cf/sqrt(diag(vc)))))
+  colnames(cf) <- c("Estimate", "Std. Error", "z value", "Pr(>|z|)")
+
+  object$coefficients <- cf      
+  class(object) <- "summary.btl"
+  return(object)
+}
+
+print.summary.btl <- function(x, digits = max(3, getOption("digits") - 3), 
+    signif.stars = getOption("show.signif.stars"), ...)
+{
+  if(is.null(x$call)) {
+    cat("\nBradley-Terry-Luce model\n\n")  
+  } else {
+    cat("\nCall:\n")
+    cat(paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
+  }
+
+  cat("Parameters:\n")
+  printCoefmat(x$coefficients, digits = digits, signif.stars = signif.stars, na.print = "NA", ...)
+
+  cat("\nLog-likelihood:", format(signif(x$loglik, digits)),
+    "(df =", paste(x$df, ")", sep = ""), "\n\n")
+  invisible(x)
+}
+
 
 coef.btl <- function(object, all = TRUE, ref = !all, ...) {
   lab <- object$labels
@@ -244,6 +293,13 @@ plot.btl <- function(x,
   }
   if(is.null(ylab)) ylab <- if(worth) "Worth parameters" else "Parameters"
     
+  ## abbreviation
+  if(is.logical(abbreviate)) {
+    nlab <- max(nchar(names(cf)))
+    abbreviate <- if(abbreviate) as.numeric(cut(nlab, c(-Inf, 1.5, 4.5, 7.5, Inf))) else nlab
+  }
+  names(cf) <- abbreviate(names(cf), abbreviate)
+
   ## raw plot
   ix <- if(index) seq(along = cf) else rep(0, length(cf))
   plot(ix, cf, xlab = xlab, ylab = ylab, type = "n", axes = FALSE, ...)
