@@ -420,13 +420,14 @@ plot.paircomp <- function(x, off = 0.05,
   ## tabulate
   tab <- summary(x)   
   ## omit NAs
-  if(nrow(tab) > length(mscale(x))) tab <- tab[,-ncol(tab)]
+  if(ncol(tab) > length(mscale(x))) tab <- tab[,-ncol(tab)]
 
   ## basic dimensions
   lab <- labels(x)
   nobj <- length(lab)
   ix <- which(upper.tri(diag(nobj)), arr.ind = TRUE)
   npc <- nrow(ix)
+  has_undecided <- min(abs(mscale(x))) < 1
 
   ## labeling
   if(is.logical(abbreviate)) {
@@ -436,7 +437,7 @@ plot.paircomp <- function(x, off = 0.05,
   alab <- abbreviate(lab, abbreviate)  
 
   ## coordinates: (cumulative) proportions
-  xcprob <- t(apply(tab, 1, function(z) as.vector(cumsum(z)[-length(z)]/sum(z))))
+  xcprob <- t(matrix(apply(tab, 1, function(z) as.vector(cumsum(z)[-length(z)]/sum(z))), ncol = nrow(tab)))
   yprob <- as.vector(rowSums(tab)/sum(tab))
   ycprob <- 1 + (npc-1) * off - c(0, cumsum(yprob[-npc] + off))
 
@@ -460,7 +461,8 @@ plot.paircomp <- function(x, off = 0.05,
   ## actual rectangles
   for(i in 1:npc) {
     rect(c(0, xcprob[i,]), ycprob[i] - yprob[i], c(xcprob[i,], 1), ycprob[i],
-      col = c(col[,ix[i,1]], rev(col[,ix[i,2]])[-1]))
+      col = c(if(has_undecided) col[,ix[i,1]] else col[-nrow(col),ix[i,1]],
+      rev(col[,ix[i,2]])[-1]))
   }
   
   ## position for x axis labels
