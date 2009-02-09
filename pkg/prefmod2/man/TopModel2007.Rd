@@ -2,11 +2,11 @@
 \alias{TopModel2007}
 \encoding{latin1}
 
-\title{Attractiveness of Germany's Next Topmodels}
+\title{Attractiveness of Germany's Next Topmodels 2007}
 
 \description{
   Preferences of 192 respondents judging the attractiveness of the top six
-  contestants of the TV show Germany's Next Topmodel 2007.
+  contestants of the TV show \emph{Germany's Next Topmodel 2007} (second cycle).
 }
 
 \usage{data("TopModel2007")}
@@ -28,9 +28,13 @@ A data frame containing 192 observations on 6 variables.
 }
 
 \details{
-  The survey was conducted in 2007 shortly after the final show. The sample
-  was stratified by gender and age (younger versus older than 30 years) with
-  48 participants in each group.
+  Germany's Next Topmodel is a German casting television show (based on a
+  concept introduced in the United States) hosted by Heidi Klum (see Wikipedia 2009).
+  The second season of the show aired March--May 2007.
+
+  A survey was conducted at the Department of Psychology, Universität Tübingen,
+  in 2007 shortly after the final show. The sample was stratified by gender and
+  age (younger versus older than 30 years) with 48 participants in each group.
 
   Digital photographs (resolution 303 times 404 pixels) of the top six
   contestants were available from the ProSieben web page
@@ -45,14 +49,13 @@ A data frame containing 192 observations on 6 variables.
   pairwise comparisons were completed.
 
   The actual ranking, as resulting from sequential elimination during the
-  course of the show, was (from first to last place): Barbara, Anni, Hana,
+  course of the show, was (from first to sixth place): Barbara, Anni, Hana,
   Fiona, Mandy, Anja.
 }
 
 \references{
-Germany's Next Topmodel. In Wikipedia, The Free Encyclopedia.
-
-\url{http://en.wikipedia.org/w/index.php?title=Germany%27s_Next_Topmodel&oldid=268802871}
+  Wikipedia (2009). Germany's Next Topmodel -- Wikipedia, The Free Encyclopedia.
+  \url{http://en.wikipedia.org/w/index.php?title=Germany%27s_Next_Topmodel&oldid=268802871}
 }
 
 \seealso{\code{\link{paircomp}}}
@@ -60,7 +63,7 @@ Germany's Next Topmodel. In Wikipedia, The Free Encyclopedia.
 \examples{
 data("TopModel2007", package = "prefmod2")
 summary(TopModel2007$preference)
-xtabs(~ gender + I(age < 30), TopModel2007)
+xtabs(~ gender + I(age < 30), data = TopModel2007)
 }
 
 \keyword{datasets}
