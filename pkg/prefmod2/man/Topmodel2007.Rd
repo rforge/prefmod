@@ -1,5 +1,5 @@
-\name{TopModel2007}
-\alias{TopModel2007}
+\name{Topmodel2007}
+\alias{Topmodel2007}
 \encoding{latin1}
 
 \title{Attractiveness of Germany's Next Topmodels 2007}
@@ -9,7 +9,7 @@
   contestants of the TV show \emph{Germany's Next Topmodel 2007} (second cycle).
 }
 
-\usage{data("TopModel2007")}
+\usage{data("Topmodel2007")}
 
 \format{
 A data frame containing 192 observations on 6 variables.
@@ -55,15 +55,15 @@ A data frame containing 192 observations on 6 variables.
 
 \references{
   Wikipedia (2009). Germany's Next Topmodel -- Wikipedia, The Free Encyclopedia.
-  \url{http://en.wikipedia.org/w/index.php?title=Germany%27s_Next_Topmodel&oldid=268802871}
+  \url{http://en.wikipedia.org/wiki/Germany's_Next_Topmodel}, accessed 2009-02-06.
 }
 
 \seealso{\code{\link{paircomp}}}
 
 \examples{
-data("TopModel2007", package = "prefmod2")
-summary(TopModel2007$preference)
-xtabs(~ gender + I(age < 30), data = TopModel2007)
+data("Topmodel2007", package = "prefmod2")
+summary(Topmodel2007$preference)
+xtabs(~ gender + I(age < 30), data = Topmodel2007)
 }
 
 \keyword{datasets}

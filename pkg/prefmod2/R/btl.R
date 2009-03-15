@@ -259,10 +259,10 @@ coef.btl <- function(object, all = TRUE, ref = !all, ...) {
 
 worth <- function(object, ...) UseMethod("worth")
 
-worth.btl <- function(x, ...) {
-  if(x$type == "probit") stop("Worth parameters for probit model not (yet) available.")
-  lab <- x$labels
-  cf <- coef(x, all = FALSE, ref = TRUE)
+worth.btl <- function(object, ...) {
+  if(object$type == "probit") stop("Worth parameters for probit model not (yet) available.")
+  lab <- object$labels
+  cf <- coef(object, all = FALSE, ref = TRUE)
   exp(cf)/sum(exp(cf))
 }
 

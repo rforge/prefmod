@@ -10,7 +10,8 @@
 \usage{
   \method{plot}{paircomp}(x, off = 0.05,
   xlab = "Proportion of comparisons", ylab = "", tol.xlab = 0.05,
-  abbreviate = TRUE, hue = NULL, chroma = 40, luminance = 80)
+  abbreviate = TRUE, hue = NULL, chroma = 40, luminance = 80,
+  xlim = c(0, 1), ylim = NULL, xaxs = "i", yaxs = "i", \dots)
 }
 
 \arguments{
@@ -29,6 +30,8 @@
   \item{chroma}{numeric. Maximum chroma in the palette.}
   \item{luminance}{numeric. Minimum (and maximum) luminance in the
     palette. If omitted, the maximum is set to 95.}
+  \item{xlim, ylim, xaxs, yaxs, \dots}{graphical arguments passed to
+    \code{\link{plot}}.}
 }
 
 \details{

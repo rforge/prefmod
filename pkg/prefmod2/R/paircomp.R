@@ -35,7 +35,7 @@ paircomp <- function(data, labels = NULL, mscale = NULL, ordered = FALSE, covari
   data_unique <- as.integer(data_unique)
 
   ## process labels
-  if(is.null(labels)) labels <- letters[1:nobj] else {
+  if(is.null(labels)) labels <- make.unique(rep(letters, length.out = nobj), sep = "") else {
     if(length(labels) != nobj) stop("length of labels does not match number of objects")
   }
 
@@ -256,6 +256,19 @@ mscale <- function(object, ...) UseMethod("mscale")
 
 mscale.paircomp <- function(object, ...) attr(object, "mscale")
 
+"mscale<-" <- function(object, value) UseMethod("mscale<-")
+
+"mscale<-.paircomp" <- function(object, value) {
+  ms <- attr(object, "mscale")
+  val <- as.integer(sort(value))
+  if(!isTRUE(all.equal(val, value))) warning("mscale sorted to be in increasing order")
+  stopifnot(all(ms %in% val) | length(ms) == length(value))
+  if(max(abs(val)) <= 0) stop("mscale needs to have non-zero elements")
+  if(abs(head(val, 1)) != tail(val, 1)) stop("mscale must by symmetric")
+  object[] <- val[as.vector(object) - min(ms) + 1]
+  attr(object, "mscale") <- val
+  return(object)
+}
 
 
 ## covariates(): new generic with extractor method for paircomp
@@ -415,7 +428,8 @@ as.data.frame.paircomp <- function(x, ...) {
 ## visualization of aggregated data
 plot.paircomp <- function(x, off = 0.05,
   xlab = "Proportion of comparisons", ylab = "", tol.xlab = 0.05,
-  abbreviate = TRUE, hue = NULL, chroma = 40, luminance = 80)
+  abbreviate = TRUE, hue = NULL, chroma = 40, luminance = 80,
+  xlim = c(0, 1), ylim = NULL, xaxs = "i", yaxs = "i", ...)
 {
   ## tabulate
   tab <- summary(x)   
@@ -453,10 +467,13 @@ plot.paircomp <- function(x, off = 0.05,
      luminance[2] - diff(luminance) * rval^0.8, fixup = TRUE)
   })
 
+  ## default arguments
+  if(is.null(ylim)) ylim <- c(0, 1 + (npc-1) * off) 
+
   ## raw plot
   plot(0, 0, type = "n", axes = FALSE,
-    xlim = c(0, 1), ylim = c(0, 1 + (npc-1) * off), xaxs = "i", yaxs = "i",
-    xlab = xlab, ylab = ylab)
+    xlim = xlim, ylim = ylim, xaxs = xaxs, yaxs = yaxs,
+    xlab = xlab, ylab = ylab, ...)
 
   ## actual rectangles
   for(i in 1:npc) {

@@ -23,9 +23,11 @@
 \alias{names.paircomp}
 \alias{names<-.paircomp}
 \alias{mscale.paircomp}
+\alias{mscale<-.paircomp}
 
 \alias{str.paircomp}
 \alias{summary.paircomp}
+\alias{is.na.paircomp}
 
 
 \title{Data Structure for Paired Comparisons}
