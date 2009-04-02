@@ -75,8 +75,8 @@ btreg.fit <- function(x, y, z = NULL, weights = NULL,
   stopifnot(inherits(y, "paircomp"))  
   if(!is.null(x)) { ## FIXME: repeat intercept processing?
     if(isTRUE(all.equal(as.vector(x), rep(1, length(y))))) x <- NULL
+    if(ncol(x) < 1) x <- NULL
   }
-  if(ncol(xx) < 1) xx <- NULL
   if(!is.null(x)) stop("subject covariates not yet implemented")
   if(!is.null(z)) stop("object covariates not yet implemented")
 
@@ -196,6 +196,7 @@ btreg.fit <- function(x, y, z = NULL, weights = NULL,
     type = type,
     ref = lab[ref],
     undecided = undecided,
+    position = position,
     labels = lab
   )     
   class(rval) <- "btreg"
@@ -209,7 +210,7 @@ logLik.btreg <- function(object, ...) structure(object$loglik, df = object$df, c
 
 deviance.btreg <- function(object, ...) -2 * object$loglik
 
-estfun.btreg <- function(x, ...) ef$estfun
+estfun.btreg <- function(x, ...) x$estfun
 
 bread.btreg <- function(x, ...) x$vcov * x$n
 

@@ -4,7 +4,7 @@
 
 ## high-level convenience interface
 bttree <- function(formula, data, na.action = na.pass,
-  type = "loglin", ref = NULL, ties = NULL, minsplit = 10, ...)
+  type = "loglin", ref = NULL, undecided = NULL, position = NULL, minsplit = 10, ...)
 {
   ## transform formula
   stopifnot(length(formula) > 2)
@@ -14,7 +14,8 @@ bttree <- function(formula, data, na.action = na.pass,
   ff[[3]][[3]] <- formula[[3]]
 
   ## call mob()
-  rval <- mob(ff, data = data, model = btModel(type = type, ref = ref, ties = ties),
+  rval <- mob(ff, data = data, model = btReg(type = type, ref = ref,
+      undecided = undecided, position = position),
     control = mob_control(minsplit = minsplit, ...), na.action = na.action)
 
   ## add class and return
@@ -64,19 +65,20 @@ worth.bttree <- function (object, node = NULL, ...)
 }
 
 ## modeltools/party interface
-btModel <- function(type = "loglin", ref = NULL, ties = NULL) {
+btReg <- function(type = "loglin", ref = NULL, undecided = NULL, position = NULL) {
   new("StatModel",
     capabilities = new("StatModelCapabilities"),
-    name = "Bradley-Terry-Luce model",
+    name = "Bradley-Terry regression model",
     dpp = ModelEnvFormula,
     fit = function(object, weights = NULL, ...){
 
         ## extract response (there are no regressors)
         y <- object@get("response")[[1]]
 	
-        ## call btl.fit()
-        z <- btl.fit(y = y, weights = weights, type = type, ref = ref, ties = ties)
-        class(z) <- c("btModel", "btl")
+        ## call btreg.fit()
+        z <- btreg.fit(y = y, weights = weights, type = type, ref = ref,
+	  undecided = undecided, position = position)
+        class(z) <- c("btReg", "btreg")
 	z$ModelEnv <- object
 	z$addargs <- list(...)	
         z
@@ -84,13 +86,14 @@ btModel <- function(type = "loglin", ref = NULL, ties = NULL) {
   )
 }
 
-reweight.btModel <- function(object, weights, ...) {
-     fit <- btModel(type = object$type, ref = object$ref, ties = object$ties)@fit
+reweight.btReg <- function(object, weights, ...) {
+     fit <- btReg(type = object$type, ref = object$ref,
+       undecided = object$undecided, position = object$position)@fit
      do.call("fit", c(list(object = object$ModelEnv, weights = weights), object$addargs))
 }
 
-print.btModel <- function(x, digits = max(3, getOption("digits") - 3), ...) {
-  cat("btModel coefficients:\n")
+print.btReg <- function(x, digits = max(3, getOption("digits") - 3), ...) {
+  cat("BT regression coefficients:\n")
   print(coef(x), digits = digits)
   invisible(x)
 }
