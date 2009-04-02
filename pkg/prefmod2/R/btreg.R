@@ -1,25 +1,57 @@
 ## simple formula interface
-btl <- function(formula, data, subset, na.action, weights, offset,
-  type = c("loglin", "logit", "probit"), ref = NULL, ties = NULL,
+btreg <- function(formula, data, subset, na.action, weights, offset,
+  type = c("loglin", "logit"), ref = NULL,
+  undecided = NULL, position = NULL,
   model = FALSE, y = TRUE, x = FALSE, ...)
 {
   ## remember original call
   cl <- match.call()
 
   ## formula parsing
-  m <- match.call(expand.dots = FALSE)
-  m <- m[c(1, match(c("formula", "data", "subset", "weights", "na.action"), names(m), 0))]
-  m[[1]] <- as.name("model.frame")
-  mf <- eval.parent(m)
+  cl <- match.call()
+  if(missing(data)) data <- environment(formula)
+  mf <- match.call(expand.dots = FALSE)
+  m <- match(c("formula", "data", "subset", "na.action", "weights", "offset"), names(mf), 0)
+  mf <- mf[c(1, m)]
+  mf$drop.unused.levels <- TRUE
 
-  ## extract data
+  ## extended formula processing: object covariates
+  if(length(formula[[2]]) > 1 && identical(formula[[2]][[1]], as.name("|")))
+  {
+    fobj <- ~ .
+    fobj[[2]] <- formula[[2]][[3]]
+    formula[[2]] <- formula[[2]][[2]]
+    mf$formula <- formula
+  } else {
+    fobj <- NULL
+  }
+
+  ## call model.frame()
+  mf[[1]] <- as.name("model.frame")
+  mf <- eval(mf, parent.frame())
+  
+  ## extract response/weights
   yy <- model.response(mf)  
   ww <- model.weights(mf)
-  xx <- NULL ## FIXME: covariates not yet implemented
+
+  ## subject covariates (compute matrix with intercept but delete it afterwards)
+  trm <- attr(mf, "terms")
+  attr(trm, "intercept") <- 1  
+  xx <- model.matrix(trm, mf)
+  xx <- xx[, - which(colnames(xx) == "(Intercept)"), drop = FALSE]
+
+  ## object covariates (FIXME: intercept handling??)
+  if(!is.null(fobj)) {
+    trmobj <- terms(fobj)
+    attr(trmobj, "intercept") <- 1
+    zz <- model.matrix(trmobj, data = covariates(yy))
+    zz <- zz[, - which(colnames(zz) == "(Intercept)"), drop = FALSE]
+  }
 
   ## call workhorse
-  rval <- btl.fit(x = xx, y = yy, weights = ww,
-    type = type, ref = ref, ties = ties, ...)
+  rval <- btreg.fit(x = xx, y = yy, z = zz, weights = ww,
+    type = type, ref = ref,
+    undecided = undecided, position = position, ...)
 
   ## add usual fitted model properties
   rval$call <- cl
@@ -32,15 +64,21 @@ btl <- function(formula, data, subset, na.action, weights, offset,
 }
 
 ## workhorse function
-btl.fit <- function(x, y, weights = NULL,
-  type = c("loglin", "logit", "probit"), ref = NULL, ties = NULL,
+btreg.fit <- function(x, y, z = NULL, weights = NULL,
+  type = c("loglin", "logit"), ref = NULL,
+  undecided = NULL, position = NULL,
   ...)
 {
   ## main arguments
   if(missing(x)) x <- NULL
-  if(!is.null(x)) stop("regressors not yet implemented")
   if(missing(y)) stop("response missing")
   stopifnot(inherits(y, "paircomp"))  
+  if(!is.null(x)) { ## FIXME: repeat intercept processing?
+    if(isTRUE(all.equal(as.vector(x), rep(1, length(y))))) x <- NULL
+  }
+  if(ncol(xx) < 1) xx <- NULL
+  if(!is.null(x)) stop("subject covariates not yet implemented")
+  if(!is.null(z)) stop("object covariates not yet implemented")
 
   ## basic paircomp properties
   lab <- labels(y)
@@ -64,18 +102,20 @@ btl.fit <- function(x, y, weights = NULL,
   }
 
   ## further arguments
-  type <- match.arg(type, c("loglin", "logit", "probit"))
+  type <- match.arg(type, c("loglin", "logit"))
   if(is.null(ref)) ref <- nobj
   if(is.character(ref)) ref <- match(ref, lab)
-  if(is.null(ties)) ties <- has_ties
-  if(ties & type != "loglin") stop("only log-linear model can handle ties")  
-  if(!has_ties & ties) stop("data have no ties")
-  npar <- nobj - !ties
+  if(is.null(undecided)) undecided <- has_ties
+  if(undecided & type != "loglin") stop("only log-linear model can handle ties")  
+  if(!has_ties & undecided) stop("data have no ties")
+  npar <- nobj - !undecided
+  if(is.null(position)) position <- attr(y, "ordered")
+  if(position) stop("position effects not yet implemented")
   
   ## basic aggregation quantities
   ytab <- summary(y)
   if(has_ties) ytab <- ytab[, c(1, 3, 2)]
-  if(!ties) ytab <- ytab[, 1:2]
+  if(!undecided) ytab <- ytab[, 1:2]
     
   ## set up auxiliary model
   if(type == "loglin") {
@@ -89,7 +129,7 @@ btl.fit <- function(x, y, weights = NULL,
     }
     xaux[,1:nobj] <- xaux[,c((1:nobj)[-ref], ref)]    
     xaux[,nobj] <- rep(c(0, 0, 1), npc)
-    if(!ties) {
+    if(!undecided) {
       xaux <- xaux[,-nobj]
       xaux <- xaux[-((1:npc) * 3),]
     }
@@ -105,26 +145,21 @@ btl.fit <- function(x, y, weights = NULL,
   fm <- glm.fit(xaux, yaux, family = famaux, control = glm.control(...))
   par <- fm$coefficients[1:npar]
   vc <- summary.glm(fm, corr = FALSE)$cov.unscaled[1:npar,1:npar]
-  names(par) <- rownames(vc) <- colnames(vc) <- c(lab[-ref], if(ties) "(undecided)" else NULL)
+  names(par) <- rownames(vc) <- colnames(vc) <- c(lab[-ref], if(undecided) "(undecided)" else NULL)
 
   ## log-probabilities and log-likelihood
   par2logprob <- switch(type,
     "loglin" = function(i) {
       p <- rep(0, nobj)
-      p[-ref] <- if(ties) par[-npar] else par
+      p[-ref] <- if(undecided) par[-npar] else par
       p <- p[ix[i,]]
-      if(ties) p <- c(p, par[npar] + mean(p))
+      if(undecided) p <- c(p, par[npar] + mean(p))
       p - log(sum(exp(p)))
     },
     "logit" = function(i) {
       p <- rep(0, nobj)
       p[-ref] <- par
       plogis(c(-1, 1) * diff(p[ix[i,]]), log.p = TRUE)
-    },
-    "probit" = function(i) {
-      p <- rep(0, nobj)
-      p[-ref] <- par
-      pnorm(c(-1, 1) * diff(p[ix[i,]]), log.p = TRUE)
     }
   )
   logp <- t(sapply(1:npc, par2logprob))
@@ -135,22 +170,18 @@ btl.fit <- function(x, y, weights = NULL,
   ymat <- as.matrix(y)
 
   ## estimating functions
-  if(type == "probit") {
-    ## not yet implemented
-    ef <- NULL
-  } else {
-    if(!ties) logp <- cbind(logp, -Inf) ## ties impossible
-    gradp <- matrix(0, nrow = npc * 3, ncol = nobj)
-    cf <- -matrix(c(1, 0, 0, 0, 1, 0, 0.5, 0.5, 1), ncol = 3)
-    ct <- matrix(c(1, 0, 0.5, 0, 1, 0.5, 0, 0, 1), ncol = 3)
-    for(i in 1:npc) gradp[i*3 - (2:0), c(ix[i,], nobj)] <- t(t(ct) + as.vector(cf %*% exp(logp[i,])))
-    ef <- t(sapply(1:length(y), function(i) {
-      wi <- (0:(npc - 1)) * 3 + c(2, 3, 1)[ymat[i,] + 2]
-      colSums(gradp[wi,], na.rm = TRUE)
-    }))
-    if(!ties) ef <- ef[,-nobj]
-    dimnames(ef) <- list(names(y), names(par))
-  }
+  if(!undecided) logp <- cbind(logp, -Inf) ## ties impossible
+  gradp <- matrix(0, nrow = npc * 3, ncol = nobj)
+  cf <- -matrix(c(1, 0, 0, 0, 1, 0, 0.5, 0.5, 1), ncol = 3)
+  ct <- matrix(c(1, 0, 0.5, 0, 1, 0.5, 0, 0, 1), ncol = 3)
+  for(i in 1:npc) gradp[i*3 - (2:0), c(ix[i,], nobj)] <- t(t(ct) + as.vector(cf %*% exp(logp[i,])))
+  ef <- t(sapply(1:length(y), function(i) {
+    wi <- (0:(npc - 1)) * 3 + c(2, 3, 1)[ymat[i,] + 2]
+    colSums(gradp[wi,], na.rm = TRUE)
+  }))
+  if(!undecided) ef <- ef[,-nobj]
+  dimnames(ef) <- list(names(y), names(par))
+
   if(!is.null(weights)) ef <- ef * weights  
   
   ## collect, class, and return
@@ -164,33 +195,29 @@ btl.fit <- function(x, y, weights = NULL,
     n = nsubj,
     type = type,
     ref = lab[ref],
-    ties = ties,
+    undecided = undecided,
     labels = lab
   )     
-  class(rval) <- "btl"
+  class(rval) <- "btreg"
   return(rval)
 }
 
 ## standard methods
-vcov.btl <- function(object, ...) object$vcov
+vcov.btreg <- function(object, ...) object$vcov
 
-logLik.btl <- function(object, ...) structure(object$loglik, df = object$df, class = "logLik")
+logLik.btreg <- function(object, ...) structure(object$loglik, df = object$df, class = "logLik")
 
-deviance.btl <- function(object, ...) -2 * object$loglik
+deviance.btreg <- function(object, ...) -2 * object$loglik
 
-estfun.btl <- function(x, ...) {
-  ef <- x$estfun
-  if(is.null(ef)) stop(sprintf("estimating functions not yet implemented for %s BTL models"), x$type)
-  return(ef)
-}
+estfun.btreg <- function(x, ...) ef$estfun
 
-bread.btl <- function(x, ...) x$vcov * x$n
+bread.btreg <- function(x, ...) x$vcov * x$n
 
 ## more elaborate methods
 ## FIXME: first draft only!
-print.btl <- function(x, digits = max(3, getOption("digits") - 3), ...) {
+print.btreg <- function(x, digits = max(3, getOption("digits") - 3), ...) {
   if(is.null(x$call)) {
-    cat("\nBradley-Terry-Luce model\n\n")  
+    cat("\nBradley-Terry regression model\n\n")  
   } else {
     cat("\nCall:\n")
     cat(paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
@@ -203,7 +230,7 @@ print.btl <- function(x, digits = max(3, getOption("digits") - 3), ...) {
   invisible(x)
 }
 
-summary.btl <- function(object, vcov. = NULL, ...)
+summary.btreg <- function(object, vcov. = NULL, ...)
 {
   ## coefficients
   cf <- coef(object)
@@ -221,15 +248,15 @@ summary.btl <- function(object, vcov. = NULL, ...)
   colnames(cf) <- c("Estimate", "Std. Error", "z value", "Pr(>|z|)")
 
   object$coefficients <- cf      
-  class(object) <- "summary.btl"
+  class(object) <- "summary.btreg"
   return(object)
 }
 
-print.summary.btl <- function(x, digits = max(3, getOption("digits") - 3), 
+print.summary.btreg <- function(x, digits = max(3, getOption("digits") - 3), 
     signif.stars = getOption("show.signif.stars"), ...)
 {
   if(is.null(x$call)) {
-    cat("\nBradley-Terry-Luce model\n\n")  
+    cat("\nBradley-Terry regression model\n\n")  
   } else {
     cat("\nCall:\n")
     cat(paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
@@ -244,7 +271,7 @@ print.summary.btl <- function(x, digits = max(3, getOption("digits") - 3),
 }
 
 
-coef.btl <- function(object, all = TRUE, ref = !all, ...) {
+coef.btreg <- function(object, all = TRUE, ref = !all, ...) {
   lab <- object$labels
   nobj <- length(lab)
   acf <- object$coefficients
@@ -259,14 +286,13 @@ coef.btl <- function(object, all = TRUE, ref = !all, ...) {
 
 worth <- function(object, ...) UseMethod("worth")
 
-worth.btl <- function(object, ...) {
-  if(object$type == "probit") stop("Worth parameters for probit model not (yet) available.")
+worth.btreg <- function(object, ...) {
   lab <- object$labels
   cf <- coef(object, all = FALSE, ref = TRUE)
   exp(cf)/sum(exp(cf))
 }
 
-plot.btl <- function(x, 
+plot.btreg <- function(x, 
   worth = TRUE, index = TRUE, names = TRUE, ref = TRUE, abbreviate = FALSE,
   type = NULL, lty = NULL, xlab = "Objects", ylab = NULL, ...)
 {
