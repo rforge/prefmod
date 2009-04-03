@@ -1,12 +1,11 @@
 Package: prefmod2
 Title: Paired Comparison Models for Preferences
 Version: 0.1-0
-Date: 2009-01-30
+Date: 2009-04-03
 Author: Regina Dittrich, Reinhold Hatzinger, Carolin Strobl, Florian Wickelmaier, Achim Zeileis
-Maintainer: Reinhold Hatzinger <Reinhold.Hatzinger@wu-wien.ac.at>
+Maintainer: Reinhold Hatzinger <Reinhold.Hatzinger@wu.ac.at>
 Depends: R (>= 2.0.0), stats
 Description: Unstable development follow-up package to "prefmod"
   for modelling preferences.
 License: GPL-2
-Copyright: The R code in R/paircomp.R and R/btl.R is
-  Copyright (C) Achim Zeileis
+Copyright: The R code is Copyright (C) Achim Zeileis

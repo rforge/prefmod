@@ -46,6 +46,8 @@ btreg <- function(formula, data, subset, na.action, weights, offset,
     attr(trmobj, "intercept") <- 1
     zz <- model.matrix(trmobj, data = covariates(yy))
     zz <- zz[, - which(colnames(zz) == "(Intercept)"), drop = FALSE]
+  } else {
+    zz <- NULL
   }
 
   ## call workhorse
@@ -58,6 +60,7 @@ btreg <- function(formula, data, subset, na.action, weights, offset,
   rval$terms <- terms(formula, data = data)
   rval$y <- if(y) yy else NULL
   rval$x <- if(x) xx else NULL
+  rval$z <- if(x) zz else NULL
   rval$model <- if(model) mf else NULL
 
   return(rval)
