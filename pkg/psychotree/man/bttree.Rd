@@ -5,11 +5,12 @@
 \alias{plot.bttree}
 \alias{print.bttree}
 \alias{summary.bttree}
+\alias{sctest.bttree}
 
 \alias{deviance.bttree}
 \alias{logLik.bttree}
-
 \alias{coef.bttree}
+\alias{worth.bttree}
 \alias{weights.bttree}
 
 

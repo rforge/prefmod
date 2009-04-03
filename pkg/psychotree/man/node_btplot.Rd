@@ -45,4 +45,4 @@ node_btplot(mobobj, id = TRUE,
 
 \seealso{\code{\link{bttree}}}
 
-\keyword{tree}
+\keyword{hplot}
