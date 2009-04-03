@@ -39,6 +39,7 @@ btreg.fit(x, y, z = NULL, weights = NULL, type = c("loglin", "logit"), ref = NUL
     \code{x1}, \code{x2}, \code{x3} are subject-covariates (taken from \code{data})
     and \code{z1} and \code{z2} are object-covariates (taken from \code{covariates(y)}).}
   \item{data}{an optional data frame containing the variables in the model.}
+  \item{subset}{an optional subset specification.}
   \item{na.action}{A function which indicates what should happen when the data
     contain \code{NA}s, defaulting to \code{\link[stats]{na.action}}.}
   \item{weights}{an optional vector of weights, interpreted as case weights (integer only).}
@@ -50,11 +51,14 @@ btreg.fit(x, y, z = NULL, weights = NULL, type = c("loglin", "logit"), ref = NUL
     category, i.e., constrained to zero?}
   \item{undecided}{logical. Should an undecided parameter be estimated?}
   \item{position}{logical. Should a position effect be estimated?}
-  \item{model, y, x}{logical. Should the corresponding components be included in the
+  \item{model}{logical. Should the model frame be included in the
     fitted model object?}
-  \item{x}{matrix. The regressor matrix pertaining to the subject covariates.}
-  \item{y}{paircomp object with the response.}
-  \item{z}{matrix. The regressor matrix pertaining to the object covariates.}
+  \item{x}{matrix. The regressor matrix pertaining to the subject covariates.
+    This can be returned in \code{btreg} if \code{x = TRUE}.}
+  \item{y}{paircomp object with the response.
+    This can be returned in \code{btreg} if \code{y = TRUE}.}
+  \item{z}{matrix. The regressor matrix pertaining to the object covariates.
+    This can be returned in \code{btreg} if \code{x = TRUE}.}
   \item{\dots}{further arguments passed to functions.}
 }
 

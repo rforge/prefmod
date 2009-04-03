@@ -17,7 +17,7 @@
   \item{\dots}{arguments passed to methods.}
 }
 
-\seealso{\code{\link{bttree}}}
+\seealso{\code{\link{btreg}}}
 
 \examples{
 data("CEMSChoice", package = "prefmod2")

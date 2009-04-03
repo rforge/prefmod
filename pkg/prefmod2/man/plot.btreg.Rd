@@ -25,7 +25,7 @@
   \item{type, lty, xlab, ylab, \dots}{graphical parameters.}
 }
 
-\seealso{\code{\link{bttree}}}
+\seealso{\code{\link{btreg}}}
 
 \examples{
 data("CEMSChoice", package = "prefmod2")
