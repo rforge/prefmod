@@ -319,12 +319,16 @@ labels.paircomp <- function(object, ...) attr(object, "labels")
   object
 }
 
-levels.paircomp <- function(x, ...) attr(x, "labels")
-
-"levels<-.paircomp" <- function(x, value) {
-  labels(x) <- value
-  x
-}
+## The idea was to have levels() synonymous with labels(),
+## but there are situations where R then concludes that this
+## is in fact a factor, argh...
+##
+## levels.paircomp <- function(x, ...) attr(x, "labels")
+## 
+## "levels<-.paircomp" <- function(x, value) {
+##   labels(x) <- value
+##   x
+## }
 
 
 

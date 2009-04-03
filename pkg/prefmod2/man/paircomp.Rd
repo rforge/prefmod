@@ -18,8 +18,6 @@
 \alias{covariates<-.paircomp}
 \alias{labels.paircomp}
 \alias{labels<-.paircomp}
-\alias{levels.paircomp}
-\alias{levels<-.paircomp}
 \alias{names.paircomp}
 \alias{names<-.paircomp}
 \alias{mscale.paircomp}
