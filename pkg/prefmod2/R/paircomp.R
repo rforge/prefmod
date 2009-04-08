@@ -262,11 +262,17 @@ mscale.paircomp <- function(object, ...) attr(object, "mscale")
   ms <- attr(object, "mscale")
   val <- as.integer(sort(value))
   if(!isTRUE(all.equal(val, value))) warning("mscale sorted to be in increasing order")
-  stopifnot(all(ms %in% val) | length(ms) == length(value))
+  stopifnot(all(val %in% ms) | all(ms %in% val) | length(ms) == length(value))
   if(max(abs(val)) <= 0) stop("mscale needs to have non-zero elements")
   if(abs(head(val, 1)) != tail(val, 1)) stop("mscale must by symmetric")
-  object[] <- val[as.vector(object) - min(ms) + 1]
-  attr(object, "mscale") <- val
+
+  if(length(ms) == length(value)) {
+    object[] <- val[as.vector(object) - min(ms) + 1]
+  } else if(all(val %in% ms)) {
+    object[!(as.vector(object) %in% val)] <- NA
+  }
+
+  attr(object, "mscale") <- unique(val)
   return(object)
 }
 
