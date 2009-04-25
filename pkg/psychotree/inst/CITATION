@@ -1,0 +1,20 @@
+citHeader("To cite psychotree in publications use")
+
+citEntry(entry="TechReport",
+         title = "Accounting for Individual Differences in Bradley-Terry Models by Means of Recursive Partitioning",
+         author = personList(as.person("Carolin Strobl"), 
+	                     as.person("Florian Wickelmaier"),
+                             as.person("Achim Zeileis")),
+         institution  = "Department of Statistics, Ludwig-Maximilians-Universit\\\"at M\\\"unchen",
+         year         = "2009",
+	 type         = "Technical Report",
+	 number       = "54",
+	 month        = "April",
+	 url          = "http://epub.ub.uni-muenchen.de/10588/",
+         
+         textVersion = 
+         paste("Carolin Strobl, Florian Wickelmaier, Achim Zeileis (2009).", 
+               "Accounting for Individual Differences in Bradley-Terry Models by Means of Recursive Partitioning.",
+	       "Technical Report 54.",
+	       "Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen.")
+)

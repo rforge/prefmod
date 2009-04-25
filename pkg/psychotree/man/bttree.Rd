@@ -13,6 +13,7 @@
 \alias{worth.bttree}
 \alias{weights.bttree}
 
+\encoding{latin1}
 
 \title{Bradley-Terry Tree Models}
 
@@ -63,8 +64,9 @@ bttree(formula, data, na.action = na.pass,
 
 \references{ 
   Carolin Strobl, Florian Wickelmaier, Achim Zeileis (2009). 
-  Accounting for Individual Differences in Bradley-Terry Models via Recursive Partitioning.
-  Research Report, FIXME.
+  Accounting for Individual Differences in Bradley-Terry Models by Means of Recursive Partitioning.
+  Technical Report 54, Department of Statistics, Ludwig-Maximilians-Universität München.
+  \url{http://epub.ub.uni-muenchen.de/10588/}
 }
 
 \seealso{\code{\link[party]{mob}}, \code{\link[prefmod2]{btreg.fit}}, \code{\link{btReg}}}
