@@ -146,8 +146,8 @@ data(cemspc)
 des<-llbt.design(cemspc,nitems=6,cov.sel="ENG")
 
 eng<-factor(des$ENG)
-res<-glm(y~o1+o2+o3+o4+o5+o6+eng:(o1+o2+o3+o4+o5+o6)+mu*eng,
-      family=poisson, data=des)
+res<-gnm(y~o1+o2+o3+o4+o5+o6+eng:(o1+o2+o3+o4+o5+o6)+g1,
+      eliminate=mu:eng, family=poisson, data=des)
 summary(res)
 
 ## calculating and plotting worth parameters

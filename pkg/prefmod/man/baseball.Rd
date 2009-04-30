@@ -13,8 +13,11 @@
 The results of the seven teams Milwaukee, Detroit, Toronto, New York, Boston, Cleveland and Baltimore, that play 13 games each. There is no possibility of ending in a draw.
 }
 \references{
-   \item Alan Agresti, Categorical Data Analysis (Second Edition), 2002 pages 437 and 438
-   \item R. Dittrich, R. Hatzinger, and W. Katzenbeisser, Fitting paired comparison models in GLIM. GLIMnewsletter 1997
+   Alan Agresti, \emph{Categorical Data Analysis (Second Edition)}, 2002 pages 437 and 438
+
+   R. Dittrich, R. Hatzinger, and W. Katzenbeisser, Fitting paired comparison models in GLIM.
+   \emph{GLIM newsletter} 1997
+
    }
 \examples{
 data(baseball)

@@ -1,17 +1,22 @@
 `writeGLIMcmds` <-
-function(dm,blnUndec)
+function(dm,blnUndec,
+   blnIntcovs,outFile,ncov,nintpars,intFile,nintcovs.out,glimCmdFile,
+   covnames,covlevels,objnames,undecnames)
+
+
+
 ################################################################
 # GLIM commands output
 ################################################################
 {
 
-    env<-get("ENV",environment(patt.design))
+    #env<-get("ENV",environment(patt.design))
     cat("exporting files for GLIM...(no output in R console)\n")
     flush.console()
 
-    env<-get("ENV",environment(patt.design))
-    for (i in 1:length(ls(env)))
-      do.call("assign",list(ls(env)[i],get(ls(env)[i],env)))
+    #env<-get("ENV",environment(patt.design))
+    #for (i in 1:length(ls(env)))
+    #  do.call("assign",list(ls(env)[i],get(ls(env)[i],env)))
 
     ## design file
 

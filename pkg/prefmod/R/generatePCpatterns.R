@@ -1,5 +1,5 @@
 `generatePCpatterns` <-
-function()
+function(env2)
 #######################################################################
 # all possible response patterns and/or difference patterns
 #######################################################################
@@ -21,14 +21,14 @@ function()
    if(ncatPC%%2>0){      # odd number of categories - possibly undecided responses
       tab<-tabulate(diffsdat,ncatPC)
       if(tab[mid]==0){           # no undecided responses
-        assign("blnUndec",FALSE,envir=sys.frame(-1))
+        env2$blnUndec<-FALSE
         assign("ncatPC",2,envir=sys.frame(-1))
         diffsdat<-ifelse(diffsdat<mid,-1,1)
         diffs<-all_patterns(0,1,ncomp)       # here the diffs are pc responses
         diffs<-ifelse(diffs==0,1,-1)
 
       } else {                   # undecided responses
-        assign("blnUndec",TRUE,envir=sys.frame(-1))
+        env2$blnUndec<-TRUE
         assign("ncatPC",3,envir=sys.frame(-1))
         diffsdat<-ifelse(diffsdat<mid,0,ifelse(diffsdat>mid,2,1))
         diffs<-all_patterns(0,2,ncomp)       # here the diffs are pc responses
@@ -37,7 +37,7 @@ function()
       }
 
     } else {             # even number of categories - no undecided responses
-        assign("blnUndec",FALSE,envir=sys.frame(-1))
+        env2$blnUndec<-FALSE
         assign("ncatPC",2,envir=sys.frame(-1))
         diffsdat<-ifelse(diffsdat<mid,1,-1)
         diffs<-all_patterns(0,1,ncomp)       # here the diffs are pc responses
@@ -47,13 +47,11 @@ function()
 
 
    # convert diffs (patterns) to string
-   dpattStr <- convert2strings(diffs)
-   assign("datStr",convert2strings(diffsdat),envir=sys.frame(-1))
+       dpattStr <- convert2strings(diffs)
+       env2$datStr<-convert2strings(diffsdat)   # character representation
+       env2$dpattStr <- dpattStr
+       env2$npatt<-length(env2$dpattStr)        # number of unique possible patterns
+       env2$diffs<-diffs                        # numeric representation
 
-
-   # add to searchpath
-   assign("dpattStr",dpattStr,envir=sys.frame(-1))       # character representation
-   assign("npatt",length(dpattStr),envir=sys.frame(-1))  # number of unique possible patterns
-   assign("diffs",diffs,envir=sys.frame(-1))             # numeric representation
 
 }

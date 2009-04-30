@@ -1,5 +1,5 @@
 `designkernel` <-
-function(diffs,blnUndec,blnIntcovs)
+function(diffs,blnUndec,blnIntcovs,env2)
 # designmatrix-kernel for objects, undecided/categories, interactions
 #################################################################
 {
@@ -35,7 +35,7 @@ function(diffs,blnUndec,blnIntcovs)
             depList<-dependencies(nobj,diffs)
             oneintdesign<-depList$d
             colnames(oneintdesign)<-depList$label.intpars
-
+            env2$nintpars<-length(depList$label.intpars)     # number of dependence parameters
             onedesign <- cbind(onedesign,oneintdesign)
             # interaction names already defined in genintdesign()
        }

@@ -6,6 +6,7 @@ ENV<-new.env()  # environment local to pcpatt0 - no objects in .GlobalEnv
 function(obj, nitems=NULL, objnames="", resptype="paircomp", blnRevert=FALSE, cov.sel="",
        blnIntcovs=FALSE, blnGLIMcmds=FALSE,glimCmdFile="",outFile="", intFile="")
 {
+  env2<-new.env()
 
   #' datafile     = "",       # dataframe used
   #' nitems       = 4,
@@ -74,6 +75,7 @@ function(obj, nitems=NULL, objnames="", resptype="paircomp", blnRevert=FALSE, co
         do.call("assign",list(names(ctrl)[i],ctrl[[i]],ENV))
 
      init(dfr)    # initialisation function
+     dat<-ENV$dat
 
      ## all possible response patterns and/or difference patterns
      ##
@@ -83,18 +85,23 @@ function(obj, nitems=NULL, objnames="", resptype="paircomp", blnRevert=FALSE, co
      resptype <- get("resptype",ENV)
 
      if (resptype == "rating") {
-        generateLpatterns()
+        generateLpatterns(env2)
      } else if(resptype == "ranking") {
-        generateRpatterns()
+        generateRpatterns(env2)
      } else if(resptype == "paircomp") {
-        generatePCpatterns()
+        generatePCpatterns(env2)
      }
+     datStr   <- env2$datStr
+     dpattStr <- env2$dpattStr
+     npatt    <- env2$npatt
+     diffs    <- env2$diffs
+     blnUndec <- env2$blnUndec
 
      ## designmatrix-kernel for objects, undecided/categories, interactions
      ##
      cat("setting up the design matrix...\n")
      blnIntcovs <-get("blnIntcovs",ENV)
-     onedesign<-designkernel(diffs,blnUndec,blnIntcovs)
+     onedesign<-designkernel(diffs,blnUndec,blnIntcovs,env2)
 
      # tidy up
      rm(diffs)
@@ -194,7 +201,11 @@ function(obj, nitems=NULL, objnames="", resptype="paircomp", blnRevert=FALSE, co
      ## generate files for GLIM
      ##
      if (get("blnGLIMcmds",ENV)){
-         writeGLIMcmds(dm,blnUndec)
+          nintcovs.out<-40 # max number of values/line in interaction output file
+          writeGLIMcmds(dm,blnUndec,
+              blnIntcovs,outFile,ncov,env2$nintpars,intFile,nintcovs.out,glimCmdFile,
+              covnames,covlevels,objnames,ENV$undecnames)
+         #writeGLIMcmds(dm,blnUndec,ENV)
      } else {
          return(dm) # R output only if blnGLIMcmds==FALSE
      }

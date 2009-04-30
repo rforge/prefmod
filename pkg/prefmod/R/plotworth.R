@@ -1,13 +1,9 @@
-plotworth<-function(worthmat, main="Preferences", ylab="Estimate", psymb=NULL, ylim = range(worthmat))
+plotworth<-function(worthmat, main="Preferences", ylab="Estimate",
+              psymb=NULL, pcol=NULL, ylim = range(worthmat))
 {
 #
 # plot ranking
 #
-#
-#  farbe<-rainbow(26, s = 1, v = 1, start = 0, end = 1, gamma = 1)
-#  farbe <- brewer.pal(nclass = 26,  palette = "Spectral")
-#  plot(0:25,rep(1,26),pch=0:25,col=farbe,cex=1.5)
-#  text(0:25,rep(0.95,26),0:25)
 #
 
 
@@ -27,10 +23,30 @@ nobj<-dim(coeff)[1]
 ngroups<-dim(coeff)[2]
 if (ngroups == 1) colnames(coeff) <- ""
 
-farbe<-"black"
+# plotsymbols and color
+
 if (is.null(psymb)) psymb<-c(15:18,21:25)[1:nobj]
 
+if (is.null(pcol))
+     farbe <- rainbow(nobj)
+else if (length(pcol)>1)
+     farbe <- pcol
+else if(pcol=="black")
+     farbe <- "black"
+else if(pcol %in% c("heat","topo","terrain","cm","gray"))
+     farbe <- eval(call(paste(pcol,".colors",sep="",collapse=""), nobj))
+else farbe <- rainbow(nobj)
 
+#     gray(0:(nobj-1) /  nobj)
+
+
+#  farbe<-rainbow(26, s = 1, v = 1, start = 0, end = 1, gamma = 1)
+#  farbe <- brewer.pal(nclass = 26,  palette = "Spectral")
+#  plot(0:25,rep(1,26),pch=0:25,col=farbe,cex=1.5)
+#  text(0:25,rep(0.95,26),0:25)
+#
+
+## plot
 par(omi = c(0.2,0.2,0.5,0.2), mar=c(3,4,0.1,0) ) # makes plot fill the whole region
 
 plot(c(0.5,ngroups+0.5),c(min(coeff),max(coeff)),type="n",axes=FALSE, xlab="",ylab=ylab,ylim=ylim)

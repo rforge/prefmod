@@ -196,7 +196,7 @@ patt.design(obj, nitems = NULL, objnames = "", resptype = "paircomp",
 }
 \references{Dittrich, R., Francis, B.J., Hatzinger R., Katzenbeisser, W. (2007),
 A Paired Comparison Approach for the Analysis of Sets of Likert Scale Responses.
-Statistical Modelling 2007; 7; 3}
+\emph{Statistical Modelling}, Vol. 7, No. 1, 3-28. }
 \author{Reinhold Hatzinger}
 \seealso{\code{\link{llbt.design}},
 \code{\link{pattPC.fit}}, \code{\link{pattL.fit}}, \code{\link{pattR.fit}}

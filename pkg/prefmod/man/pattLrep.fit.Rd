@@ -50,7 +50,7 @@ pattLrep.fit(obj, nitems, tpoints = 1, formel = ~1, elim = ~1,
         \code{formel}.  However, \code{elim} specifies the basic contingency
         table to be set up but does not specify any covariates to be fitted.
         This is done using \code{formel}.
-        If, e.g., \code{elim=SEX} but \code{formel=~1},
+        If, e.g., \code{elim=~SEX} but \code{formel=~1},
         then the table is set up as if \code{SEX} would be fitted but only one global
         preference scale is computed.  This feature
         allows for the succesive fitting of nested models to enable the use of
@@ -84,10 +84,15 @@ pattLrep.fit(obj, nitems, tpoints = 1, formel = ~1, elim = ~1,
        the package's \code{data/} directory.
        }
 \value{
-  On return the function provides a list with elements (use \code{str(return object)}
-  for a detailed display)
+  \code{pattLrep.fit} returns an object of class \code{pattMod}. The function
+       \code{\link{print}} (i.e., \code{\link{print.pattMod}}) can be used to
+       print the results and the function \code{\link{patt.worth}} to
+       produce a matrix of worth parameters. An object of class \code{pattMod}
+       is a list containing  the following components:
 
-     \item{}{main results of the fit like estimates, log likelihood, the call}
+     \item{}{main results of the fit like estimates (\code{coefficients}),
+     log likelihood of the model (\code{ll}), log likelihood of the saturated model
+     (\code{fl}), and the call}
      \item{result}{a list of results from the fitting routine (see Value of
           \code{\link{nlm}}.
           }

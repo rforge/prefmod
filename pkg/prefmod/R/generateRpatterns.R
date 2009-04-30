@@ -1,5 +1,5 @@
 `generateRpatterns` <-
-function()
+function(env2)
 #######################################################################
 # all possible response patterns and/or difference patterns
 #######################################################################
@@ -24,15 +24,11 @@ function()
    diffs<-ifelse(diffs<0,1,-1)   # rankings never undecided
    diffsdat<-ifelse(diffsdat<0,1,-1)
    assign("ncatPC",2,envir=sys.frame(-1))
-   assign("blnUndec",FALSE,envir=sys.frame(-1))
+   env2$blnUndec<-FALSE
 
    # convert diffs (patterns) to string
-   dpattStr <- convert2strings(diffs)
-   assign("datStr",convert2strings(diffsdat),envir=sys.frame(-1))
-
-
-   # add to searchpath
-   assign("dpattStr",dpattStr,envir=sys.frame(-1))       # character representation
-   assign("npatt",length(dpattStr),envir=sys.frame(-1))  # number of unique possible patterns
-   assign("diffs",diffs,envir=sys.frame(-1))             # numeric representation
+   env2$dpattStr <- convert2strings(diffs) # character representation
+   env2$datStr<-convert2strings(diffsdat)
+   env2$npatt<-length(env2$dpattStr)       # number of unique possible patterns
+   env2$diffs<-diffs                       # numeric representation
 }

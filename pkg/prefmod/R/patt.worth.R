@@ -1,6 +1,6 @@
-patt.worth<-function(obj, obj.names=NULL)
+patt.worth<-function(obj, obj.names=NULL, outmat="worth")
 {
-    if(!class(obj)=="pattMod") stop("function only for objects of class pattMod (see help e.g. for pattPC.fit)")
+    if(class(obj)!="pattMod") stop("function only for objects of class pattMod (see help e.g. for pattPC.fit)")
 
     envList<-obj$envList
     ncovpar<-envList$ncovpar
@@ -45,7 +45,7 @@ patt.worth<-function(obj, obj.names=NULL)
     gr<- expand.grid(grid.groups)
     gr2<-gr
     if(all(covlevels==1)){
-         gr.labels<-""
+         gr.labels<-"estimate"
     } else {
          for (i in 1:ncovs)
              gr2[i]<-paste(names(covlevels)[i],gr[[i]],sep="")
@@ -96,8 +96,17 @@ patt.worth<-function(obj, obj.names=NULL)
        rownames(worthmatrix)<-obj.names
     }
 
+    colnames(est) <- colnames(worthmatrix)
+    rownames(est) <- rownames(worthmatrix)
 
-    class(worthmatrix) <- c("pattW")                         #class: pattern worth
-    worthmatrix
+    #class(worthmatrix) <- c("pattW")                         #class: pattern worth
+    #worthmatrix
+
+    switch(outmat,
+       "lambda" = return(est),
+       "worth" = return(worthmatrix),
+       # "est" = return(lambda.mat),
+       stop("     outmat must be either 'worth' or 'lambda'\n")
+    )
 
 }

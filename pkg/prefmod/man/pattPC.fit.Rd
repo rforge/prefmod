@@ -66,11 +66,11 @@ pattPC.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "paircomp",
         effects, respectively. The operator \code{:} is not allowed. See also
         \code{\link{formula}}.
 
-        The spcification for \code{elim} follows the same rules as for
+        The specification for \code{elim} follows the same rules as for
         \code{formel}.  However, \code{elim} specifies the basic contingency
         table to be set up but does not specify any covariates to be fitted.
         This is done using \code{formel}.
-        If, e.g., \code{elim=SEX} but \code{formel=~1},
+        If, e.g., \code{elim=~SEX} but \code{formel=~1},
         then the table is set up as if \code{SEX} would be fitted but only one global
         preference scale is computed.  This feature
         allows for the succesive fitting of nested models to enable the use of
@@ -99,10 +99,21 @@ pattPC.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "paircomp",
        the package's \code{data/} directory.
        }
 \value{
-  On return the function provides a list with elements
+  \code{pattPC.fit} returns an object of class \code{pattMod}. The function
+       \code{\link{print}} (i.e., \code{\link{print.pattMod}}) can be used to
+       print the results and the function \code{\link{patt.worth}} to
+       produce a matrix of the estimated worth parameters. An object of class "\code{pattMod}"
+       is a list containing  the following components:
+
+     \item{}{main results of the fit like estimates (\code{coefficients}),
+     log likelihood of the model (\code{ll}), log likelihood of the saturated model
+     (\code{fl}), and the call}
      \item{result}{a list of results from the fitting routine (see Value of
-          \code{\link{nlm}}.
+          \code{\link{nlm}}).
           }
+     \item{envList}{a list with further fit details like subject covariates
+          design structure \code{covdesmat}, paired comparison reponse pattern matrix
+          \code{Y}, etc.}
      \item{partsList}{a list of the basic data structures for each subgroup
           defined by crossing all covariate levels and different missing value
           patterns. Each element of \code{partsList} is again a list containing

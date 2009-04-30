@@ -1,6 +1,5 @@
 \name{print.pattMod}
 \alias{print.pattMod}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Print methods for pattern models}
 \description{Print method for objects of class \code{pattMod}.}
 \usage{
@@ -12,8 +11,8 @@
 }
 \details{
   This print method generates output for fitted pattern models, i.e. for models.
-  of class \code{pattMod}. The functions \code{\link{pattPC.fit}},
-  \code{\link{pattR.fit}}, and \code{\link{pattPC.fit}} produce such objects.
+  of class \code{pattMod}. The functions \code{\link{pattPC.fit}}, \code{\link{pattR.fit}},
+  \code{\link{pattL.fit}}, and  \code{\link{pattLrep.fit}} produce such objects.
 }
 \author{Reinhold Hatzinger}
 \examples{
