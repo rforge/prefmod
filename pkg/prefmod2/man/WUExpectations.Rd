@@ -34,8 +34,8 @@ A data frame containing 127 observations on 7 variables.
 Pongratz and Weiler (2007) carried out the survey about
 preferences on skills of assistants and professors at WU Wirtschaftsuniversität Wien
 (Vienna University of Economics and Business). During a presurvey at Universität Innsbruck
-the eight main important personal skills of being a professor and of being an
-assistant had been figured out.
+the eight main important personal skills for being a professor and for being an
+assistant, respectively, had been determined.
 
 Professors and assistants at the WU were presented with all 28 pairs of
 professor skills and with all 28 pairs of assistant skills. Each pair (AB) had
