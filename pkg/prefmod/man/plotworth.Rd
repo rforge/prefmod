@@ -18,7 +18,7 @@ plotworth(worthmat, main = "Preferences", ylab = "Estimate",
   \item{main}{main title of the plot.}
   \item{ylab}{y-axis label}
   \item{psymb}{plotsymbols for objects, see Details below}
-  \item{pcol}{colors for objects, see Details below}
+  \item{pcol}{colours for objects, see Details below}
   \item{ylim}{limits for y-axis}
 }
 \details{
@@ -29,12 +29,13 @@ plotworth(worthmat, main = "Preferences", ylab = "Estimate",
   from the number of rows in \code{worthmat}. A display of some plotsymbols may
   be obtained from the correponding example below.
 
-  If \code{pcol = NULL}, the colors for objects are defined from the rainbow palette.
-  Other specifications include "heat", "topo", "terrain", "cm", and "gray" (see \code{\link{rainbow}}).
-  The number of different colors is automatically determined via the number of objects.
-  Alternatively, \code{pcol} can be specified as a character vector containing user defined RGB color
+  If \code{pcol = NULL}, the colours for objects are defined from the rainbow_hcl palette unsing
+  the colorspace package.
+  Other specifications include "heat", "terrain" (see \code{\link[colorspace]{rainbow_hcl}}), and "gray" (see \code{\link{grDevices}}).
+  The number of different colours is automatically determined via the number of objects.
+  Alternatively, \code{pcol} can be specified as a character vector containing user defined RGB colour
   values for all objects (as hexadecimal strings in the form \code{"#rrggbb"}), e.g., for blue \code{"#0000FF"}).
-  These are usually set up using standard color palettes (see \code{rainbow} or, e.g., the
+  These are usually set up using standard colour palettes (see \code{rainbow} or, e.g., the
   \code{RColorBrewer} package (see Examples below).
  }
 \author{Reinhold Hatzinger}

@@ -1,5 +1,5 @@
 # design matrix for subject covs
-covdesign<-function(formel,covs)
+covdesign<-function(formel,covs,ENV)
 {
    # number of factor levels for terms from formula
    vars<-attr(terms(formel),"term.labels")
@@ -11,8 +11,11 @@ covdesign<-function(formel,covs)
    maineffects<-as.data.frame(gfac2(levs)) #
    maineffects<-data.frame(apply(maineffects,2,factor))
    names(maineffects)<-vars
+   ENV$maineffects<-maineffects            # covs design matrix with factors
+
 
    form<-formula(formel)
-   mmat<-model.matrix(form,data=maineffects)  # intercept included
+   form.terms<-terms(form, keep.order=TRUE, simplify = TRUE)
+   mmat<-model.matrix(form.terms,data=maineffects)  # intercept included
    as.matrix(unique(mmat))
 }

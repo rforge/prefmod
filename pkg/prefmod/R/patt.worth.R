@@ -30,6 +30,7 @@ patt.worth<-function(obj, obj.names=NULL, outmat="worth")
 
     ## preference parameters (summed lambdas) for cov groups
     struct <- unique(obj$envList$covdesmat)
+
     if (ncol(struct)==0) struct<-as.matrix(1)
     # summation matrix for objects
     dd<-diag(nobj)
@@ -38,25 +39,14 @@ patt.worth<-function(obj, obj.names=NULL, outmat="worth")
     group.est <- sum.mat %*% as.vector(lmat)
 
     ## labels for cov groups
-    ncovs<-length(covlevels)
-    grid.groups<-vector("list",ncovs)
-    for (i in 1:ncovs)
-      grid.groups[[i]]<-1:covlevels[i]
-    gr<- expand.grid(grid.groups)
-    gr2<-gr
-    if(all(covlevels==1)){
-         gr.labels<-"estimate"
-    } else {
-         for (i in 1:ncovs)
-             gr2[i]<-paste(names(covlevels)[i],gr[[i]],sep="")
-         gr.labels<-apply(as.matrix(gr2),1,function(x) paste(x,collapse=":"))
-    }
+    if(!Tmod){                                           # if not a time model
+         x<-obj$envList$model.covs
+         xx<-mapply(function(x,y)paste(x,y,sep=""), colnames(x),data.frame(x))
+         gr.labels <-apply(xx,1,paste,collapse=":")
+    } else
+         gr.labels <- ""
 
-    ## data frame with lambda estimates and labels
-    #
-    #gr.est.labs<-expand.grid(obj$envList$obj.names,gr.labels)
-    #gr.est.labels<-apply(as.matrix(gr.est.labs),1,function(x) paste(x,collapse=":"))
-    #data.frame(gr.est.labels,group.est))
+
 
 
     mltp<-2

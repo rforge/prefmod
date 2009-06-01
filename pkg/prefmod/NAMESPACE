@@ -1,5 +1,5 @@
 useDynLib(prefmod)
-import("stats", "graphics")
+import("stats", "graphics", "gnm", "colorspace")
 export(patt.design)
 export(pattPC.fit)
 export(pattR.fit)

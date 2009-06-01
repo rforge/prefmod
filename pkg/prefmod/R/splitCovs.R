@@ -1,25 +1,26 @@
 # split data according to subject covariates
 splitCovs<-function(dat,covs,formel,elim,ENV)
 {
-   if(is.null(covs)){
-      formel<-~1                 # remove formulae if no covariates
+   if(is.null(covs)){            # no covariates
+      formel<-~1                 # reset formulas
       elim<-~1
    }
 
-   if(elim=="~1") elim<-formel
+   if(elim=="~1") elim<-formel   # if no eliminate specification use model specification
 
    if(elim=="~1"){               # subject covariates
       covdesmat<-matrix(1,1)
       elimdesmat<-covdesmat
       covs<-as.matrix(rep(1,nrow(dat)),nc=1)
-   } else {
-      if (formel=="~1"){
+   } else {                      # there are terms to eliminate
+      if (formel=="~1"){         #   no covariates in actual model
            covdesmat<-matrix(1,1)
            colnames(covdesmat)<-""
-      } else {
-           covdesmat<-covdesign(formel,covs)
+      } else {                   # there are terms in actual model
+           covdesmat<-covdesign(formel,covs,ENV)
+           ENV$model.covs<-ENV$maineffects
       }
-      elimdesmat<-covdesign(elim,covs)
+      elimdesmat<-covdesign(elim,covs,ENV)
    }
 
    all.term.labels<-attr(terms(elim),"term.labels")
@@ -29,9 +30,12 @@ splitCovs<-function(dat,covs,formel,elim,ENV)
 
    ENV$covlevels<-NULL
 
-   if (length(order)>0){
+   if (length(order)>0){                       ## there are terms to eliminate
+
 
        maineffect.terms<-all.term.labels[order==1]
+       if( any(table(covs[,maineffect.terms]) == 0) )
+            stop("Crossclassification of subject covariates yields zero cell(s).")
        maineffect.terms.frml<-all.frml.term.labels[order.frml==1]
        if(length(maineffect.terms.frml)>0){                                        # only if cov terms in formel
          ENV$covlevels<-apply(as.matrix(covs[,maineffect.terms.frml]),2,max)
@@ -61,15 +65,19 @@ splitCovs<-function(dat,covs,formel,elim,ENV)
        for (i in 1:length(cList))
            cList[[i]]<-c(cList[i],list(cov=elimdesmat[i,model.terms]))
        ENV$covdesmat  <-elimdesmat[,model.terms]
+       if (formel != "~1")
+           colnames(ENV$model.covs)<-maineffect.terms   # order of elim terms for factor matrix to
+                                                        # properly label worth matrix
 
-   } else {
+   } else {                                    ## nothing to eliminate - basic model
 
        cList<-split(dat,as.factor(rep(1,nrow(dat))))
        cList[[1]]<-c(cList[1],list(cov=1))
        ENV$covdesmat<-covdesmat
    }
 
-   ENV$ncovpar<-ncol(covdesmat)
+
+   ENV$ncovpar<-ncol(covdesmat)       # number of covariates
    ENV$formel<-formel
    ENV$elim<-elim
    cList
