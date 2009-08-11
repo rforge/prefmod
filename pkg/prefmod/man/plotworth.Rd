@@ -29,7 +29,7 @@ plotworth(worthmat, main = "Preferences", ylab = "Estimate",
   from the number of rows in \code{worthmat}. A display of some plotsymbols may
   be obtained from the correponding example below.
 
-  If \code{pcol = NULL}, the colours for objects are defined from the rainbow_hcl palette unsing
+  If \code{pcol = NULL}, the colours for objects are defined from the rainbow\_hcl palette unsing
   the colorspace package.
   Other specifications include "heat", "terrain" (see \code{\link[colorspace]{rainbow_hcl}}), and "gray" (see \code{\link{grDevices}}).
   The number of different colours is automatically determined via the number of objects.

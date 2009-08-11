@@ -49,7 +49,10 @@ else farbe <- rainbow_hcl(nobj)
 #
 
 ## plot
-par(omi = c(0.2,0.2,0.5,0.2), mar=c(3,4,0.1,0) ) # makes plot fill the whole region
+# specification of omi prohibits multiple plots if requested via, e.g., mfrow(c(m,n))
+pomi <- c(0.2,0.2,0.5,0.2)
+if (!(all(pomi==par("omi"))))        # if already set don't reset omi
+    par(omi = pomi, mar=c(3,4,0.1,0) ) # makes plot fill the whole region
 
 plot(c(0.5,ngroups+0.5),c(min(coeff),max(coeff)),type="n",axes=FALSE, xlab="",ylab=ylab,ylim=ylim)
 title(main,outer=TRUE)

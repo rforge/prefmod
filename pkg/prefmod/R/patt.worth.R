@@ -41,8 +41,12 @@ patt.worth<-function(obj, obj.names=NULL, outmat="worth")
     ## labels for cov groups
     if(!Tmod){                                           # if not a time model
          x<-obj$envList$model.covs
+         if (is.null(x)) {
+              gr.labels <- "estimate"
+         } else{
          xx<-mapply(function(x,y)paste(x,y,sep=""), colnames(x),data.frame(x))
          gr.labels <-apply(xx,1,paste,collapse=":")
+         }
     } else
          gr.labels <- ""
 

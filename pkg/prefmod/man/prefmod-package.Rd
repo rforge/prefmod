@@ -16,8 +16,8 @@ rankings, and ratings. Some treatment of missing values (MCAR and MNAR).
 \tabular{ll}{
 Package: \tab prefmod\cr
 Type: \tab Package\cr
-Version: \tab 0.8-13\cr
-Date: \tab 2008-12-11\cr
+Version: \tab 0.8-17\cr
+Date: \tab 2008-08-11\cr
 Depends: \tab stats\cr
 License: \tab GPL\cr
 }

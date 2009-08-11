@@ -47,7 +47,8 @@ pattL.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="rating",
              cat("\tsubject covariates: NAs in lines",NAs," - removed from data\n")
              notNAs<-which(complete.cases(covs))
              dat<-dat[notNAs,]
-             covs<-covs[notNAs,]
+             # covs<-covs[notNAs,] ## replaced 20-08-09
+             covs<-covs[notNAs,,drop=FALSE]
         }
    }
 
