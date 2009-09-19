@@ -50,7 +50,7 @@ bttree(formula, data, na.action = na.pass,
   Strobl, Wickelmaier, Zeileis (2009).
   
   Various methods are provided for \code{"bttree"} objects, most of them
-  inherit their behaviour from \code{"mob"} objects (e.g., \code{print}, \code{summary},
+  inherit their behavior from \code{"mob"} objects (e.g., \code{print}, \code{summary},
   etc.). \code{worth} behaves analogously to \code{coef} and extracts the
   worth parameters from the BT models in the nodes of the tree. The \code{plot}
   method employs the \code{\link{node_btplot}} panel-generating function.

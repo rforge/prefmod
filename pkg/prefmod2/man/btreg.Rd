@@ -64,7 +64,7 @@ btreg.fit(x, y, z = NULL, weights = NULL, type = c("loglin", "logit"), ref = NUL
 
 \details{
   \code{btreg} is a convenient formula-based interface for fitting Bradley-Terry
-  models. It essentially handles the formala parsing and argument preprocessing
+  models. It essentially handles the formula parsing and argument preprocessing
   and then calls \code{btreg.fit}, the workhorse fitting function. This suitably
   aggregates the data and then calls \code{\link{glm.fit}} (currently) for parameter
   estimation and postprocesses the results.
