@@ -115,7 +115,7 @@ format.paircomp <- function(x, sep = ", ", brackets = TRUE,
   pc <- pc + mscale_max + 1
   pc <- apply(pc, 1, function(x) paste(
     ifelse(is.na(x), "NA", paste(lab1, mscale_symbol[x], lab2, sep = " ")),
-    collapse = ", "))
+    collapse = sep))
   ## Handle NAs differently? Maybe via "a ? b"?
 
   ## check width
