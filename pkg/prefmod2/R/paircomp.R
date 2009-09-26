@@ -161,7 +161,7 @@ str.paircomp <- function(object, width = getOption("width") - 7, ...)
   invisible(NULL)
 }
 
-summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, ...)
+summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, matrix = FALSE, ...)
 {
   ## data
   dat <- as.matrix(object)
@@ -203,6 +203,14 @@ summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, ...)
   if(decreasing) rval <- rval[,ncol(rval):1]
   if(any(is.na(dat))) rval <- cbind(rval, apply(dat, 2, function(x) sum(is.na(x))))
   dimnames(rval) <- list(rnam, cnam)
+
+  ## return paired-comparison matrix (only for unordered binary paircomp's)
+  if(matrix & length(mscale) == 2 & !attr(object, "ordered")) {
+    longDf <- data.frame(c(lab1, lab2), c(lab2, lab1), as.numeric(rval[,1:2]))
+    names(longDf) <- c(cnam[1:2], "Freq")
+    rval <- unclass(xtabs(Freq ~ ., longDf))
+    attr(rval, "call") <- NULL
+  }
   
   rval
 }
