@@ -107,8 +107,10 @@ format.paircomp <- function(x, sep = ", ", brackets = TRUE,
   lab1 <- lab[ix[,1]]
   lab2 <- lab[ix[,2]]
   if(attr(x, "ordered")) {
-    lab1 <- c(lab1, lab2)
-    lab2 <- c(lab2, lab1)
+    lab1 <- c(lab[ix[,1]], lab[ix[,2]])
+    lab2 <- c(lab[ix[,2]], lab[ix[,1]])
+#   lab1 <- c(lab1, lab2)
+#   lab2 <- c(lab2, lab1)
   }
   
   pc <- as.matrix(x)
@@ -181,8 +183,8 @@ summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, matr
   lab1 <- lab[ix[,1]]
   lab2 <- lab[ix[,2]]
   if(attr(object, "ordered")) {
-    lab1 <- c(lab1, lab2)
-    lab2 <- c(lab2, lab1)
+    lab1 <- c(lab[ix[,1]], lab[ix[,2]])
+    lab2 <- c(lab[ix[,2]], lab[ix[,1]])
   }
   rnam <- paste(format(lab1), ":", format(lab2))
 
@@ -208,7 +210,7 @@ summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, matr
   if(matrix & length(mscale) == 2 & !attr(object, "ordered")) {
     longDf <- data.frame(c(lab1, lab2), c(lab2, lab1), as.numeric(rval[,1:2]))
     names(longDf) <- c(cnam[1:2], "Freq")
-    rval <- unclass(xtabs(Freq ~ ., longDf))
+    rval <- unclass(xtabs(Freq ~ ., longDf))[lab, lab]
     attr(rval, "call") <- NULL
   }
   
@@ -422,8 +424,8 @@ as.matrix.paircomp <- function(x, ...) {
   lab1 <- lab[ix[,1]]
   lab2 <- lab[ix[,2]]
   if(attr(x, "ordered")) {
-    lab1 <- c(lab1, lab2)
-    lab2 <- c(lab2, lab1)
+    lab1 <- c(lab[ix[,1]], lab[ix[,2]])
+    lab2 <- c(lab[ix[,2]], lab[ix[,1]])
   }
   colnames(rval) <- paste(lab1, ":", lab2, sep = "")
   return(rval)  
