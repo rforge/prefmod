@@ -22,7 +22,7 @@ A data frame containing 192 observations on 6 variables.
     is recognized.}
   \item{gender}{Factor coding gender.}
   \item{age}{Integer. Age of the respondents in years.}
-  \item{eduction}{Ordered factor. Level of education: 1 no degree, 2
+  \item{education}{Ordered factor. Level of education: 1 no degree, 2
     Hauptschule (Secondary General School), 3 Realschule (Intermediate
     Secondary School), 4 Gymnasium (High School), 5 Studium (University)}
   \item{crisis}{Factor. Do you feel affected by the economic crisis?}
