@@ -104,13 +104,12 @@ format.paircomp <- function(x, sep = ", ", brackets = TRUE,
   lab <- abbreviate(lab, abbreviate)  
   ## expand
   ix <- which(upper.tri(diag(length(lab))), arr.ind = TRUE)
-  lab1 <- lab[ix[,1]]
-  lab2 <- lab[ix[,2]]
-  if(attr(x, "ordered")) {
+  if(!attr(x, "ordered")) {
+    lab1 <- lab[ix[,1]]
+    lab2 <- lab[ix[,2]]
+  } else {
     lab1 <- c(lab[ix[,1]], lab[ix[,2]])
     lab2 <- c(lab[ix[,2]], lab[ix[,1]])
-#   lab1 <- c(lab1, lab2)
-#   lab2 <- c(lab2, lab1)
   }
   
   pc <- as.matrix(x)
@@ -180,9 +179,10 @@ summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, matr
 
   ## rownames
   ix <- which(upper.tri(diag(length(lab))), arr.ind = TRUE)
-  lab1 <- lab[ix[,1]]
-  lab2 <- lab[ix[,2]]
-  if(attr(object, "ordered")) {
+  if(!attr(object, "ordered")) {
+    lab1 <- lab[ix[,1]]
+    lab2 <- lab[ix[,2]]
+  } else {
     lab1 <- c(lab[ix[,1]], lab[ix[,2]])
     lab2 <- c(lab[ix[,2]], lab[ix[,1]])
   }
@@ -207,11 +207,16 @@ summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, matr
   dimnames(rval) <- list(rnam, cnam)
 
   ## return paired-comparison matrix (only for unordered binary paircomp's)
+  ## FIXME: better name for argument / standalone method?
+  ## FIXME: table() and xtabs() are both not generic...
   if(matrix & length(mscale) == 2 & !attr(object, "ordered")) {
-    longDf <- data.frame(c(lab1, lab2), c(lab2, lab1), as.numeric(rval[,1:2]))
-    names(longDf) <- c(cnam[1:2], "Freq")
-    rval <- unclass(xtabs(Freq ~ ., longDf))[lab, lab]
-    attr(rval, "call") <- NULL
+    mat <- matrix(0, ncol = length(lab), nrow = length(lab))
+    rownames(mat) <- colnames(mat) <- lab
+    names(dimnames(mat)) <- cnam
+    mat[upper.tri(mat)] <- rval[,1]
+    mat <- t(mat)
+    mat[upper.tri(mat)] <- rval[,2]
+    rval <- t(mat)
   }
   
   rval
@@ -241,7 +246,7 @@ c.paircomp <- function(...)
   }
   if(!check_list(lapply(args, attr, "labels"))) stop("objects have different labels")
   if(!check_list(lapply(args, attr, "mscale"))) stop("objects have different mscales")
-  if(!check_list(lapply(args, attr, "ordered"))) stop("objects have differently ordered")
+  if(!check_list(lapply(args, attr, "ordered"))) stop("objects are differently ordered")
   if(!check_list(lapply(args, attr, "covariates"))) stop("objects have different covariates")
 
   rval <- args[[1]]
@@ -366,7 +371,8 @@ reorder.paircomp <- function(x, labels, ...)
   nlab <- labels
   ix <- which(upper.tri(diag(length(xlab))), arr.ind = TRUE)
   wi <- apply(ix, 1, function(z) all(z %in% nlab))
-  ndat <- if(attr(x, "ordered")) as.matrix(x)[, c(wi, wi), drop = FALSE] else as.matrix(x)[, wi, drop = FALSE]
+  ndat <- if(attr(x, "ordered")) as.matrix(x)[, c(wi, wi), drop = FALSE]
+    else as.matrix(x)[, wi, drop = FALSE]
   
   ## re-order comparisons (if necessary)
   if(!identical(nlab, sort(nlab))) {
@@ -383,7 +389,7 @@ reorder.paircomp <- function(x, labels, ...)
     
     ## re-order
     if(attr(x, "ordered")) {
-      ndat <- ndat[, c(ord, ord), drop = FALSE]
+      ndat <- ndat[, c(ord, sum(wi) + ord), drop = FALSE]
       ndat[, c(wi, wi)] <- -1 * ndat[, c(wi, wi)]
     } else {
       ndat <- ndat[, ord, drop = FALSE]
@@ -421,9 +427,10 @@ as.matrix.paircomp <- function(x, ...) {
   ## colnames
   lab <- attr(x, "labels")
   ix <- which(upper.tri(diag(length(lab))), arr.ind = TRUE)
-  lab1 <- lab[ix[,1]]
-  lab2 <- lab[ix[,2]]
-  if(attr(x, "ordered")) {
+  if(!attr(x, "ordered")) {
+    lab1 <- lab[ix[,1]]
+    lab2 <- lab[ix[,2]]
+  } else {
     lab1 <- c(lab[ix[,1]], lab[ix[,2]])
     lab2 <- c(lab[ix[,2]], lab[ix[,1]])
   }
