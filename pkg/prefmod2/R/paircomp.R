@@ -162,7 +162,7 @@ str.paircomp <- function(object, width = getOption("width") - 7, ...)
   invisible(NULL)
 }
 
-summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, matrix = FALSE, ...)
+summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, pcmatrix = FALSE, ...)
 {
   ## data
   dat <- as.matrix(object)
@@ -209,10 +209,10 @@ summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, matr
   ## return paired-comparison matrix (only for unordered binary paircomp's)
   ## FIXME: better name for argument / standalone method?
   ## FIXME: table() and xtabs() are both not generic...
-  if(matrix & length(mscale) == 2 & !attr(object, "ordered")) {
+  if(pcmatrix & length(mscale) == 2 & !attr(object, "ordered")) {
     mat <- matrix(0, ncol = length(lab), nrow = length(lab))
     rownames(mat) <- colnames(mat) <- lab
-    names(dimnames(mat)) <- cnam
+    names(dimnames(mat)) <- cnam[1:2]
     mat[upper.tri(mat)] <- rval[,1]
     mat <- t(mat)
     mat[upper.tri(mat)] <- rval[,2]
