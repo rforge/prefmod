@@ -43,7 +43,7 @@ A data frame containing 192 observations on 6 variables.
   Participants were presented with 15 pairs of options in random order. On
   each trial, their task was to choose the party they would rather vote for at
   an election for the German parliament. A given participant compared each
-  pair in only one order, hence the NA's in \code{ordered.pref}.
+  pair in one order only, hence the NA's in \code{ordered.pref}.
 
   In order to minimize response biases, the pairs of options were read to the
   participants one at a time. Participants made their choices by crossing
@@ -53,18 +53,17 @@ A data frame containing 192 observations on 6 variables.
   The results of the election on September 27, 2009 (number of
   so-called Zweitstimmen in percent) were:
 
-% FIX ME: rather Bereich Innenstadt?
-
   \tabular{lrr}{
              \tab Germany \tab Tübingen\cr
   Die Linke  \tab    11.9 \tab      8.5\cr
   Die Grünen \tab    10.7 \tab     27.9\cr
   SPD        \tab    23.0 \tab     21.1\cr
   CDU/CSU    \tab    33.8 \tab     23.0\cr
-  FDP        \tab    14.6 \tab     13.5\cr
+  FDP        \tab    14.6 \tab     13.9\cr
+  Others     \tab     6.0 \tab      5.7\cr
   }
 
-  
+  The voter turnout was 70.8 percent in Germany and 80.5 percent in Tübingen.
 }
 
 % \references{
