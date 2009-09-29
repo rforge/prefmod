@@ -49,6 +49,22 @@ A data frame containing 192 observations on 6 variables.
   participants one at a time. Participants made their choices by crossing
   either \dQuote{First Option} or \dQuote{Second Option} on an anonymous
   response sheet.
+
+  The results of the election on September 27, 2009 (number of
+  so-called Zweitstimmen in percent) were:
+
+% FIX ME: rather Bereich Innenstadt?
+
+  \tabular{lrr}{
+             \tab Germany \tab Tübingen\cr
+  Die Linke  \tab    11.9 \tab      8.5\cr
+  Die Grünen \tab    10.7 \tab     27.9\cr
+  SPD        \tab    23.0 \tab     21.1\cr
+  CDU/CSU    \tab    33.8 \tab     23.0\cr
+  FDP        \tab    14.6 \tab     13.5\cr
+  }
+
+  
 }
 
 % \references{
