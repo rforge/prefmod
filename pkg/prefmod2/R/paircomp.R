@@ -376,24 +376,31 @@ reorder.paircomp <- function(x, labels, ...)
   
   ## re-order comparisons (if necessary)
   if(!identical(nlab, sort(nlab))) {
-    ## set up indexes
-    ix <- ix[wi,, drop = FALSE]
-    nix <- which(upper.tri(diag(length(nlab))), arr.ind = TRUE)
-    nix <- matrix(nlab[nix], ncol = 2)
-    ## match
-    wi <- apply(nix, 1, function(x) x[1] > x[2])
-    nix[wi,] <- nix[wi, 2:1]
-    onam <- apply(ix, 1, paste, collapse = ":")
-    nnam <- apply(nix, 1, paste, collapse = ":")
-    ord <- match(nnam, onam)
-    
-    ## re-order
-    if(attr(x, "ordered")) {
-      ndat <- ndat[, c(ord, sum(wi) + ord), drop = FALSE]
-      ndat[, c(wi, wi)] <- -1 * ndat[, c(wi, wi)]
-    } else {
+    if(!attr(x, "ordered")) {    
+      ## set up indexes
+      ix <- ix[wi,, drop = FALSE]
+      nix <- which(upper.tri(diag(length(nlab))), arr.ind = TRUE)
+      nix <- matrix(nlab[nix], ncol = 2)
+      ## match
+      wi <- apply(nix, 1, function(x) x[1] > x[2])
+      nix[wi,] <- nix[wi, 2:1]
+      onam <- apply(ix, 1, paste, collapse = ":")
+      nnam <- apply(nix, 1, paste, collapse = ":")
+      ord <- match(nnam, onam)
+      ## reorder
       ndat <- ndat[, ord, drop = FALSE]
       ndat[, wi] <- -1 * ndat[, wi]
+    } else {
+      ## set up indexes
+      ix <- ix[wi,, drop = FALSE]
+      nix <- which(upper.tri(diag(length(nlab))), arr.ind = TRUE)
+      nix <- matrix(nlab[nix], ncol = 2)
+      ## match
+      onam <- apply(rbind(ix, ix[,2:1]), 1, paste, collapse = ":")
+      nnam <- apply(rbind(nix, nix[,2:1]), 1, paste, collapse = ":")
+      ord <- match(nnam, onam)
+      ## reorder
+      ndat <- ndat[, ord, drop = FALSE]
     }    
   }
 
