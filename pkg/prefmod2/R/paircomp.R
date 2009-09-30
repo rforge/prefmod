@@ -218,6 +218,23 @@ summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, pcma
     mat[upper.tri(mat)] <- rval[,2]
     rval <- t(mat)
   }
+  if(pcmatrix & length(mscale) == 2 & attr(object, "ordered")) {
+    ordarr <- array(0, c(length(lab), length(lab), 2))
+
+    mat <- matrix(0, ncol = length(lab), nrow = length(lab))
+    mat[upper.tri(mat)] <- rval[1:(nrow(rval)/2), 1]
+    mat <- t(mat)
+    mat[upper.tri(mat)] <- rval[1:(nrow(rval)/2), 2]
+    ordarr[,,1] <- t(mat)
+    mat[upper.tri(mat)] <- rval[(nrow(rval)/2 + 1):nrow(rval), 2]
+    mat <- t(mat)
+    mat[upper.tri(mat)] <- rval[(nrow(rval)/2 + 1):nrow(rval), 1]
+    ordarr[,,2] <- t(mat)
+
+    dimnames(ordarr) <- list(lab, lab, c("1", "2"))
+    names(dimnames(ordarr)) <- c(cnam[1:2], "order")
+    rval <- ordarr
+  }
   
   rval
 }
