@@ -47,6 +47,11 @@ A data frame containing 192 observations on 11 variables.
   their own child.  The pairs of boys names were read to the participants one
   at a time.  A given participant compared each pair in one order only, hence
   the NA's in \code{ordered.pref}.
+
+  The names were selected to fall within the upper (Tim, Lucas), mid (Michael,
+  Robin) and lower (Benedikt, Julius) range of the top 100 of the most popular
+  boys names in Germany in the years from 1990 to 1999
+  (\url{http://www.beliebte-vornamen.de/3778-1990er-jahre.htm}).
  
   The interviewers were Psychology Master's students who collected the data
   for course credits.
