@@ -26,6 +26,7 @@ A data frame containing 192 observations on 6 variables.
     Hauptschule (Secondary General School), 3 Realschule (Intermediate
     Secondary School), 4 Gymnasium (High School), 5 Studium (University)}
   \item{crisis}{Factor. Do you feel affected by the economic crisis?}
+  \item{interviewer}{Factor. Interviewer id.}
 }
 }
 
@@ -49,6 +50,12 @@ A data frame containing 192 observations on 6 variables.
   participants one at a time. Participants made their choices by crossing
   either \dQuote{First Option} or \dQuote{Second Option} on an anonymous
   response sheet.
+
+  The interviewers were Psychology Master's students who collected the data
+  for course credits. Since they mainly interviewed people they knew, the
+  results are not representative of the political opinions in Germany. As far
+  as the winner of the survey (Die Grünen) is concerned, however, the results
+  agree with the outcome of the election for the Tübingen voters.
 
   The results of the election on September 27, 2009 (number of
   so-called Zweitstimmen in percent) were:
