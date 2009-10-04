@@ -28,7 +28,7 @@ A data frame containing 192 observations on 11 variables.
     Gymnasium without and with degree (High School), 6 and 7 Studium without
     and with degree (University).}
   \item{children}{Integer. Number of children.}
-  \item{state}{Factor. State of Germany.}
+  \item{state}{Factor. State of Germany where participant grew up.}
   \item{state.reg}{Factor. The region (south, north-west, east) each state
     belongs to.}
   \item{fname}{Factor. Participant's fist name(s).}
