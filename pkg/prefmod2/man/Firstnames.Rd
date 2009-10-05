@@ -40,8 +40,10 @@ A data frame containing 192 observations on 11 variables.
 \details{
   A survey was conducted at the Department of Psychology, Universität
   Tübingen, in June 2009. The sample was stratified by gender and age (younger
-  versus older than 30 years) with 48 participants in each group.
- 
+  versus older than 30 years) with 48 participants in each group.  The
+  interviewers were Psychology Master's students who collected the data for
+  course credits.
+
   Participants were presented with 15 pairs of boys names in random order. On
   each trial, their task was to choose the name they would rather give to
   their own child.  The pairs of boys names were read to the participants one
@@ -51,21 +53,30 @@ A data frame containing 192 observations on 11 variables.
   The names were selected to fall within the upper (Tim, Lucas), mid (Michael,
   Robin) and lower (Benedikt, Julius) range of the top 100 of the most popular
   boys names in Germany in the years from 1990 to 1999
-  (\url{http://www.beliebte-vornamen.de/3778-1990er-jahre.htm}).
- 
-  The interviewers were Psychology Master's students who collected the data
-  for course credits.
+  (\url{http://www.beliebte-vornamen.de/3778-1990er-jahre.htm}). The names
+  have either front (e, i) or back (o, u) vowels in the stressed syllables.
+  Phonology of the name and attractiveness of a person have been shown to be
+  related (Perfors, 2004; Hartung et al., 2009).
 }
 
-% \references{
-%   FIX ME
-% }
+\references{
+  Hartung, F., Klenovsak, D., Santiago dos Santos, L., Strobl, C., and
+  Zaefferer, D. (2009). Are Tims Hot and Toms not? Probing the effect of sound
+  symbolism on perception of facial attractiveness. Presented at the
+  \emph{31th Annual Meeting of the Cognitive Science Society}, July 27 to
+  August 1, Amsterdam, The Netherlands.
+ 
+  Perfors, A. (2004). What's in a Name? The effect of sound symbolism on
+  perception of facial attractiveness. Presented at the \emph{26th Annual
+  Meeting of the Cognitive Science Society}, August 5-7, Chicago, USA.
+}
 
 \seealso{\code{\link{paircomp}}}
 
 \examples{
 data("Firstnames", package = "prefmod2")
 summary(Firstnames$preference)
+covariates(Firstnames$preference)
 }
 
 \keyword{datasets}
