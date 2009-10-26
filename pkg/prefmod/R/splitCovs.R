@@ -66,7 +66,7 @@ splitCovs<-function(dat,covs,formel,elim,ENV)
            cList[[i]]<-c(cList[i],list(cov=elimdesmat[i,model.terms]))
        ENV$covdesmat  <-elimdesmat[,model.terms]
        if (formel != "~1")
-           colnames(ENV$model.covs)<-maineffect.terms   # order of elim terms for factor matrix to
+           colnames(ENV$model.covs)<-maineffect.terms.frml   # order of elim terms for factor matrix to
                                                         # properly label worth matrix
 
    } else {                                    ## nothing to eliminate - basic model
