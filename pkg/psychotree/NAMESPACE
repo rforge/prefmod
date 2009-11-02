@@ -1,0 +1,80 @@
+## imported packages (with generics etc.)
+import(
+  "stats",
+  "graphics",
+  "party",
+  "sandwich", 
+  "strucchange"
+)
+
+export(
+  ## Bradley-Terry tree tools
+  "bttree",
+  "node_btplot",
+  "worth",
+
+  ## Bradley-Terry regression
+  "btReg",
+  "btReg.fit",
+
+  ## paircomp class and new generics
+  "paircomp",
+  "covariates",
+  "covariates<-",
+  "labels<-",
+  "mscale",
+  "mscale<-"
+)
+
+## methods for bttree objects
+S3method("coef", "bttree")
+S3method("deviance", "bttree")
+S3method("logLik", "bttree")
+S3method("plot", "bttree")
+S3method("print", "bttree")
+S3method("sctest", "bttree")
+S3method("summary", "bttree")
+S3method("weights", "bttree")
+S3method("worth", "bttree")
+
+## methods for btReg objects
+S3method("bread", "btReg")
+S3method("coef", "btReg")
+S3method("deviance", "btReg")
+S3method("estfun", "btReg")
+S3method("logLik", "btReg")
+S3method("plot", "btReg")
+S3method("print", "btReg")
+S3method("print", "summary.btReg")
+S3method("reweight", "btReg")
+S3method("summary", "btReg")
+S3method("vcov", "btReg")
+S3method("worth", "btReg")
+
+## methods for paircomp objects
+S3method("[", "paircomp")
+S3method("as.character", "paircomp")
+S3method("as.data.frame", "paircomp")
+S3method("as.double", "paircomp")
+S3method("as.integer", "paircomp")
+S3method("as.matrix", "paircomp")
+S3method("c", "paircomp")
+S3method("covariates", "paircomp")
+S3method("covariates<-", "paircomp")
+S3method("format", "paircomp")
+S3method("is.na", "paircomp")
+S3method("labels", "paircomp")
+S3method("labels<-", "paircomp")
+S3method("length", "paircomp")
+S3method("mscale", "paircomp")
+S3method("mscale<-", "paircomp")
+S3method("names", "paircomp")
+S3method("names<-", "paircomp")
+S3method("plot", "paircomp")
+S3method("print", "paircomp")
+S3method("reorder", "paircomp")
+S3method("rep", "paircomp")
+S3method("str", "paircomp")
+S3method("subset", "paircomp")
+S3method("summary", "paircomp")
+S3method("xtfrm", "paircomp")
