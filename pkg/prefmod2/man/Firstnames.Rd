@@ -74,7 +74,7 @@ A data frame containing 192 observations on 11 variables.
 \seealso{\code{\link{paircomp}}}
 
 \examples{
-data("Firstnames", package = "prefmod2")
+data("Firstnames", package = "psychotree")
 summary(Firstnames$preference)
 covariates(Firstnames$preference)
 }

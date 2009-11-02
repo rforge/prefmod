@@ -77,7 +77,7 @@ Weber D., Weiler M. (2009).
 
 \examples{
 ## data and preprocessing
-data("WUExpectations", package = "prefmod2")
+data("WUExpectations", package = "psychotree")
 
 ## subset selection: use only complete cases
 wu <- na.omit(WUExpectations)

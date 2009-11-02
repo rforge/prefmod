@@ -1,7 +1,3 @@
-########################################
-## RECURSIVE PARTITIONING OF BT MODEL ##
-########################################
-
 ## high-level convenience interface
 bttree <- function(formula, data, na.action = na.pass,
   type = "loglin", ref = NULL, undecided = NULL, position = NULL, minsplit = 10, ...)
@@ -62,40 +58,6 @@ worth.bttree <- function (object, node = NULL, ...)
     rownames(rval) <- node
   }
   return(rval)
-}
-
-## modeltools/party interface
-btReg <- function(type = "loglin", ref = NULL, undecided = NULL, position = NULL) {
-  new("StatModel",
-    capabilities = new("StatModelCapabilities"),
-    name = "Bradley-Terry regression model",
-    dpp = ModelEnvFormula,
-    fit = function(object, weights = NULL, ...){
-
-        ## extract response (there are no regressors)
-        y <- object@get("response")[[1]]
-	
-        ## call btreg.fit()
-        z <- btreg.fit(y = y, weights = weights, type = type, ref = ref,
-	  undecided = undecided, position = position)
-        class(z) <- c("btReg", "btreg")
-	z$ModelEnv <- object
-	z$addargs <- list(...)	
-        z
-    }
-  )
-}
-
-reweight.btReg <- function(object, weights, ...) {
-     fit <- btReg(type = object$type, ref = object$ref,
-       undecided = object$undecided, position = object$position)@fit
-     do.call("fit", c(list(object = object$ModelEnv, weights = weights), object$addargs))
-}
-
-print.btReg <- function(x, digits = max(3, getOption("digits") - 3), ...) {
-  cat("BT regression coefficients:\n")
-  print(coef(x), digits = digits)
-  invisible(x)
 }
 
 ## visualization function

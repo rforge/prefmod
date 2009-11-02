@@ -17,12 +17,13 @@
   \item{\dots}{arguments passed to methods.}
 }
 
-\seealso{\code{\link{btreg}}}
+\seealso{\code{\link{bttree}}}
 
 \examples{
-data("CEMSChoice", package = "prefmod2")
-cems <- btreg(preference ~ 1, data = CEMSChoice)
-worth(cems)
+data("CEMSChoice", package = "psychotree")
+cems_tree <- bttree(preference ~ french + spanish + italian + study + work + gender + intdegree,
+  data = CEMSChoice, minsplit = 5, ref = "London")
+worth(cems_tree)
 }
 
 \keyword{classes}

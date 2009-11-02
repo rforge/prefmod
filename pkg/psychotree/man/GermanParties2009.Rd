@@ -80,7 +80,7 @@ A data frame containing 192 observations on 6 variables.
 \seealso{\code{\link{paircomp}}}
 
 \examples{
-data("GermanParties2009", package = "prefmod2")
+data("GermanParties2009", package = "psychotree")
 summary(GermanParties2009$preference)
 }
 

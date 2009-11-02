@@ -13,8 +13,6 @@
 \alias{worth.bttree}
 \alias{weights.bttree}
 
-\encoding{latin1}
-
 \title{Bradley-Terry Tree Models}
 
 \description{
@@ -30,24 +28,23 @@ bttree(formula, data, na.action = na.pass,
 \arguments{
   \item{formula}{A symbolic description of the model to be fit. This
     should be of type \code{y ~ x1 + x2}
-    where \code{y} should be an object of class \code{\link[prefmod2]{paircomp}}
+    where \code{y} should be an object of class \code{\link[psychotree]{paircomp}}
     and \code{x1} and \code{x2} are used as partitioning variables.}
   \item{data}{an optional data frame containing the variables in the model.}
   \item{na.action}{A function which indicates what should happen when the data
     contain \code{NA}s, defaulting to \code{\link[stats]{na.pass}}.}
   \item{type, ref, undecided, position}{arguments for the Bradley-Terry
-    model passed on to \code{\link[prefmod2]{btreg}}.}
+    model passed on to \code{\link{btReg}}.}
   \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
 }
 
 \details{
   Bradley-Terry tree models are an application of model-based recursive partitioning
   (implemented in \code{\link[party]{mob}}) to Bradley-Terry models for
-  paired comparison data (implemented in \code{\link[prefmod2]{btreg}}).
-  Internally, a wrapper function \code{\link{btReg}} for \code{btreg} is used.
+  paired comparison data (implemented in \code{\link{btReg}}).
   For all details about the underlying theory and further explanations
   of the illustrations from the example section can be found in
-  Strobl, Wickelmaier, Zeileis (2009).
+  Strobl, Wickelmaier, Zeileis (2010).
   
   Various methods are provided for \code{"bttree"} objects, most of them
   inherit their behavior from \code{"mob"} objects (e.g., \code{print}, \code{summary},
@@ -63,20 +60,20 @@ bttree(formula, data, na.action = na.pass,
 }
 
 \references{ 
-  Carolin Strobl, Florian Wickelmaier, Achim Zeileis (2009). 
+  Carolin Strobl, Florian Wickelmaier, Achim Zeileis (2010). 
   Accounting for Individual Differences in Bradley-Terry Models by Means of Recursive Partitioning.
-  Technical Report 54, Department of Statistics, Ludwig-Maximilians-Universität München.
-  \url{http://epub.ub.uni-muenchen.de/10588/}
+  Journal of Educational and Behavioral Statistics, Forthcoming.
+  Preprint at \url{http://statmath.wu.ac.at/~zeileis/papers/Strobl+Wickelmaier+Zeileis-2010.pdf}
 }
 
-\seealso{\code{\link[party]{mob}}, \code{\link[prefmod2]{btreg.fit}}, \code{\link{btReg}}}
+\seealso{\code{\link[party]{mob}}, \code{\link{btReg}}}
 
 \examples{
 ## package
 library("psychotree")
 
 ## Germany's Next Topmodel 2007 data
-data("Topmodel2007", package = "prefmod2")
+data("Topmodel2007", package = "psychotree")
 ## BT tree
 tm_tree <- bttree(preference ~ ., data = Topmodel2007, minsplit = 5, ref = "Barbara")
 plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
@@ -86,7 +83,7 @@ sctest(tm_tree, node = 1)
 worth(tm_tree)
 
 ## CEMS university choice data
-data("CEMSChoice", package = "prefmod2")
+data("CEMSChoice", package = "psychotree")
 summary(CEMSChoice$preference)
 ## BT tree
 cems_tree <- bttree(preference ~ french + spanish + italian + study + work + gender + intdegree,

@@ -1,0 +1,13 @@
+Changes in Version 0.9-0
+
+  o First CRAN release of the package accompanying the forthcoming
+    paper "Accounting for Individual Differences in Bradley-Terry
+    Models by Means of Recursive Partitioning" by Strobl, Wickelmaier,
+    and Zeileis, accepted for publication in Journal of Educational
+    and Behavioral Statistics.
+    
+  o Compared to earlier package versions available from R-Forge,
+    this package does not depend on data/code from the "prefmod2"
+    package. All required functionality (basic Bradley-Terry
+    regression, paircomp class, data sets) are now contained in the
+    "psychotree" package.

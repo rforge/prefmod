@@ -61,7 +61,7 @@ A data frame containing 192 observations on 6 variables.
 \seealso{\code{\link{paircomp}}}
 
 \examples{
-data("Topmodel2007", package = "prefmod2")
+data("Topmodel2007", package = "psychotree")
 summary(Topmodel2007$preference)
 xtabs(~ gender + I(age < 30), data = Topmodel2007)
 }

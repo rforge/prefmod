@@ -75,7 +75,7 @@ Dittrich R., Hatzinger R., Katzenbeisser W. (2001).
 \seealso{\code{\link{paircomp}}}
 
 \examples{
-data("CEMSChoice", package = "prefmod2")
+data("CEMSChoice", package = "psychotree")
 summary(CEMSChoice$preference)
 covariates(CEMSChoice$preference)
 }
