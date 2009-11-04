@@ -35,7 +35,7 @@ btreg.fit(x, y, z = NULL, weights = NULL, type = c("loglin", "logit"), ref = NUL
 \arguments{
   \item{formula}{A symbolic description of the model to be fit. This
     should be of type \code{y | z1 + z2 ~ x1 + x2 + x3}
-    where \code{y} should be an object of class \code{\link{paircomp}},
+    where \code{y} should be an object of class \code{\link[psychotree]{paircomp}},
     \code{x1}, \code{x2}, \code{x3} are subject-covariates (taken from \code{data})
     and \code{z1} and \code{z2} are object-covariates (taken from \code{covariates(y)}).}
   \item{data}{an optional data frame containing the variables in the model.}
@@ -111,7 +111,7 @@ btreg.fit(x, y, z = NULL, weights = NULL, type = c("loglin", "logit"), ref = NUL
 
 \examples{
 ## CEMS university choice data
-data("CEMSChoice", package = "prefmod2")
+data("CEMSChoice", package = "psychotree")
 
 ## Bradley-Terry modeling
 cems <- btreg(preference ~ 1, data = CEMSChoice)

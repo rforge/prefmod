@@ -28,7 +28,7 @@
 \seealso{\code{\link{btreg}}}
 
 \examples{
-data("CEMSChoice", package = "prefmod2")
+data("CEMSChoice", package = "psychotree")
 cems <- btreg(preference ~ 1, data = CEMSChoice)
 plot(cems)
 }

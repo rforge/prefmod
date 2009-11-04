@@ -19,11 +19,11 @@ A data frame containing 127 observations on 7 variables.
     \item{\code{parttime}}{Factor. Did the interviewee work parttime or fulltime?}
     \item{\code{seniority}}{Numeric. Work experience at university in years.}
     \item{\code{deptsize}}{Numeric. Number of employees within the department.}
-    \item{\code{professor}}{Paired comparison of class \code{\link{paircomp}}.
+    \item{\code{professor}}{Paired comparison of class \code{\link[psychotree]{paircomp}}.
       Preferences for all 28 paired comparisons from 8 professor skills: competence,
       trustworthiness, communication, fairness, reliability, interest, motivation,
       cooperation.}
-    \item{\code{assistant}}{Paired comparison of class \code{\link{paircomp}}.
+    \item{\code{assistant}}{Paired comparison of class \code{\link[psychotree]{paircomp}}.
       Preferences for all 28 paired comparisons from 8 assistant skills: competence,
       reliability, interest, creativity, cooperation, trustworthiness, diligence,
       motivation.}
@@ -72,12 +72,12 @@ Weber D., Weiler M. (2009).
 \author{Daniela Weber}
 
 \seealso{
- \code{\link{paircomp}}, \code{\link{btreg}}
+ \code{\link{btreg}, \code{\link[psychotree]{paircomp}}}
 }
 
 \examples{
 ## data and preprocessing
-data("WUExpectations", package = "psychotree")
+data("WUExpectations", package = "prefmod2")
 
 ## subset selection: use only complete cases
 wu <- na.omit(WUExpectations)

@@ -288,7 +288,8 @@ coef.btreg <- function(object, all = TRUE, ref = !all, ...) {
   return(cf)
 }
 
-worth <- function(object, ...) UseMethod("worth")
+#FIXME# For the moment the worth() generic is in psychotree
+## worth <- function(object, ...) UseMethod("worth")
 
 worth.btreg <- function(object, ...) {
   lab <- object$labels
