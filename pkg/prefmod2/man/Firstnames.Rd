@@ -31,7 +31,8 @@ A data frame containing 192 observations on 11 variables.
   \item{state}{Factor. State of Germany where participant grew up.}
   \item{state.reg}{Factor. The region (south, north-west, east) each state
     belongs to.}
-  \item{fname}{Factor. Participant's fist name(s).}
+  \item{fname}{Factor. Participant's fist name(s). (Umlaute in Jörg and Jürgen
+    have been transliterated to Joerg and Juergen for portability of the data.)}
   \item{interviewer}{Factor. Interviewer id.}
   \item{gender.int}{Factor coding interviewer's gender.}
 }
