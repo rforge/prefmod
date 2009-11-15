@@ -34,6 +34,7 @@ RaschModel.fit(y, weights = NULL, start = NULL,
 \arguments{
   \item{y}{object that can be coerced (via \code{\link[base]{as.matrix}}) to binary 0/1 matrix.}
   \item{weights}{an optional vector of weights, interpreted as case weights (integer only).}
+  \item{start}{an optional vector of starting values.}
   \item{hessian}{logical. Should the numerical Hessian be used for inference? (Default
     is to use analytical Hessian.)}
   \item{gradtol, check.analyticals, \dots}{further arguments passed to \code{\link[stats]{nlm}}.}

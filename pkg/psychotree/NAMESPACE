@@ -58,7 +58,6 @@ S3method("worth", "bttree")
 ## methods for RaschModel objects
 S3method("bread", "RaschModel")
 S3method("coef", "RaschModel")
-S3method("deviance", "RaschModel")
 S3method("estfun", "RaschModel")
 S3method("logLik", "RaschModel")
 S3method("plot", "RaschModel")

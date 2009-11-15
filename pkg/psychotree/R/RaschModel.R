@@ -204,7 +204,7 @@ elemenatry_symmetric_functions <- function(par, order = 0, log = TRUE) {
 }
 
 ## methods
-coefficients.RaschModel <- function(object, ...) object$coefficients
+coef.RaschModel <- function(object, ...) object$coefficients
 
 vcov.RaschModel <- function(object, ...) object$vcov
 
