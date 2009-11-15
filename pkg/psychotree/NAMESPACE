@@ -8,6 +8,14 @@ import(
 )
 
 export(
+  ## Rasch tree tools
+  "raschtree",
+  "node_raschplot",
+
+  ## Rasch model
+  "RaschModel",
+  "RaschModel.fit",
+
   ## Bradley-Terry tree tools
   "bttree",
   "node_btplot",
@@ -26,6 +34,16 @@ export(
   "mscale<-"
 )
 
+## methods for raschtree objects
+S3method("coef", "raschtree")
+S3method("logLik", "raschtree")
+S3method("plot", "raschtree")
+S3method("print", "raschtree")
+S3method("sctest", "raschtree")
+S3method("summary", "raschtree")
+S3method("weights", "raschtree")
+S3method("worth", "raschtree")
+
 ## methods for bttree objects
 S3method("coef", "bttree")
 S3method("deviance", "bttree")
@@ -36,6 +54,20 @@ S3method("sctest", "bttree")
 S3method("summary", "bttree")
 S3method("weights", "bttree")
 S3method("worth", "bttree")
+
+## methods for RaschModel objects
+S3method("bread", "RaschModel")
+S3method("coef", "RaschModel")
+S3method("deviance", "RaschModel")
+S3method("estfun", "RaschModel")
+S3method("logLik", "RaschModel")
+S3method("plot", "RaschModel")
+S3method("print", "RaschModel")
+S3method("print", "summary.RaschModel")
+S3method("reweight", "RaschModel")
+S3method("summary", "RaschModel")
+S3method("vcov", "RaschModel")
+S3method("worth", "RaschModel")
 
 ## methods for btReg objects
 S3method("bread", "btReg")

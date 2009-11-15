@@ -1,3 +1,9 @@
+Changes in Version 0.9-1
+
+  o Added raschtree() function, based on simple RaschModel()
+    (for binary 0/1 items).
+
+
 Changes in Version 0.9-0
 
   o First CRAN release of the package accompanying the forthcoming
