@@ -292,14 +292,30 @@ print.summary.RaschModel <- function(x, digits = max(3, getOption("digits") - 3)
   invisible(x)
 }
 
-plot.RaschModel <- function(x, 
+plot.RaschModel <- function(x,
   center = TRUE, index = TRUE, names = TRUE, abbreviate = FALSE, ref = TRUE,
-  type = NULL, lty = NULL, xlab = "Items", ylab = NULL, ...)
+  bg = hcl(c(0, 0, 180, 270), c(0, 80, 80, 80), c(95, 50, 50, 50)), cex = 1,
+  type = NULL, lty = NULL, ylim = NULL, xlab = "Items", ylab = NULL, ...)
 {
   ## parameters to be plotted
   cf <- worth(x)
-  if(!center) cf <- cf[-1]
-  cf_ref <- mean(cf)
+  cf_ident <- is.finite(cf) & !is.na(cf)
+  if(!center) cf <- cf - (cf[cf_ident])[1]
+  cf_ref <- mean(cf[cf_ident])
+
+  ## background color
+  col <- if(index) bg[1] else hcl(0, 0, 0)
+  col <- rep(col, length(cf))
+  col[cf <= -Inf] <- bg[2]
+  col[cf >= Inf] <- bg[3]
+  col[is.na(cf)] <- bg[4]
+
+  ## substitute non-identified parameters with plottable values
+  if(is.null(ylim)) ylim <- range(cf[cf_ident])
+  ylim <- rep(ylim, length.out = 2)
+  cf[is.na(cf)] <- cf_ref
+  cf[cf <= -Inf] <- ylim[1]
+  cf[cf >= Inf] <- ylim[2]
 
   ## labeling
   if(is.character(names)) {
@@ -326,12 +342,13 @@ plot.RaschModel <- function(x,
   ## actual data
   if(index) {
     if(is.null(type)) type <- "b"
-    if(is.null(lty)) lty <- 2  
-    lines(ix, cf, type = type, lty = lty)
+    if(is.null(lty)) lty <- 2
+    if(type %in% c("b", "p")) points(ix, cf, pch = 19, col = col, cex = cex)
+    lines(ix, cf, type = type, lty = lty, col = ifelse(cf_ident, "black", "transparent"), cex = cex)
     axis(1, at = ix, labels = if(names) names(cf) else TRUE)
   } else {
     if(is.null(type)) type <- "p"
-    if(names) text(names(cf), x = ix, y = cf, ...) else lines(ix, cf, type = type, lty = lty)
+    if(names) text(names(cf), x = ix, y = cf, col = col, ...) else lines(ix, cf, type = type, lty = lty, col = col)
   }
 }
 
