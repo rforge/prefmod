@@ -38,73 +38,84 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL,
 {
   ## original data
   y <- as.matrix(y)
-  k <- ncol(y)
+  k <- k_orig <- ncol(y)
   n <- nrow(y)
-  nam <- dimnames(y)
-  ## need at least three items
-  stopifnot(k >= 3)
+  if(is.null(colnames(y))) colnames(y) <- paste("Item", gsub(" ", "0", format(1:k)), sep = "")
+  y_orig <- y
 
   ## weights processing
   if(is.null(weights)) weights <- rep.int(1L, n)
   ## data and weights need to match
   stopifnot(length(weights) == n)
 
-  ## ## could try to condense data
-  ## ychar <- apply(y, 1, paste, collapse = "\r")
-  ## ydup <- duplicated(ychar)
-  ## if(any(ydup)) {
-  ##   y <- y[!ydup,, drop = FALSE]
-  ##   weights <- as.vector(tapply(weights, factor(ychar, levels = ychar[!ydup]), sum))
-  ## }
-  
-  ## data statistics (FIXME: na.rm?)
-  cs <- colSums(y * weights)
-  rs <- rowSums(y)
-  rf <- as.vector(tapply(weights, factor(rs, levels = 0:k), sum))
-  rf[is.na(rf)] <- 0
+  ## all parameters identified?
+  cm <- colMeans(y, na.rm = TRUE)
+  status <- as.character(cut(cm, c(-Inf, 1/(2 * n), 1 - 1/(2 * n), Inf), labels = c("0", "0/1", "1")))
+  status[is.na(status)] <- "NA"
+  status <- factor(status, levels = c("0/1", "0", "1", "NA"))
+  ident <- status == "0/1"
+  names(status) <- colnames(y)
 
-  ## starting values (FIXME: boundary cases?)
-  if(is.null(start)) {
-    sw <- sum(weights)
-    start <- qlogis(ifelse(cs < 1, 1, ifelse(cs >= sw, sw-1, cs))/sw)
-  }
-  
-  ## contrast: set parameter 1 to zero
-  start <- start[-1] - start[1]
-  rf <- rf[-1]
-  cs <- cs[-1]
-  
-  ## objective function: conditional log-likelihood
-  cloglik <- function(par) {
-    ## obtain esf and apply contrast
-    esf <- elemenatry_symmetric_functions(c(0, par), order = 1)
-    g <- esf[[1]][-1]
-    g1 <- esf[[2]][-1, -1]
+  ## just estimate identified parameters
+  y <- y[,ident, drop = FALSE]
+  k <- ncol(y)
+  y_na <- is.na(y)
+  any_y_na <- any(y_na)
 
-    ## conditional log-likelihood
-    cll <- sum(cs * par) - sum(rf * log(g))
-    ## gradient
-    grad <- cs - colSums(rf * g1/g)
-
-    ## collect and return
-    attr(cll, "gradient") <- - grad
-    return(-cll)
-  }
+  if(!any_y_na) {
   
-  ## analytical hessian
-  ahessian <- function(par, esf = NULL) {
-    ## obtain esf and apply contrast
-    if(is.null(esf)) esf <- elemenatry_symmetric_functions(c(0, par), order = 2)
-    g <- esf[[1]][-1]
-    g1 <- esf[[2]][-1, -1]
-    g2 <- esf[[3]][-1, -1, -1]
+    ## data statistics
+    cs <- colSums(y * weights)
+    rs <- rowSums(y)
+    rf <- as.vector(tapply(weights, factor(rs, levels = 0:k), sum))
+    rf[is.na(rf)] <- 0
 
-    ## hessian
-    hess <- matrix(0, ncol = k-1, nrow = k-1)
-    g1s <- g1/g
-    for (q in 1:(k-1)) hess[q,] <- colSums(rf * (g2[,q,]/g - (g1[,q]/g) * g1s))
+    ## starting values
+    if(is.null(start)) start <- qlogis(cs/sum(weights))
+  
+    ## contrast: set parameter 1 to zero
+    start <- start[-1] - start[1]
+    rf <- rf[-1]
+    cs <- cs[-1]
+
+    ## objective function: conditional log-likelihood
+    cloglik <- function(par) {
+      ## obtain esf and apply contrast
+      esf <- elementary_symmetric_functions(c(0, par), order = 1)
+      g <- esf[[1]][-1]
+      g1 <- esf[[2]][-1, -1]
+
+      ## conditional log-likelihood
+      cll <- sum(cs * par) - sum(rf * log(g))
+      ## gradient
+      grad <- cs - colSums(rf * g1/g)
+
+      ## collect and return
+      attr(cll, "gradient") <- - grad
+      return(-cll)
+    }
+
+    ## analytical hessian
+    ahessian <- function(par, esf = NULL) {
+      ## obtain esf and apply contrast
+      if(is.null(esf)) esf <- elementary_symmetric_functions(c(0, par), order = 2)
+      g <- esf[[1]][-1]
+      g1 <- esf[[2]][-1, -1]
+      g2 <- esf[[3]][-1, -1, -1]
+
+      ## hessian
+      hess <- matrix(0, ncol = k-1, nrow = k-1)
+      g1s <- g1/g
+      for (q in 1:(k-1)) hess[q,] <- colSums(rf * (g2[,q,]/g - (g1[,q]/g) * g1s))
     
-    return(hess)
+      return(hess)
+    }
+
+  } else {
+
+    ## log-likelihood contributions
+    ## ll <- as.vector(x %*% beta) - log(g)[rs + 1]
+
   }
   
   ## optimization
@@ -113,10 +124,11 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL,
   
   ## collect and annotate results
   cf <- opt$estimate
-  esf <- elemenatry_symmetric_functions(c(0, cf), order = 2)
+  esf <- if(any_y_na) NULL else elementary_symmetric_functions(c(0, cf), order = 2)
+  grad <- if(any_y_na) agrad(cf) else NULL
   vc <- if(hessian) opt$hessian else ahessian(cf, esf)
   vc <- solve(vc)
-  names(cf) <- rownames(vc) <- colnames(vc) <- colnames(y)[-1]  
+  names(cf) <- rownames(vc) <- colnames(vc) <- colnames(y)[-1]
   
   ## collect, class, and return
   rval <- list(
@@ -126,9 +138,11 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL,
     df = k-1,
     weights = weights,
     n = n,
-    data = y,
-    dimnames = nam,
-    elemenatry_symmetric_functions = esf,
+    data = y_orig,
+    items = status,
+    na = any_y_na,
+    elementary_symmetric_functions = esf,
+    estfun = grad,
     nlm_code = opt$code,
     iterations = opt$iterations,
     hessian = hessian,
@@ -139,7 +153,7 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL,
 }
 
 ## elementary symmetric functions
-elemenatry_symmetric_functions <- function(par, order = 0, log = TRUE) {
+elementary_symmetric_functions <- function(par, order = 0, log = TRUE) {
   ## Michelle Liou (1994). More on the Computation of Higher-Order
   ## Derivatives of the Elementary Symmetric Functions in the
   ## Rasch Model. Applied Psychological Measurement, 18(1), 53-62.
@@ -213,17 +227,25 @@ logLik.RaschModel <- function(object, ...) structure(object$loglik, df = object$
 bread.RaschModel <- function(x, ...) x$vcov * x$n
 
 estfun.RaschModel <- function(x, ...) {
-  g <- x$elemenatry_symmetric_functions[[1]][-1]
-  g1 <- x$elemenatry_symmetric_functions[[2]][-1,-1]
-  rs <- rowSums(x$data)
-  x$data[,-1] - g1[rs,] / g[rs]
+  if(!x$na) {
+    g <- x$elementary_symmetric_functions[[1]][-1]
+    g1 <- x$elementary_symmetric_functions[[2]][-1,-1]
+    dat <- x$data[, x$items == "0/1", drop = FALSE]
+    rs <- rowSums(dat)
+    return(dat[,-1] - g1[rs,] / g[rs])
+  } else {
+    return(x$estfun)
+  }
 }
 
 worth.RaschModel <- function(object, ...) {
   cf <- c(0, object$coefficients)
   cf <- cf - mean(cf)
-  names(cf) <- colnames(object$data)
-  cf
+  rval <- structure(rep(NA, ncol(object$data)), .Names = colnames(object$data))
+  rval[object$items == "0/1"] <- cf
+  rval[object$items == "0"] <- -Inf
+  rval[object$items == "1"] <- Inf
+  return(rval)
 }
 
 summary.RaschModel <- function(object, vcov. = NULL, ...)
@@ -258,6 +280,9 @@ print.summary.RaschModel <- function(x, digits = max(3, getOption("digits") - 3)
     cat(paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
   }
 
+  if(any(x$items != "0/1")) cat("Excluded items:",
+    paste(colnames(x$data)[x$items != "0/1"], collapse = ", "), "\n\n")
+
   cat("Parameters:\n")
   printCoefmat(x$coefficients, digits = digits, signif.stars = signif.stars, na.print = "NA", ...)
 
@@ -282,7 +307,7 @@ plot.RaschModel <- function(x,
     names <- TRUE
   }
 
-  if(is.null(ylab)) ylab <- if(center) "Centered parameters" else "Parameters"
+  if(is.null(ylab)) ylab <- if(center) "Centered item parameters" else "Item parameters"
 
   ## abbreviation
   if(is.logical(abbreviate)) {

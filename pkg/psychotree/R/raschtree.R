@@ -1,5 +1,5 @@
 ## high-level convenience interface
-raschtree <- function(formula, data, na.action = na.pass, minsplit = 10, ...)
+raschtree <- function(formula, data, minsplit = 10, ...)
 {
   ## transform formula
   stopifnot(length(formula) > 2)
@@ -8,10 +8,24 @@ raschtree <- function(formula, data, na.action = na.pass, minsplit = 10, ...)
   ff[[2]] <- formula[[2]]
   ff[[3]][[3]] <- formula[[3]]
 
+  ## formula/data/model pre-processing
+  raschmod <- RaschModel()  
+  ff <- attr(modeltools:::ParseFormula(ff), "formula")
+  ff$input[[3]] <- ff$input[[2]]
+  ff$input[[2]] <- ff$response[[2]]
+  ff <- dpp(raschmod, as.formula(ff$input), other = list(part = as.formula(ff$blocks)), 
+    data = data, na.action = na.pass)
+
+  ## data sanity checks
+  y <- as.matrix(ff@get("response"))
+  if(k < 3) stop("need at least three items")
+  if(!all(as.vector(y) %in% c(0:1, NA))) stop("y must be a binary 0/1 matrix (potentially with NAs)")
+  if(!all(apply(y, 1, function(x) all(0:1 %in% x))))
+    stop("each row of y must have at least one 0 and one 1 entry")
+
   ## call mob()
-  rval <- mob(ff, data = data, model = RaschModel(),
-    control = mob_control(minsplit = minsplit,
-      objfun = function(object) - as.vector(logLik(object)), ...), na.action = na.action)
+  rval <- mob(ff, model = raschmod, control = mob_control(minsplit = minsplit,
+      objfun = function(object) - as.vector(logLik(object)), ...))
 
   ## add class and return
   structure(list(mob = rval), class = "raschtree")

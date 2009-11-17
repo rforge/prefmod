@@ -20,7 +20,7 @@
 }
 
 \usage{
-raschtree(formula, data, na.action = na.pass, minsplit = 10, \dots)
+raschtree(formula, data, minsplit = 10, \dots)
 }
 
 \arguments{
@@ -28,9 +28,7 @@ raschtree(formula, data, na.action = na.pass, minsplit = 10, \dots)
     should be of type \code{y ~ x1 + x2}
     where \code{y} should be a binary 0/1 matrix
     and \code{x1} and \code{x2} are used as partitioning variables.}
-  \item{data}{an optional data frame containing the variables in the model.}
-  \item{na.action}{A function which indicates what should happen when the data
-    contain \code{NA}s, defaulting to \code{\link[stats]{na.pass}}.}
+  \item{data}{a data frame containing the variables in the model.}
   \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
 }
 
