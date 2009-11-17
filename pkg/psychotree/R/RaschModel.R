@@ -25,7 +25,6 @@ reweight.RaschModel <- function(object, weights, ...) {
      do.call("fit", c(list(object = object$ModelEnv, weights = weights), object$addargs))
 }
 
-
 print.RaschModel <- function(x, digits = max(3, getOption("digits") - 3), ...) {
   cat("Rasch model coefficients:\n")
   print(coef(x), digits = digits)
@@ -63,6 +62,7 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL,
   any_y_na <- any(y_na)
 
   if(!any_y_na) {
+    ## compute likelihood/gradient/hessian on aggregated data
   
     ## data statistics
     cs <- colSums(y * weights)
@@ -96,9 +96,8 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL,
     }
 
     ## analytical hessian
-    ahessian <- function(par, esf = NULL) {
+    ahessian <- function(par, esf) {
       ## obtain esf and apply contrast
-      if(is.null(esf)) esf <- elementary_symmetric_functions(c(0, par), order = 2)
       g <- esf[[1]][-1]
       g1 <- esf[[2]][-1, -1]
       g2 <- esf[[3]][-1, -1, -1]
@@ -112,9 +111,124 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL,
     }
 
   } else {
+    ## compute likelihood/gradient/hessian on individual data
 
-    ## log-likelihood contributions
-    ## ll <- as.vector(x %*% beta) - log(g)[rs + 1]
+    na_patterns <- factor(apply(y_na, 1, function(z) paste(which(z), collapse = "\r")))
+    y0 <- y
+    y0[y_na] <- 0
+    rs <- rowSums(y0)
+
+    ## starting values
+    if(is.null(start)) start <- qlogis(colSums(y0 * weights)/colSums(!y_na * weights))
+    start <- start[-1] - start[1]
+
+    ## objective function: conditional log-likelihood
+    cloglik <- function(par) {
+      ## pre-compute ESF for all observed NA patterns
+      esf_patterns <- lapply(levels(na_patterns), function(z) {
+        wi <- as.integer(strsplit(z, "\r")[[1]])
+	cf <- if(length(wi) < 1) c(0, par) else c(0, par)[-wi]
+	elementary_symmetric_functions(cf, order = 1)
+      })
+      
+      ## convenience function for obtaining ESF of observation i
+      ## fill up with zeros if there were NAs
+      get_esf <- function(i, order = 0) {
+        na_i <- na_patterns[i]
+        rs_i <- rs[i]
+        wi_i <- as.integer(strsplit(as.character(na_i), "\r")[[1]])
+        esf <- esf_patterns[[na_i]][[order + 1]]
+	if(order < 1) esf[-1][rs_i] else {
+	  rval <- rep(0, k)
+	  if(length(wi_i) < 1) {
+	    rval <- esf[rs_i + 1,]
+	  } else {
+            rval[-wi_i] <- esf[rs_i + 1,]
+	  }
+          rval[-1]
+	}
+      }
+
+      ## compute sum of weighted likelihood contributions
+      cll <- sum(weights * (as.vector(y0[,-1] %*% par) -
+        sapply(1:n, function(i) log(get_esf(i, order = 0)))))
+
+      ## gradient
+      grad <- colSums(weights * (y0[,-1] - t(sapply(1:n, function(i)
+        get_esf(i, order = 1) / get_esf(i, order = 0)))))
+
+      ## collect and return
+      attr(cll, "gradient") <- - grad
+      return(-cll)
+    }
+ 
+    ## analytical gradient
+    agrad <- function(par, esf_patterns) {
+      ## convenience function for obtaining ESF of observation i
+      ## fill up with zeros if there were NAs
+      get_esf <- function(i, order = 0) {
+        na_i <- na_patterns[i]
+        rs_i <- rs[i]
+        wi_i <- as.integer(strsplit(as.character(na_i), "\r")[[1]])
+        esf <- esf_patterns[[na_i]][[order + 1]]
+	if(order < 1) esf[-1][rs_i] else {
+	  rval <- rep(0, k)
+	  if(length(wi_i) < 1) {
+	    rval <- esf[rs_i + 1,]
+	  } else {
+            rval[-wi_i] <- esf[rs_i + 1,]
+	  }
+          rval[-1]
+	}
+      }
+
+      ## gradient
+      weights * (y0[,-1] - t(sapply(1:n, function(i)
+        get_esf(i, order = 1) / get_esf(i, order = 0))))
+    }
+
+    ## analytical hessian
+    ahessian <- function(par, esf) {
+      ## convenience function for obtaining ESF of observation i
+      ## fill up with zeros if there were NAs
+      esf_patterns <- esf
+      get_esf <- function(i, order = 0) {
+        na_i <- na_patterns[i]
+        rs_i <- rs[i]
+        wi_i <- as.integer(strsplit(as.character(na_i), "\r")[[1]])
+        esf <- esf_patterns[[na_i]][[order + 1]]
+	if(order < 1) {
+	  esf[-1][rs_i]
+	} else if(order < 2) {
+	  rval <- rep(0, k)
+	  if(length(wi_i) < 1) {
+	    rval <- esf[rs_i + 1,]
+	  } else {
+            rval[-wi_i] <- esf[rs_i + 1,]
+	  }
+          rval[-1]
+	} else {
+	  rval <- matrix(0, ncol = k, nrow = k)
+	  if(length(wi_i) < 1) {
+	    rval <- esf[rs_i + 1,,]
+	  } else {
+            rval[-wi_i, -wi_i] <- esf[rs_i + 1,,]
+	  }
+          rval[-1,-1]
+	}
+      }
+
+      hess <- matrix(0, ncol = k-1, nrow = k-1)
+
+      for(i in 1:n) {
+        g <- get_esf(i, order = 0)
+        g1 <- get_esf(i, order = 1)
+        g2 <- get_esf(i, order = 2)
+        hess <- hess + (g2 - outer(g1, g1)/g)/g
+      }
+
+      return(hess)
+    }
 
   }
   
@@ -124,8 +238,16 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL,
   
   ## collect and annotate results
   cf <- opt$estimate
-  esf <- if(any_y_na) NULL else elementary_symmetric_functions(c(0, cf), order = 2)
-  grad <- if(any_y_na) agrad(cf) else NULL
+  esf <- if(any_y_na) {
+    lapply(levels(na_patterns), function(z) {
+      wi <- as.integer(strsplit(z, "\r")[[1]])
+      cfi <- if(length(wi) < 1) c(0, cf) else c(0, cf)[-wi]
+      elementary_symmetric_functions(cfi, order = 2)
+    })
+  } else {
+    elementary_symmetric_functions(c(0, cf), order = 2)
+  }
+  grad <- if(any_y_na) agrad(cf, esf) else NULL
   vc <- if(hessian) opt$hessian else ahessian(cf, esf)
   vc <- solve(vc)
   names(cf) <- rownames(vc) <- colnames(vc) <- colnames(y)[-1]
@@ -141,7 +263,7 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL,
     data = y_orig,
     items = status,
     na = any_y_na,
-    elementary_symmetric_functions = esf,
+    elementary_symmetric_functions = if(any_y_na) NULL else esf,
     estfun = grad,
     nlm_code = opt$code,
     iterations = opt$iterations,
@@ -334,7 +456,7 @@ plot.RaschModel <- function(x,
 
   ## raw plot
   ix <- if(index) seq(along = cf) else rep(0, length(cf))
-  plot(ix, cf, xlab = xlab, ylab = ylab, type = "n", axes = FALSE, ...)
+  plot(ix, cf, xlab = xlab, ylab = ylab, type = "n", axes = FALSE, ylim = ylim, ...)
   if(ref) abline(h = cf_ref, col = "lightgray")
   axis(2)
   box()  

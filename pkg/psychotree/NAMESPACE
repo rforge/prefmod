@@ -2,6 +2,7 @@
 import(
   "stats",
   "graphics",
+  "modeltools",
   "party",
   "sandwich", 
   "strucchange"

@@ -18,7 +18,7 @@ raschtree <- function(formula, data, minsplit = 10, ...)
 
   ## data sanity checks
   y <- as.matrix(ff@get("response"))
-  if(k < 3) stop("need at least three items")
+  if(ncol(y) < 3) stop("need at least three items")
   if(!all(as.vector(y) %in% c(0:1, NA))) stop("y must be a binary 0/1 matrix (potentially with NAs)")
   if(!all(apply(y, 1, function(x) all(0:1 %in% x))))
     stop("each row of y must have at least one 0 and one 1 entry")
