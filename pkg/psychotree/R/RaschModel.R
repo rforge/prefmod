@@ -7,7 +7,7 @@ RaschModel <- function(gradtol = 1e-12, hessian = FALSE) {
     fit = function(object, weights = NULL, ...){
 
         ## extract response (there are no regressors)
-        y <- object@get("response")[[1]]
+        y <- object@get("response")
 
         ## call RaschModel.fit()
         z <- RaschModel.fit(y = y, weights = weights,
