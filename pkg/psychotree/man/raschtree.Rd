@@ -20,7 +20,7 @@
 }
 
 \usage{
-raschtree(formula, data, minsplit = 10, \dots)
+raschtree(formula, data, minsplit = 10, gradtol = 1e-6, \dots)
 }
 
 \arguments{
@@ -29,6 +29,8 @@ raschtree(formula, data, minsplit = 10, \dots)
     where \code{y} should be a binary 0/1 matrix
     and \code{x1} and \code{x2} are used as partitioning variables.}
   \item{data}{a data frame containing the variables in the model.}
+  \item{gradtol}{numeric tolerance passed to \code{\link{RaschModel}}
+    and on to \code{\link[stats]{nlm}}.}
   \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
 }
 

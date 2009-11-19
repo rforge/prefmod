@@ -25,19 +25,16 @@
 }
 
 \usage{
-RaschModel(gradtol = 1e-12, hessian = FALSE)
+RaschModel(gradtol = 1e-6)
 
-RaschModel.fit(y, weights = NULL, start = NULL,
-  gradtol = 1e-12, check.analyticals = FALSE, hessian = FALSE, \dots)
+RaschModel.fit(y, weights = NULL, start = NULL, gradtol = 1e-6, \dots)
 }
 
 \arguments{
   \item{y}{object that can be coerced (via \code{\link[base]{as.matrix}}) to binary 0/1 matrix.}
   \item{weights}{an optional vector of weights, interpreted as case weights (integer only).}
   \item{start}{an optional vector of starting values.}
-  \item{hessian}{logical. Should the numerical Hessian be used for inference? (Default
-    is to use analytical Hessian.)}
-  \item{gradtol, check.analyticals, \dots}{further arguments passed to \code{\link[stats]{nlm}}.}
+  \item{gradtol, \dots}{further arguments passed to \code{\link[stats]{nlm}}.}
 }
 
 \details{
