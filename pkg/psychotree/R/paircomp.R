@@ -202,7 +202,7 @@ summary.paircomp <- function(object, abbreviate = FALSE, decreasing = TRUE, pcma
   if(any(is.na(dat))) cnam <- c(cnam, "NA's")
 
   rval <- t(apply(dat, 2, function(x) table(factor(x, levels = mscale(object)))))
-  if(decreasing) rval <- rval[,ncol(rval):1]
+  if(decreasing) rval <- rval[, ncol(rval):1, drop = FALSE]
   if(any(is.na(dat))) rval <- cbind(rval, apply(dat, 2, function(x) sum(is.na(x))))
   dimnames(rval) <- list(rnam, cnam)
 

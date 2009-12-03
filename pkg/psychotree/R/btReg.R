@@ -76,8 +76,8 @@ btReg.fit <- function(y, weights = NULL,
   
   ## basic aggregation quantities
   ytab <- summary(y)
-  if(has_ties) ytab <- ytab[, c(1, 3, 2)]
-  if(!undecided) ytab <- ytab[, 1:2]
+  if(has_ties) ytab <- ytab[, c(1, 3, 2), drop = FALSE]
+  if(!undecided) ytab <- ytab[, 1:2, drop = FALSE]
     
   ## set up auxiliary model
   if(type == "loglin") {
@@ -106,7 +106,7 @@ btReg.fit <- function(y, weights = NULL,
   ## fit auxiliary model and extract information
   fm <- glm.fit(xaux, yaux, family = famaux, control = glm.control(...))
   par <- fm$coefficients[1:npar]
-  vc <- summary.glm(fm, corr = FALSE)$cov.unscaled[1:npar,1:npar]
+  vc <- summary.glm(fm, corr = FALSE)$cov.unscaled[1:npar, 1:npar, drop = FALSE]
   names(par) <- rownames(vc) <- colnames(vc) <- c(lab[-ref], if(undecided) "(undecided)" else NULL)
 
   ## log-probabilities and log-likelihood
@@ -139,9 +139,9 @@ btReg.fit <- function(y, weights = NULL,
   for(i in 1:npc) gradp[i*3 - (2:0), c(ix[i,], nobj)] <- t(t(ct) + as.vector(cf %*% exp(logp[i,])))
   ef <- t(sapply(1:length(y), function(i) {
     wi <- (0:(npc - 1)) * 3 + c(2, 3, 1)[ymat[i,] + 2]
-    colSums(gradp[wi,], na.rm = TRUE)
+    colSums(gradp[wi,, drop = FALSE], na.rm = TRUE)
   }))
-  if(!undecided) ef <- ef[,-nobj]
+  if(!undecided) ef <- ef[, -nobj, drop = FALSE]
   dimnames(ef) <- list(names(y), names(par))
 
   if(!is.null(weights)) ef <- ef * weights  
