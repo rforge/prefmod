@@ -20,7 +20,8 @@
 }
 
 \usage{
-raschtree(formula, data, minsplit = 10, gradtol = 1e-6, \dots)
+raschtree(formula, data, minsplit = 10, gradtol = 1e-6,
+  deriv = c("sum", "diff", "numeric"), \dots)
 }
 
 \arguments{
@@ -29,6 +30,10 @@ raschtree(formula, data, minsplit = 10, gradtol = 1e-6, \dots)
     where \code{y} should be a binary 0/1 matrix
     and \code{x1} and \code{x2} are used as partitioning variables.}
   \item{data}{a data frame containing the variables in the model.}
+  \item{deriv}{character. Which type of derivatives should be used for computing
+    gradient and Hessian matrix? Analytical with sum algorithm (\code{"sum"}),
+    analytical with difference algorithm (\code{"diff"}, faster but numerically unstable),
+    or numerical. Passed to \code{\link{RaschModel}}.}
   \item{gradtol}{numeric tolerance passed to \code{\link{RaschModel}}
     and on to \code{\link[stats]{nlm}}.}
   \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}

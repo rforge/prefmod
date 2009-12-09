@@ -1,5 +1,5 @@
 ## S4 StatModel object
-RaschModel <- function(gradtol = 1e-6) {
+RaschModel <- function(gradtol = 1e-6, deriv = c("sum", "diff", "numeric")) {
   new("StatModel",
     capabilities = new("StatModelCapabilities"),
     name = "Rasch model",
@@ -10,7 +10,7 @@ RaschModel <- function(gradtol = 1e-6) {
         y <- object@get("response")
 
         ## call RaschModel.fit()
-        z <- RaschModel.fit(y = y, weights = weights, gradtol = gradtol)
+        z <- RaschModel.fit(y = y, weights = weights, gradtol = gradtol, deriv = deriv)
         z$ModelEnv <- object
         z$addargs <- list(...)
         z
@@ -31,8 +31,12 @@ print.RaschModel <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 }
 
 ## workhorse fitting function
-RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6, ...)
+RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6, 
+  deriv = c("sum", "diff", "numeric"), ...)
 {
+  ## argument matching
+  deriv <- match.arg(deriv)
+
   ## original data
   y <- as.matrix(y)
   k <- k_orig <- ncol(y)
@@ -85,17 +89,24 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6, ...)
     ## objective function: conditional log-likelihood
     cloglik <- function(par) {
       ## obtain esf and apply contrast
-      esf <- elementary_symmetric_functions(c(0, par), order = 1)
+      esf <- elementary_symmetric_functions(c(0, par),
+        order = 1 - (deriv == "numeric"), 
+	diff = deriv == "diff")
       g <- esf[[1]][-1]
-      g1 <- esf[[2]][-1, -1, drop = FALSE]
 
       ## conditional log-likelihood
       cll <- sum(cs * par) - sum(rf * log(g))
-      ## gradient
-      grad <- cs - colSums(rf * g1/g)
 
-      ## collect and return
-      attr(cll, "gradient") <- - grad
+      ## catch degenerated cases (typically cause by non-finite gamma)
+      if(is.na(cll) | !is.finite(cll)) cll <- -.Machine$double.xmax
+
+      ## gradient
+      if(deriv != "numeric") {
+        g1 <- esf[[2]][-1, -1, drop = FALSE]
+        grad <- cs - colSums(rf * g1/g)
+        attr(cll, "gradient") <- - grad
+      }
+
       return(-cll)
     }
 
@@ -169,18 +180,30 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6, ...)
         rf_i[is.na(rf_i)] <- 0
 
         ## obtain esf and apply contrast
-        esf_i <- elementary_symmetric_functions(par_i, order = 1)
+        esf_i <- elementary_symmetric_functions(par_i,
+          order = 1 - (deriv == "numeric"), 
+  	  diff = deriv == "diff")
         g_i <- esf_i[[1]]
-        g1_i <- esf_i[[2]]
 
         ## conditional log-likelihood
         cll <- cll + (sum(cs_i * par_i) - sum(rf_i * log(g_i)))
+
         ## gradient
-        grad <- grad + zero_fill(cs_i - colSums(rf_i * g1_i/g_i), wi_i)[-1]
+        if(deriv != "numeric") {
+          g1_i <- esf_i[[2]]
+          grad <- grad + zero_fill(cs_i - colSums(rf_i * g1_i/g_i), wi_i)[-1]
+        }
       }
 
+      ## catch degenerated cases (typically cause by non-finite gamma)
+      if(is.na(cll) | !is.finite(cll)) cll <- -.Machine$double.xmax
+
+      ## add gradient (if desired)
+      if(deriv != "numeric") {
+        attr(cll, "gradient") <- - grad
+      }
+      
       ## collect and return
-      attr(cll, "gradient") <- - grad
       return(-cll)
     }
  
@@ -248,7 +271,7 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6, ...)
   
   ## optimization
   opt <- nlm(cloglik, start, gradtol = gradtol, 
-    hessian = FALSE, check.analyticals = FALSE)
+    hessian = (deriv == "numeric"), check.analyticals = FALSE)
   
   ## collect and annotate results
   cf <- opt$estimate
@@ -256,14 +279,18 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6, ...)
     lapply(levels(na_patterns), function(z) {
       wi <- as.integer(strsplit(z, "\r")[[1]])
       cfi <- if(length(wi) < 1) c(0, cf) else c(0, cf)[-wi]
-      elementary_symmetric_functions(cfi, order = 2)
+      elementary_symmetric_functions(cfi,
+        order = 2 - (deriv == "numeric"), 
+	diff = deriv == "diff")
     })
   } else {
-    elementary_symmetric_functions(c(0, cf), order = 2)
+    elementary_symmetric_functions(c(0, cf),
+      order = 2 - (deriv == "numeric"),
+      diff = deriv == "diff")
   }
   if(any_y_na) names(esf) <- levels(na_patterns)
   grad <- agrad(cf, esf)
-  vc <- ahessian(cf, esf)
+  vc <- if(deriv == "numeric") opt$hessian else ahessian(cf, esf)
   vc <- solve(vc)
   names(cf) <- colnames(grad) <- rownames(vc) <- colnames(vc) <- colnames(y)[-1]
   
@@ -288,10 +315,13 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6, ...)
 }
 
 ## elementary symmetric functions
-elementary_symmetric_functions <- function(par, order = 0, log = TRUE) {
+elementary_symmetric_functions <- function(par, order = 0, log = TRUE, diff = FALSE) {
   ## Michelle Liou (1994). More on the Computation of Higher-Order
   ## Derivatives of the Elementary Symmetric Functions in the
   ## Rasch Model. Applied Psychological Measurement, 18(1), 53-62.
+
+  ## Use difference algorithm for orders > 0?
+  diff <- rep(diff, length.out = 2)
 
   ## derivatives up to order
   order <- round(order)[1]
@@ -322,27 +352,45 @@ elementary_symmetric_functions <- function(par, order = 0, log = TRUE) {
   if(order < 1) return(rval)
 
   ## Order: 1
-  ## initialization: gamma_1^(j) = 1
-  gamma1 <- matrix(0, nrow = n+1, ncol = n)
-  gamma1[2,] <- 1
-  ## recursion: Equation 4
-  for(q in 3:(n+1)) gamma1[q,] <- gamma[q-1] - eps * gamma1[q-1,]
+  if(diff[1]) {
+    ## initialization: gamma_1^(j) = 1
+    gamma1 <- matrix(0, nrow = n+1, ncol = n)
+    gamma1[2,] <- 1
+    ## recursion: Equation 4
+    for(q in 3:(n+1)) gamma1[q,] <- gamma[q-1] - eps * gamma1[q-1,]
+  } else {
+    ## re-call self, omitting i-th parameter
+    gamma1 <- sapply(1:n, function(i)
+      c(0, elementary_symmetric_functions(eps[-i], order = 0, log = FALSE)[[1]]))
+  }
   ## if input on log scale: include inner derivative
-  if(log) gamma1 <- t(t(gamma1) * eps)
+  if(log) gamma1 <- exp(t(t(log(gamma1)) + beta))
   ## return value
   rval[[2]] <- gamma1
   if(order < 2) return(rval)
 
   ## Order: 2
-  ## initialization: gamma_2^(i,j) = 1
-  gamma2 <- array(0, c(n+1, n, n))
-  gamma2[3,,] <- 1
-  ## auxiliary variables
-  eps_plus_eps <- outer(eps, eps, "+")
-  eps_times_eps <- outer(eps, eps)
-  ## recursion: Jansen's Equation (Table 1, Forward, Second-Order)
-  if(n > 2) for(q in 4:(n+1)) gamma2[q,,] <- gamma[q-2] -
-    (eps_plus_eps * gamma2[q-1,,] + eps_times_eps * gamma2[q-2,,])
+  if(diff[2]) {
+    ## initialization: gamma_2^(i,j) = 1
+    gamma2 <- array(0, c(n+1, n, n))
+    gamma2[3,,] <- 1
+    ## auxiliary variables
+    eps_plus_eps <- outer(eps, eps, "+")
+    eps_times_eps <- exp(outer(beta, beta, "+"))
+    ## recursion: Jansen's Equation (Table 1, Forward, Second-Order)
+    if(n > 2) for(q in 4:(n+1)) gamma2[q,,] <- gamma[q-2] -
+      (eps_plus_eps * gamma2[q-1,,] + eps_times_eps * gamma2[q-2,,])
+  } else {
+    ## re-call self, omitting i-th and j-th parameter
+    gamma2 <- array(0, c(n + 1, n, n))
+    for(i in 1:(n-1)) {
+      for(j in (i+1):n) {
+        gamma2[, i, j] <- gamma2[, j, i] <- c(0, 0,
+	  elementary_symmetric_functions(eps[-c(i, j)], order = 0, log = FALSE)[[1]])
+      }
+    }
+    if(log) eps_times_eps <- exp(outer(beta, beta, "+"))  
+  }
   ## if input on log scale: include inner derivative
   if(log) for(q in 1:(n+1)) gamma2[q,,] <- eps_times_eps * gamma2[q,,]
   ## each diagonal is simply first derivative

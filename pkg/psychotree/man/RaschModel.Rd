@@ -25,15 +25,20 @@
 }
 
 \usage{
-RaschModel(gradtol = 1e-6)
+RaschModel(gradtol = 1e-6, deriv = c("sum", "diff", "numeric"))
 
-RaschModel.fit(y, weights = NULL, start = NULL, gradtol = 1e-6, \dots)
+RaschModel.fit(y, weights = NULL, start = NULL, gradtol = 1e-6,
+  deriv = c("sum", "diff", "numeric"), \dots)
 }
 
 \arguments{
   \item{y}{object that can be coerced (via \code{\link[base]{as.matrix}}) to binary 0/1 matrix.}
   \item{weights}{an optional vector of weights, interpreted as case weights (integer only).}
   \item{start}{an optional vector of starting values.}
+  \item{deriv}{character. Which type of derivatives should be used for computing
+    gradient and Hessian matrix? Analytical with sum algorithm (\code{"sum"}),
+    analytical with difference algorithm (\code{"diff"}, faster but numerically unstable),
+    or numerical.}
   \item{gradtol, \dots}{further arguments passed to \code{\link[stats]{nlm}}.}
 }
 

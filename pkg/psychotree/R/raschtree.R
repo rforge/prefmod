@@ -1,5 +1,6 @@
 ## high-level convenience interface
-raschtree <- function(formula, data, minsplit = 10, gradtol = 1e-6, ...)
+raschtree <- function(formula, data, minsplit = 10, gradtol = 1e-6,
+  deriv = c("sum", "diff", "numeric"), ...)
 {
   ## transform formula
   stopifnot(length(formula) > 2)
@@ -9,7 +10,7 @@ raschtree <- function(formula, data, minsplit = 10, gradtol = 1e-6, ...)
   ff[[3]][[3]] <- formula[[3]]
 
   ## formula/data/model pre-processing
-  raschmod <- RaschModel(gradtol = gradtol)
+  raschmod <- RaschModel(gradtol = gradtol, deriv = deriv)
   ff <- attr(modeltools:::ParseFormula(ff), "formula")
   ff$input[[3]] <- ff$input[[2]]
   ff$input[[2]] <- ff$response[[2]]
