@@ -4,7 +4,8 @@ NIblcontrib<-function(obj,lambda,X,nobj,ENV)
 {
       naidx<-1-as.numeric(obj$notnaidx)  # R=1 missing, R=0 observed
 
-      R<-matrix(rep(naidx,2^ENV$ncomp),nr=2^ENV$ncomp,byrow=T)
+      ncat<-ENV$ncat                                                      #  7.12.09
+      R<-matrix(rep(naidx,ncat^ENV$ncomp),nr=ncat^ENV$ncomp,byrow=T)      #
       RBstar<-R %*%abs(pcdesign(nobj))  # alpha_i + alpha_j
       #RBstar<-R %*%(pcdesign(4))    # alpha_i - alpha_j
 
@@ -24,6 +25,9 @@ NIblcontrib<-function(obj,lambda,X,nobj,ENV)
          XX<-cbind(X,r)                                       # lambdas, alpha+alpha
       }
 
+
+      # add undecided if undec=TRUE            #  7.12.09
+      if(ENV$undec) XX<-cbind(XX,ENV$U)        #
 
       # add dependencies if ia=TRUE
       if(ENV$ia) XX<-cbind(XX,ENV$XI)

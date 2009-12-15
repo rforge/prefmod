@@ -107,14 +107,19 @@ llbtPC.fit<-function(obj, nitems, formel=~1, elim=~1, resptype="paircomp", obj.n
     colnames(objdesign) <- ENV$obj.names
 
     dfr <- cbind(dfr, objdesign)
-
     # covariates
     if (length(cList[[1]]$cov) > 1) {
-    covdesign <- data.frame(gfac2(ENV$covlevels) %x% rep(1,ncomp*ncat))
-    names(covdesign) <- names(ENV$covlevels)
-    covdesign <- lapply(covdesign, function(x) as.factor(x))
 
-    dfr <- cbind(dfr, covdesign)
+       covsdesign <- as.data.frame(gfac2(ENV$elimcovlevels) %x% rep(1,ncomp*ncat))
+       names(covsdesign)<-names(ENV$elimcovlevels)
+       covsdesign <- covsdesign[names(ENV$model.covs)]
+
+       #covsdesign <- data.frame(gfac2(ENV$covlevels) %x% rep(1,ncomp*ncat)) # 23.11.09 if based on model terms only
+       #names(covsdesign) <- names(ENV$covlevels)                            # we get a wrong sequence of factor levels
+
+       names(covsdesign) <- names(ENV$model.covs)
+       covsdesign <- lapply(covsdesign, function(x) as.factor(x))
+       dfr <- cbind(dfr, covsdesign)
     }
 
  #ev. gnm.Fit

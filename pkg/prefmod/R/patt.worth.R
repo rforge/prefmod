@@ -44,14 +44,11 @@ patt.worth<-function(obj, obj.names=NULL, outmat="worth")
          if (is.null(x)) {
               gr.labels <- "estimate"
          } else{
-         xx<-mapply(function(x,y)paste(x,y,sep=""), colnames(x),data.frame(x))
-         gr.labels <-apply(xx,1,paste,collapse=":")
+              xx<-mapply(function(x,y)paste(x,y,sep=""), colnames(x),data.frame(x))
+              gr.labels <-apply(xx,1,paste,collapse=":")
          }
     } else
          gr.labels <- ""
-
-
-
 
     mltp<-2
     worthmatrix<-NULL

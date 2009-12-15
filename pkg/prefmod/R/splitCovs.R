@@ -39,6 +39,8 @@ splitCovs<-function(dat,covs,formel,elim,ENV)
        maineffect.terms.frml<-all.frml.term.labels[order.frml==1]
        if(length(maineffect.terms.frml)>0){                                        # only if cov terms in formel
          ENV$covlevels<-apply(as.matrix(covs[,maineffect.terms.frml]),2,max)
+         ENV$elimcovlevels<-apply(as.matrix(covs[,maineffect.terms]),2,max)        # 23.11.09
+         names(ENV$elimcovlevels)<-maineffect.terms                                # subj covs have to based on elim terms
          names(ENV$covlevels)<-maineffect.terms.frml
        }
 
@@ -46,21 +48,22 @@ splitCovs<-function(dat,covs,formel,elim,ENV)
        cList<-split(dat,covs[,maineffect.terms])
 
        # remove terms in elim design matrix not in formel design matrix
-       enam<-colnames(elimdesmat)                                                # had to be introduced
-       cnam<-colnames(covdesmat)                                                 # since terms in
-       nam.elim<-sapply(1:ncol(elimdesmat),                                      # interactions
-                         function(i){txt<-sort(unlist(strsplit(enam[i],":")));   # may have different
-                                     paste(txt,collapse=":")}                    # order in elim and formel
-                       )                                                         # correct in R 2.6.x and
-       nam.cov<-sapply(1:ncol(covdesmat),                                        # maybe in 2.7.0
-                         function(i){txt<-sort(unlist(strsplit(cnam[i],":")));   #
-                                     paste(txt,collapse=":")}                    #
-                       )                                                         #
-                                                                                 #
-       model.terms<-nam.elim %in% nam.cov                                        #
-       #model.terms<-colnames(elimdesmat) %in% colnames(covdesmat)          replaced
+                                                                                 # now obsolete: 23.11.09
+#      enam<-colnames(elimdesmat)                                                # had to be introduced
+#      cnam<-colnames(covdesmat)                                                 # since terms in
+#      nam.elim<-sapply(1:ncol(elimdesmat),                                      # interactions
+#                        function(i){txt<-sort(unlist(strsplit(enam[i],":")));   # may have different
+#                                    paste(txt,collapse=":")}                    # order in elim and formel
+#                      )                                                         # correct in R 2.6.x and
+#      nam.cov<-sapply(1:ncol(covdesmat),                                        # maybe in 2.7.0
+#                        function(i){txt<-sort(unlist(strsplit(cnam[i],":")));   #
+#                                    paste(txt,collapse=":")}                    # now obsolete
+#                      )                                                         #
+#                                                                                #
+#       model.terms<-nam.elim %in% nam.cov                                       #
 
-       colnames(elimdesmat)<-nam.elim                                            #
+       model.terms<-colnames(elimdesmat) %in% colnames(covdesmat)                # had been replaced
+
 
        for (i in 1:length(cList))
            cList[[i]]<-c(cList[i],list(cov=elimdesmat[i,model.terms]))
@@ -76,10 +79,8 @@ splitCovs<-function(dat,covs,formel,elim,ENV)
        ENV$covdesmat<-covdesmat
    }
 
-
    ENV$ncovpar<-ncol(covdesmat)       # number of covariates
    ENV$formel<-formel
    ENV$elim<-elim
    cList
-
 }

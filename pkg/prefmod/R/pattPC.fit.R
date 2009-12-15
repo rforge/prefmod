@@ -62,6 +62,7 @@ pattPC.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="paircomp",obj.names
          ncat<-2
          undec<-FALSE
     }
+    ENV$ncat <- ncat     # 7.12.09
 
     # transform data to 0,1 or 0,1,2
     if (min(dat, na.rm=TRUE)<0) dat <- -dat  # if -1/1 used then larger value is the preferred
@@ -173,7 +174,8 @@ pattPC.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="paircomp",obj.names
     #MNAR model Brian B:
     ##npar<-npar + MISalpha*(nobj) + MISbeta*(nobj)
     npar<-npar + MISalpha*sum(ENV$Malph) + MISbeta*sum(ENV$Mbeta) + MIScommon*1
-    paridx<-c(rep(1,nobj-1),rep(2,nobj*MISalpha)[ENV$Malph],rep(3,nobj*MISbeta)[ENV$Mbeta],4*MIScommon,rep(5,ia*npars.ia))
+    # 7.12.09 undec added to paridx
+    paridx<-c(rep(1,nobj-1),rep(2,nobj*MISalpha)[ENV$Malph],rep(3,nobj*MISbeta)[ENV$Mbeta],4*MIScommon,6*undec,rep(5,ia*npars.ia))
     paridx<-paridx[paridx>0]
     ENV$paridx<-paridx
     ########################################################

@@ -11,7 +11,7 @@
 {
 
      dat<-design
-     pluginz<-NULL          # possible starting values for mass points
+     pluginz<-NULL
      N<-nrow(dat)
      offset<-rep(0,N)
      weights<-rep(1,N)

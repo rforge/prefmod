@@ -62,17 +62,8 @@ NIgroupscontrib<-function(obj,lambda,X,nobj,ENV)
 
      } else { # nonresponse models
 
-
        likparts<-lapply(obj[1:(length(obj)-1)],NIblcontrib,lambda,X,nobj,ENV)
-##print(likparts)
-       ###ll1<-sum(unlist(lapply(likparts,function(x)x$ll1)))          # unnormalised part
        ll<-sum(unlist(lapply(likparts,function(x)x$ll)))          # now normalised part
-##print("groupscontrib loglik")
-##print(ll)
-       ###s.cnts<-sum(unlist(lapply(likparts,function(x)x$summ.cnts))) # part for normalisation
-       ###s.patt<-sum(unlist(lapply(likparts,function(x)x$summ.patt))) # part for normalisation
-
-       ###ll <- ll1 - s.cnts*log(s.patt)                    # loglik for current model
        fl<-sum(unlist(lapply(likparts,function(x)x$fl))) # loglik for saturated model
 
        ll.bl<-list(list(ll=ll,fl=fl))
