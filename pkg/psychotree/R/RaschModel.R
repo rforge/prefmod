@@ -289,7 +289,9 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
       diff = deriv == "diff")
   }
   if(any_y_na) names(esf) <- levels(na_patterns)
-  grad <- agrad(cf, esf)
+  grad <- matrix(0, ncol = length(cf), nrow = length(weights_orig))
+  grad[weights_orig > 0,] <- agrad(cf, esf)
+  
   vc <- if(deriv == "numeric") opt$hessian else ahessian(cf, esf)
   vc <- solve(vc)
   names(cf) <- colnames(grad) <- rownames(vc) <- colnames(vc) <- colnames(y)[-1]
@@ -300,8 +302,8 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
     vcov = vc,
     loglik = -opt$minimum,
     df = k-1,
-    weights = weights,
-    n = nrow(y_orig),
+    weights = weights_orig,
+    n = sum(weights_orig > 0),
     items = status,
     na = any_y_na,
     elementary_symmetric_functions = esf,
