@@ -16,7 +16,8 @@ covdesign<-function(formel,covs,ENV)
 
 
    form<-formula(formel)
-   form.terms<-terms(form, keep.order=TRUE, simplify = TRUE)
+###   form.terms<-terms(form, keep.order=TRUE, simplify = TRUE)
+   form.terms<-terms(form, simplify = TRUE)
    mmat<-model.matrix(form.terms,data=maineffects)  # intercept included
    as.matrix(unique(mmat))
 }

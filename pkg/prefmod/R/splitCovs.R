@@ -1,6 +1,12 @@
 # split data according to subject covariates
 splitCovs<-function(dat,covs,formel,elim,ENV)
 {
+   sort.model.terms<-function(newForm){
+       sort(sapply(
+          strsplit(colnames(attr(terms(newForm), "factors")), ":", fixed = TRUE),
+          function(x) paste(sort(x), collapse = ":")))
+   }
+
    if(is.null(covs)){            # no covariates
       formel<-~1                 # reset formulas
       elim<-~1
@@ -17,14 +23,28 @@ splitCovs<-function(dat,covs,formel,elim,ENV)
            covdesmat<-matrix(1,1)
            colnames(covdesmat)<-""
       } else {                   # there are terms in actual model
+
+           # sort formel terms first before setting up covdesmat (18.1.10)
+           sorted.frml.terms<-sort.model.terms(formel)
+           frmlstr<-paste("~",paste(sorted.frml.terms,collapse="+"))
+           formel<-formula(frmlstr)
+
            covdesmat<-covdesign(formel,covs,ENV)
            ENV$model.covs<-ENV$maineffects
       }
-      elimdesmat<-covdesign(elim,covs,ENV)
+           # sort formel terms first before setting up elimdesmat (18.1.10)
+           sorted.elim.terms<-sort.model.terms(elim)
+           elimstr<-paste("~",paste(sorted.elim.terms,collapse="+"))
+           elim<-formula(elimstr)
+           elimdesmat<-covdesign(elim,covs,ENV)
    }
 
+
+#   all.term.labels<-attr(terms(formula(elimstr)),"term.labels")
    all.term.labels<-attr(terms(elim),"term.labels")
    order<-attr(terms(elim),"order")
+
+#   all.frml.term.labels<-attr(terms(formula(frmlstr)),"term.labels")
    all.frml.term.labels<-attr(terms(formel),"term.labels")
    order.frml<-attr(terms(formel),"order")
 
@@ -48,6 +68,7 @@ splitCovs<-function(dat,covs,formel,elim,ENV)
        cList<-split(dat,covs[,maineffect.terms])
 
        # remove terms in elim design matrix not in formel design matrix
+                                                                                 # again obsolete 18.1.10
                                                                                  # now obsolete: 23.11.09
 #      enam<-colnames(elimdesmat)                                                # had to be introduced
 #      cnam<-colnames(covdesmat)                                                 # since terms in
