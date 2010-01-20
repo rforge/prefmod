@@ -76,7 +76,8 @@ worth.raschtree <- function (object, node = NULL, ...)
 ## visualization function
 node_raschplot <- function(mobobj, id = TRUE,
   center = TRUE, names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
-  col = "black", linecol = "lightgray", cex = 0.5, pch = 19, xscale = NULL, yscale = NULL, ylines = 1.5)
+  col = "black", linecol = "black", hlinecol = "lightgray",
+  cex = 0.5, pch = 19, xscale = NULL, yscale = NULL, ylines = 1.5)
 {
     ## extract parameter of interest
     node <- 1:max(party:::terminal_nodeIDs(mobobj@tree))
@@ -137,9 +138,9 @@ node_raschplot <- function(mobobj, id = TRUE,
 	    name = paste("node_raschplot", node$nodeID, "plot", sep = ""))
         pushViewport(plot_vpi)
 	
-        grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = linecol), default.units = "native")
+        grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = hlinecol), default.units = "native")
 	if(index) {
-	  grid.lines(x, cfi, gp = gpar(col = col, lty = 2), default.units = "native")
+	  grid.lines(x, cfi, gp = gpar(col = linecol, lty = 2), default.units = "native")
 	  grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
 	  grid.xaxis(at = x, label = if(names) names(cfi) else x)
 	} else {	  
