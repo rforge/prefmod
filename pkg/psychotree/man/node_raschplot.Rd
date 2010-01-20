@@ -11,8 +11,8 @@
 \usage{
 node_raschplot(mobobj, id = TRUE,
   center = TRUE, names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
-  col = "black", linecol = "lightgray", cex = 0.5, pch = 19,
-  xscale = NULL, yscale = NULL, ylines = 1.5)
+  col = "black", linecol = "black", hlinecol = "lightgray", cex = 0.5, pch = 19,
+  xscale = NULL, yscale = NULL, xaxis = TRUE, yaxis = TRUE, ylines = 1.5)
 
 }
 
@@ -27,8 +27,10 @@ node_raschplot(mobobj, id = TRUE,
   \item{index}{logical. Should different indexes for different stimuli be used?}
   \item{ref}{logical. Should a horizontal line for the reference level be drawn?}
   \item{col, cex, pch}{graphical appearance of plotting symbols.}
-  \item{linecol}{line color for reference line (if \code{ref}).}
+  \item{linecol}{line color.}
+  \item{refcol}{line color for reference line (if \code{ref}).}
   \item{xscale, yscale}{x and y axis limits.}
+  \item{xaxis, yaxis}{logical. Should a axes be plotted?}
   \item{ylines}{numeric. Number of lines used for y-axis labels.}
 }
 

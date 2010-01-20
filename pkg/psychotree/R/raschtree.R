@@ -76,8 +76,9 @@ worth.raschtree <- function (object, node = NULL, ...)
 ## visualization function
 node_raschplot <- function(mobobj, id = TRUE,
   center = TRUE, names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
-  col = "black", linecol = "black", hlinecol = "lightgray",
-  cex = 0.5, pch = 19, xscale = NULL, yscale = NULL, ylines = 1.5)
+  col = "black", linecol = "black", refcol = "lightgray",
+  cex = 0.5, pch = 19, xscale = NULL, yscale = NULL,
+  xaxis = TRUE, yaxis = TRUE, ylines = 1.5)
 {
     ## extract parameter of interest
     node <- 1:max(party:::terminal_nodeIDs(mobobj@tree))
@@ -138,16 +139,16 @@ node_raschplot <- function(mobobj, id = TRUE,
 	    name = paste("node_raschplot", node$nodeID, "plot", sep = ""))
         pushViewport(plot_vpi)
 	
-        grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = hlinecol), default.units = "native")
+        grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = refcol), default.units = "native")
 	if(index) {
 	  grid.lines(x, cfi, gp = gpar(col = linecol, lty = 2), default.units = "native")
 	  grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
-	  grid.xaxis(at = x, label = if(names) names(cfi) else x)
+	  if(xaxis) grid.xaxis(at = x, label = if(names) names(cfi) else x)
 	} else {	  
   	  if(names) grid.text(names(cfi), x = x, y = cfi, default.units = "native")
 	    else grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
 	}
-        grid.yaxis(at = c(ceiling(yscale[1] * 100)/100, floor(yscale[2] * 100)/100))
+        if(yaxis) grid.yaxis(at = c(ceiling(yscale[1] * 100)/100, floor(yscale[2] * 100)/100))
         grid.rect(gp = gpar(fill = "transparent"))
 
 	upViewport(2)
