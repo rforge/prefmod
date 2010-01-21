@@ -11,7 +11,7 @@
 \usage{
 node_raschplot(mobobj, id = TRUE,
   center = TRUE, names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
-  col = "black", linecol = "black", hlinecol = "lightgray", cex = 0.5, pch = 19,
+  col = "black", linecol = "black", refcol = "lightgray", cex = 0.5, pch = 19,
   xscale = NULL, yscale = NULL, xaxis = TRUE, yaxis = TRUE, ylines = 1.5)
 
 }
