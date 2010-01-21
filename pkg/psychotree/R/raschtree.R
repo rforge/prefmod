@@ -33,8 +33,9 @@ raschtree <- function(formula, data, minsplit = 10, gradtol = 1e-6,
 }
 
 ## convenience plotting
-plot.raschtree <- function(x, terminal_panel = node_raschplot, tnex = 2, ...) {
-  plot(x$mob, terminal_panel = terminal_panel, tnex = tnex, tp_args = list(...))
+plot.raschtree <- function(x, terminal_panel = node_raschplot, tnex = 2, pval = TRUE, ...) {
+  plot(x$mob, terminal_panel = terminal_panel, tnex = tnex,
+    tp_args = list(...), ip_args = list(pval = pval))
 }
 
 ## hand-crafted "Next()" to bridge to
