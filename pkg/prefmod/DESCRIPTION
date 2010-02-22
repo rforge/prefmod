@@ -1,8 +1,8 @@
 Package: prefmod
 Type: Package
 Title: Utilities to fit paired comparison models for preferences
-Version: 0.8-17.3
-Date: 2010-01-18
+Version: 0.8-19
+Date: 2010-02-21
 Author: Reinhold Hatzinger
 Maintainer: Reinhold Hatzinger <reinhold.hatzinger@wu.ac.at>
 Depends: stats, gnm, colorspace

@@ -60,7 +60,11 @@ function(dfr){
     blnSubjcov<-cov.sel[1]!=""             #    FALSE if ""
 
     if (blnSubjcov) {
-       inpcovnames <- colnames(dat)[(nobj+1):ncolumns]
+       if (resptype=="paircomp") {         # in case of PC
+          inpcovnames <- colnames(dat)[(ncomp+1):ncolumns]
+       } else {
+          inpcovnames <- colnames(dat)[(nobj+1):ncolumns]
+       }
        if (toupper(cov.sel[1]) == "ALL"){   # all covariates included
           cov.sel <- inpcovnames
        } else if(length(setdiff(cov.sel,inpcovnames))>0) {
@@ -69,6 +73,13 @@ function(dfr){
        cov.case<-as.matrix(dat[,c(cov.sel)])
        colnames(cov.case)<-cov.sel
        covlevels<-apply(cov.case,2,max)
+       covlevmin<-apply(cov.case,2,min)         # check for subj covs which have no proper values
+       covwrong<- !(covlevels>1 & covlevmin==1) # don't have at least 2 values (highest lev > 1) and don't start with 1
+       if(any(covwrong)) {
+           wrongcov<-colnames(cov.case)[covwrong]
+           txt<-paste("\ncovariates with improper values: ",wrongcov,"\n")
+           stop(txt)
+       }
        ncov<-length(cov.sel)
     } else {
        cov.case=NULL
