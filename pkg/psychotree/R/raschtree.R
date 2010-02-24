@@ -33,9 +33,10 @@ raschtree <- function(formula, data, minsplit = 10, gradtol = 1e-6,
 }
 
 ## convenience plotting
-plot.raschtree <- function(x, terminal_panel = node_raschplot, tnex = 2, pval = TRUE, ...) {
+plot.raschtree <- function(x, terminal_panel = node_raschplot, tnex = 2,
+  pval = TRUE, id = TRUE, ...) {
   plot(x$mob, terminal_panel = terminal_panel, tnex = tnex,
-    tp_args = list(...), ip_args = list(pval = pval))
+    tp_args = list(id = id, ...), ip_args = list(pval = pval, id = id))
 }
 
 ## hand-crafted "Next()" to bridge to
@@ -129,7 +130,7 @@ node_raschplot <- function(mobobj, id = TRUE,
         ## main title
         top <- viewport(layout.pos.col = 2, layout.pos.row = 1)
         pushViewport(top)
-	mainlab <- paste(ifelse(id, paste("Node", node$nodeID, "(n = "), ""),
+	mainlab <- paste(ifelse(id, paste("Node", node$nodeID, "(n = "), "n = "),
 	                 sum(node$weights), ifelse(id, ")", ""), sep = "")
         grid.text(mainlab)
         popViewport()
@@ -143,7 +144,12 @@ node_raschplot <- function(mobobj, id = TRUE,
         grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = refcol), default.units = "native")
 	if(index) {
 	  grid.lines(x, cfi, gp = gpar(col = linecol, lty = 2), default.units = "native")
-	  grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
+          if(NCOL(pch) == 1L) {
+  	    grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
+          } else {
+	    grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch[,1], default.units = "native")
+	    grid.points(x, cfi, gp = gpar(           cex = cex), pch = pch[,2], default.units = "native")
+          }
 	  if(xaxis) grid.xaxis(at = x, label = if(names) names(cfi) else x)
 	} else {	  
   	  if(names) grid.text(names(cfi), x = x, y = cfi, default.units = "native")
