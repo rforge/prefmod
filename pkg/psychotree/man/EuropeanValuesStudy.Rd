@@ -33,7 +33,7 @@ A data frame containing 3584 observations on 10 variables.
 
 \details{
   The data are part of a larger survey conducted in 1999 in 32 countries in
-  Europe (see \url{http://www.europeanvaluesstudy.eu}). Vermunt (2003)
+  Europe (see \url{http://www.europeanvaluesstudy.eu/}). Vermunt (2003)
   obtained a sample from 10 percent of the available cases per country,
   yielding 3584 valid cases.
 
@@ -78,8 +78,16 @@ A data frame containing 3584 observations on 10 variables.
 \seealso{\code{\link{paircomp}}}
 
 \examples{
+##
 data("EuropeanValuesStudy", package = "psychotree")
 summary(EuropeanValuesStudy$paircomp)
+
+## Bradley-Terry tree resulting in similar results compared to
+## the (different) tree approach of Lee and Lee (2010)
+evs <- na.omit(EuropeanValueStudy)
+bt <- bttree(paircomp ~ gender + age + birthyear + marital + employment + income + country2,
+  data = evs, alpha = 0.01)
+plot(bt, abbreviate = 2)
 }
 
 \keyword{datasets}
