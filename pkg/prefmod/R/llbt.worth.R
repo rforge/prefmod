@@ -10,11 +10,14 @@ llbt.worth <- function(obj, obj.names=NULL, outmat="worth"){
 
 
    if(mtype == "gnm"){
+
+       # remove category and undecided parameters from lambda
        lambda <- obj$coefficients[obj$ofInterest]
        if(any(grep("^g[0-9]|g[0-9]$|^u$",names(lambda))))
            lambda <- lambda[-(grep("^g[0-9]|^u$", names(lambda)))]
        lambda <- ifelse(is.na(lambda),0,lambda)
 
+       # initialise lambda matrix
        npar<-length(lambda)
        lambda.mat <- matrix(, nrow=nobj, ncol=npar/nobj)
 
@@ -23,11 +26,11 @@ llbt.worth <- function(obj, obj.names=NULL, outmat="worth"){
        rownames(lambda.mat) <- nam.lambda[1:nobj]
        nam.new<-nam.lambda
        for (i  in nam.lambda[1:nobj])
-#           nam.new<-gsub(paste("^",i,"$|^",i,"[^0-9]:+|[:alnum:]*:?(",i,"[^0-9]{0,2})$",sep=""),"",nam.new)
+           # nam.new<-gsub(paste("^",i,"$|^",i,"[^0-9]:+|[:alnum:]*:?(",i,"[^0-9]{0,2})$",sep=""),"",nam.new)
            nam.new<-gsub(paste("^",i,"$|^",i,":",sep=""),"",nam.new)
        nn<-nam.new
        nl<-nam.lambda
-       colnames(lambda.mat) <- unique(nam.new)
+       #colnames(lambda.mat) <- unique(nam.new)
 
        # fill lambda matrix with correct entries
        npar<-length(lambda)
@@ -35,13 +38,14 @@ llbt.worth <- function(obj, obj.names=NULL, outmat="worth"){
        # case with covs
        if(npar>nobj){
            lambda.mat <- matrix(, nrow=nobj, ncol=npar/nobj)
+           colnames(lambda.mat) <- unique(nam.new)
 
            # reference group into first column
            lambda.mat[,1] <- lambda[1:nobj]
 
            # others according to their labels
            lambda.rest<-lambda[-(1:nobj)]
-           nn2<-nn[-(1:nobj)]
+           #nn2<-nn[-(1:nobj)]
            nn2<-nl[-(1:nobj)]
            lambda.mat.rest<-matrix(lambda.rest,b=T,nrow=nobj)
            lambda.mat[,2:ncol(lambda.mat)]<-lambda.mat.rest

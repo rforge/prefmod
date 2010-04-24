@@ -11,13 +11,14 @@ paired comparison data (Likert type items / ratings or rankings) using a
 loglinear approach. Fits loglinear Bradley-Terry model (LLBT) exploting an
 eliminate feature. Computes pattern models for paired comparisons,
 rankings, and ratings. Some treatment of missing values (MCAR and MNAR).
+Fits pattern mixture models using a nonparametric ML approach.
 }
 \details{
 \tabular{ll}{
 Package: \tab prefmod\cr
 Type: \tab Package\cr
 Version: \tab 0.8-19\cr
-Date: \tab 2010-02-21\cr
+Date: \tab 2010-04-22\cr
 Depends: \tab stats\cr
 License: \tab GPL\cr
 }

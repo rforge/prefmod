@@ -132,7 +132,8 @@ llbtPC.fit<-function(obj, nitems, formel=~1, elim=~1, resptype="paircomp", obj.n
 
     # part for covs
     if (length(cList[[1]]$cov) > 1) {
-       frm.covs <- paste("+",frm.objects, ":(",gsub("[~[:blank:]]","",formel)[2],")",sep="",collapse="")
+       # rh 22.4.10: use ENV$formel instead of formel because ENV$formel has sorted terms
+       frm.covs <- paste("+",frm.objects, ":(",gsub("[~[:blank:]]","",ENV$formel)[2],")",sep="",collapse="")
     } else {
        frm.covs <- ""
     }
@@ -147,12 +148,14 @@ llbtPC.fit<-function(obj, nitems, formel=~1, elim=~1, resptype="paircomp", obj.n
     formula <- as.formula(paste("y~",frm.objects,frm.covs,frm.u, sep="",collapse=""))
 
     npar.elim <- ncomp * length(cList)
-    eliminate <- gl(npar.elim, ncat)
+    elim <- gl(npar.elim, ncat)
+    dfr <- cbind(dfr, elim)
+
 
     rm(cList,cLtab)
     gc()
 
-    result <- gnm(formula,elim=eliminate,family=poisson,data=dfr)
+    result <- gnm(formula, eliminate=elim, family=poisson, data=dfr)
     result$envList <- as.list(ENV)
     class(result) <- c("llbtMod", class(result))
     result

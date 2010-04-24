@@ -151,10 +151,11 @@ res<-gnm(y~o1+o2+o3+o4+o5+o6+eng:(o1+o2+o3+o4+o5+o6)+g1,
 summary(res)
 
 ## calculating and plotting worth parameters
-lambda<-res$coefficients[c(2:6,23:27)]
-lambda[6:10]<-lambda[1:5]+lambda[6:10]
+lambda<-res$coefficients
+lambda<-lambda[names(lambda)!="g1"]
+lambda<-ifelse(is.na(lambda),0,lambda)
 lambmat<-matrix(lambda,ncol=2)
-lambmat<-rbind(lambmat,c(0,0))
+lambmat[,2]<-rowSums(lambmat)
 worthmat<-apply(lambmat,2,
       function(x) exp(2*x)/sum(exp(2*x)))
 colnames(worthmat)<-c("English:good","English:poor")

@@ -1,11 +1,11 @@
 Package: prefmod
 Type: Package
 Title: Utilities to fit paired comparison models for preferences
-Version: 0.8-19
-Date: 2010-02-21
+Version: 0.8-20
+Date: 2010-04-22
 Author: Reinhold Hatzinger
 Maintainer: Reinhold Hatzinger <reinhold.hatzinger@wu.ac.at>
-Depends: stats, gnm, colorspace
+Depends: stats, gnm (>= 1.0-0), colorspace
 Description: Generates design matrix for analysing real paired
              comparisons and derived paired comparison data
              (Likert type items / ratings or rankings) using a
@@ -14,6 +14,6 @@ Description: Generates design matrix for analysing real paired
              Computes pattern models for paired comparisons,
              rankings, and ratings.  Some treatment of missing
              values (MCAR and MNAR). Fits latent class (mixture) models
-             for paired comparison, rating and ranking patterns.
+             for paired comparison, rating and ranking patterns using
+             a nonparametric ML approach.
 License: GPL
-Packaged: Thu Dec 11 10:58:02 2008; hatz
