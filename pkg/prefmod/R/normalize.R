@@ -10,7 +10,7 @@ normalize<-function(lambda,X,nobj,ENV){
       }
       if (ENV$MISbeta){
         YrBstar<-do.call(cbind,lapply(1:nobj,function(x)ENV$Y[,x]*rBstar[x])) # design matrix for betas for current block
-        eta<-eta+YrBstar[,ENV$Mbeta]%*%betas
+        eta<-eta+YrBstar[,ENV$Mbeta,drop=FALSE]%*%betas # 27.6.2010
       }
 
       if(ENV$undec){                 # 7.12.09

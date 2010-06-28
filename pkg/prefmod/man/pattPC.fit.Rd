@@ -35,7 +35,7 @@ pattPC.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "paircomp",
         \code{NItest} is set to \code{FALSE} if subject covariates are specified.
         }
   \item{NI}{if  \code{TRUE}, fits large table (crossclassification with NA patterns), for comparison
-  .     with models including \code{MISalpha} (and \code{MISbeta}). }
+        with models including \code{MISalpha} (and \code{MISbeta}). }
   \item{MISalpha}{if not \code{NULL}, specification to fit parameters for
         NA indicators using a
         logical vector, where \code{TRUE} means that the NA indicator parameter

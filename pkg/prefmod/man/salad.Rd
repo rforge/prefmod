@@ -8,10 +8,10 @@
 \usage{data(salad)}
 \format{
 \describe{
-    \item{\code{A}}{salad dressing preperation A}
-    \item{\code{B}}{salad dressing preperation B}
-    \item{\code{C}}{salad dressing preperation C}
-    \item{\code{D}}{salad dressing preperation D}
+    \item{\code{A}}{salad dressing preparation A}
+    \item{\code{B}}{salad dressing preparation B}
+    \item{\code{C}}{salad dressing preparation C}
+    \item{\code{D}}{salad dressing preparation D}
   }
 }
 \references{
