@@ -26,7 +26,7 @@ A data frame containing 3584 observations on 10 variables.
   \item{paircomp}{Paired comparison of class \code{\link{paircomp}}.
     Five pairwise choices among four important political goals derived from
     a double-choice task (see Details).}
-  \item{county2}{Factor. Country group according to postmaterialism
+  \item{country2}{Factor. Country group according to postmaterialism
     (see Details).}
 }
 }
@@ -67,25 +67,25 @@ A data frame containing 3584 observations on 10 variables.
 }
 
 \references{
-  Lee, P.H., & Yu, P.L.H. (2010). Distance-based tree models for ranking
-  data. \emph{Computational Statistics and Data Analysis}, \bold{54},
+  Lee, P.H., & Yu, P.L.H. (2010). Distance-Based Tree Models for Ranking
+  Data. \emph{Computational Statistics and Data Analysis}, \bold{54},
   1672--1682.
 
-  Vermunt, J.K. (2003). Multilevel latent class models.
+  Vermunt, J.K. (2003). Multilevel Latent Class Models.
   \emph{Sociological Methodology}, \bold{33}, 213--239.
 }
 
 \seealso{\code{\link{paircomp}}}
 
 \examples{
-##
+## data
 data("EuropeanValuesStudy", package = "psychotree")
 summary(EuropeanValuesStudy$paircomp)
 
 ## Bradley-Terry tree resulting in similar results compared to
 ## the (different) tree approach of Lee and Lee (2010)
-evs <- na.omit(EuropeanValueStudy)
-bt <- bttree(paircomp ~ gender + age + birthyear + marital + employment + income + country2,
+evs <- na.omit(EuropeanValuesStudy)
+bt <- bttree(paircomp ~ gender + eduage + birthyear + marital + employment + income + country2,
   data = evs, alpha = 0.01)
 plot(bt, abbreviate = 2)
 }
