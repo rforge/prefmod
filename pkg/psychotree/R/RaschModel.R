@@ -56,6 +56,7 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
   y_orig <- y
 
   ## all parameters identified?
+  if(n < 2) stop("not enough observations")
   cm <- colMeans(y, na.rm = TRUE)
   status <- as.character(cut(cm, c(-Inf, 1/(2 * n), 1 - 1/(2 * n), Inf), labels = c("0", "0/1", "1")))
   status[is.na(status)] <- "NA"
