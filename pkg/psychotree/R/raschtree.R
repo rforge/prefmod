@@ -153,7 +153,11 @@ node_raschplot <- function(mobobj, id = TRUE, difficulty = TRUE,
 	    grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch[,1], default.units = "native")
 	    grid.points(x, cfi, gp = gpar(           cex = cex), pch = pch[,2], default.units = "native")
           }
-	  if(xaxis) grid.xaxis(at = x, label = if(names) names(cfi) else x)
+	  if(xaxis) {
+	    xlab <- if(names) names(cfi) else x
+	    xlab[x < max(x) & x > 1] <- ""
+	    grid.xaxis(at = x, label = xlab)
+	  }
 	} else {	  
   	  if(names) grid.text(names(cfi), x = x, y = cfi, default.units = "native")
 	    else grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
