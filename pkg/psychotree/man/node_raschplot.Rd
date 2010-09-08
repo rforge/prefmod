@@ -9,7 +9,7 @@
 }
 
 \usage{
-node_raschplot(mobobj, id = TRUE,
+node_raschplot(mobobj, id = TRUE, difficulty = TRUE,
   center = TRUE, names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
   col = "black", linecol = "black", refcol = "lightgray", cex = 0.5, pch = 19,
   xscale = NULL, yscale = NULL, xaxis = TRUE, yaxis = TRUE, ylines = 1.5)
@@ -20,6 +20,8 @@ node_raschplot(mobobj, id = TRUE,
   \item{mobobj}{an object of class \code{"mob"} based on Rasch models
     fitted by \code{\link{RaschModel}}.}
   \item{id}{logical. Should the node ID be displayed?}
+  \item{difficulty}{logical. Should item difficulty (or alternatively: easiness)
+    parameters be displayed?}
   \item{center}{logical. Should the item parameters be centered?}
   \item{names}{logical. Should the names for the objects be displayed?}
   \item{abbreviate}{logical or numeric. Should object names be abbreviated?

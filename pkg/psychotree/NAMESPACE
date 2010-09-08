@@ -69,6 +69,7 @@ S3method("print", "summary.RaschModel")
 S3method("reweight", "RaschModel")
 S3method("summary", "RaschModel")
 S3method("vcov", "RaschModel")
+S3method("weights", "RaschModel")
 S3method("worth", "RaschModel")
 
 ## methods for btReg objects

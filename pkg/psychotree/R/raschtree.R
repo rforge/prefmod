@@ -76,7 +76,7 @@ worth.raschtree <- function (object, node = NULL, ...)
 }
 
 ## visualization function
-node_raschplot <- function(mobobj, id = TRUE,
+node_raschplot <- function(mobobj, id = TRUE, difficulty = TRUE,
   center = TRUE, names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
   col = "black", linecol = "black", refcol = "lightgray",
   cex = 0.5, pch = 19, xscale = NULL, yscale = NULL,
@@ -84,8 +84,11 @@ node_raschplot <- function(mobobj, id = TRUE,
 {
     ## extract parameter of interest
     node <- 1:max(party:::terminal_nodeIDs(mobobj@tree))
-    cf <- t(sapply(nodes(mobobj, node), function(z)
-      if(center) worth(z$model) else worth(z$model) - worth(z$model)[1]))
+    cf <- t(sapply(nodes(mobobj, node), function(z) if(center) {
+        worth(z$model, difficulty = difficulty)
+      } else {
+        worth(z$model, difficulty = difficulty) - worth(z$model, difficulty = difficulty)[1]
+      }))
     rownames(cf) <- node
 
     ## labeling

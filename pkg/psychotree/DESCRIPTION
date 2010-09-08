@@ -1,6 +1,6 @@
 Package: psychotree
 Title: Recursive Partitioning Based on Psychometric Models
-Version: 0.10-0
+Version: 0.11-0
 Date: 2010-07-05
 Author: Achim Zeileis, Carolin Strobl, Florian Wickelmaier, Julia Kopf
 Maintainer: Achim Zeileis <Achim.Zeileis@R-project.org>

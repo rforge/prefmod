@@ -25,7 +25,7 @@ reweight.RaschModel <- function(object, weights, ...) {
 }
 
 print.RaschModel <- function(x, digits = max(3, getOption("digits") - 3), ...) {
-  cat("Rasch model coefficients:\n")
+  cat("Rasch model difficulty parameters:\n")
   print(coef(x), digits = digits)
   invisible(x)
 }
@@ -50,10 +50,10 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
 
   ## omit zero weights
   weights_orig <- weights
+  y_orig <- y
   y <- y[weights > 0, , drop = FALSE]
   weights <- weights[weights > 0]
   n <- nrow(y)
-  y_orig <- y
 
   ## all parameters identified?
   if(n < 2) stop("not enough observations")
@@ -65,6 +65,7 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
   names(status) <- colnames(y)
 
   ## just estimate identified parameters
+  y_orig <- y_orig[,ident, drop = FALSE]
   y <- y[,ident, drop = FALSE]
   k <- ncol(y)
   y_na <- is.na(y)
@@ -80,10 +81,11 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
     rf[is.na(rf)] <- 0
 
     ## starting values
-    if(is.null(start)) start <- qlogis(cs/sum(weights))
-  
     ## contrast: set parameter 1 to zero
-    start <- start[-1] - start[1]
+    if(is.null(start)) {
+      start <- -qlogis(cs/sum(weights))
+      start <- start[-1] - start[1]
+    }
     rf <- rf[-1]
     cs <- cs[-1]
 
@@ -96,7 +98,7 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
       g <- esf[[1]][-1]
 
       ## conditional log-likelihood
-      cll <- sum(cs * par) - sum(rf * log(g))
+      cll <- sum(-cs * par) - sum(rf * log(g))
 
       ## catch degenerated cases (typically cause by non-finite gamma)
       if(is.na(cll) | !is.finite(cll)) cll <- -.Machine$double.xmax
@@ -104,16 +106,16 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
       ## gradient
       if(deriv != "numeric") {
         g1 <- esf[[2]][-1, -1, drop = FALSE]
-        grad <- cs - colSums(rf * g1/g)
+        grad <- - cs + colSums(rf * g1/g)
         attr(cll, "gradient") <- - grad
       }
 
       return(-cll)
     }
 
-    ## analytical gradient
-    agrad <- function(par, esf)
-      weights * (y - esf[[2]][rs + 1, , drop = FALSE] / esf[[1]][rs + 1])[,-1, drop = FALSE]
+    ## analytical gradient -> now moved to estfun() method
+    ## agrad <- function(par, esf)
+    ##  weights * (- y + esf[[2]][rs + 1, , drop = FALSE] / esf[[1]][rs + 1])[,-1, drop = FALSE]
 
     ## analytical hessian
     ahessian <- function(par, esf) {
@@ -137,8 +139,10 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
     na_patterns <- factor(apply(y_na, 1, function(z) paste(which(z), collapse = "\r")))
 
     ## starting values
-    if(is.null(start)) start <- qlogis(colSums(y * weights, na.rm = TRUE)/colSums(!y_na * weights))
-    start <- start[-1] - start[1]
+    if(is.null(start)) {
+      start <- -qlogis(colSums(y * weights, na.rm = TRUE)/colSums(!y_na * weights))
+      start <- start[-1] - start[1]
+    }
 
     ## convenience function
     zero_fill <- function(obj, at) {
@@ -187,12 +191,12 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
         g_i <- esf_i[[1]]
 
         ## conditional log-likelihood
-        cll <- cll + (sum(cs_i * par_i) - sum(rf_i * log(g_i)))
+        cll <- cll + (sum(-cs_i * par_i) - sum(rf_i * log(g_i)))
 
         ## gradient
         if(deriv != "numeric") {
           g1_i <- esf_i[[2]]
-          grad <- grad + zero_fill(cs_i - colSums(rf_i * g1_i/g_i), wi_i)[-1]
+          grad <- grad + zero_fill(-cs_i + colSums(rf_i * g1_i/g_i), wi_i)[-1]
         }
       }
 
@@ -208,29 +212,29 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
       return(-cll)
     }
  
-    ## analytical gradient
-    agrad <- function(par, esf) {
-
-      ## set up return value    
-      rval <- matrix(0, nrow = n, ncol = k)
-
-      ## loop over observed NA patterns      
-      for(i in seq_along(levels(na_patterns))) {
-        ## parse NA pattern
-	lev_i <- levels(na_patterns)[i]
-	na_i <- which(na_patterns == lev_i)
-        wi_i <- as.integer(strsplit(lev_i, "\r")[[1]])
-        wi_i <- if(length(wi_i) < 1) 1:k else (1:k)[-wi_i]
-	
-	## compute gradient per pattern
-	esf_i <- esf[[i]]
-	rs_i <- rowSums(y[na_i, wi_i, drop = FALSE])
-	rval[na_i, wi_i] <- weights[na_i] * (y[na_i, wi_i, drop = FALSE] -
-          esf_i[[2]][rs_i + 1, , drop = FALSE] / esf_i[[1]][rs_i + 1])
-      }
-
-      return(rval[, -1, drop = FALSE])
-    }
+    ## ## analytical gradient -> now moved to estfun() method
+    ## agrad <- function(par, esf) {
+    ## 
+    ##   ## set up return value    
+    ##   rval <- matrix(0, nrow = n, ncol = k)
+    ## 
+    ##   ## loop over observed NA patterns	 
+    ##   for(i in seq_along(levels(na_patterns))) {
+    ##     ## parse NA pattern
+    ##     lev_i <- levels(na_patterns)[i]
+    ##     na_i <- which(na_patterns == lev_i)
+    ##     wi_i <- as.integer(strsplit(lev_i, "\r")[[1]])
+    ##     wi_i <- if(length(wi_i) < 1) 1:k else (1:k)[-wi_i]
+    ## 
+    ##     ## compute gradient per pattern
+    ##     esf_i <- esf[[i]]
+    ##     rs_i <- rowSums(y[na_i, wi_i, drop = FALSE])
+    ##     rval[na_i, wi_i] <- weights[na_i] * (- y[na_i, wi_i, drop = FALSE] +
+    ##       esf_i[[2]][rs_i + 1, , drop = FALSE] / esf_i[[1]][rs_i + 1])
+    ##   }
+    ## 
+    ##   return(rval[, -1, drop = FALSE])
+    ## }
 
     ## analytical hessian
     ahessian <- function(par, esf) {
@@ -290,12 +294,10 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
       diff = deriv == "diff")
   }
   if(any_y_na) names(esf) <- levels(na_patterns)
-  grad <- matrix(0, ncol = length(cf), nrow = length(weights_orig))
-  grad[weights_orig > 0,] <- agrad(cf, esf)
   
   vc <- if(deriv == "numeric") opt$hessian else ahessian(cf, esf)
   vc <- solve(vc)
-  names(cf) <- colnames(grad) <- rownames(vc) <- colnames(vc) <- colnames(y)[-1]
+  names(cf) <- rownames(vc) <- colnames(vc) <- colnames(y)[-1]
   
   ## collect, class, and return
   rval <- list(
@@ -303,12 +305,12 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
     vcov = vc,
     loglik = -opt$minimum,
     df = k-1,
-    weights = weights_orig,
+    data = y_orig,
+    weights = if(identical(as.vector(weights_orig), rep(1L, nrow(y_orig)))) NULL else weights_orig,
     n = sum(weights_orig > 0),
     items = status,
     na = any_y_na,
     elementary_symmetric_functions = esf,
-    estfun = grad,
     nlm_code = opt$code,
     iterations = opt$iterations,
     gradtol = gradtol
@@ -334,8 +336,8 @@ elementary_symmetric_functions <- function(par, order = 0, log = TRUE, diff = FA
 
   ## transformations
   par <- as.vector(par)
-  beta <- if(log) par else log(par)
-  eps <- exp(beta)
+  beta <- if(log) par else -log(par)
+  eps <- exp(-beta)
   n <- length(eps)
   stopifnot(n > 1)
   
@@ -367,7 +369,7 @@ elementary_symmetric_functions <- function(par, order = 0, log = TRUE, diff = FA
       c(0, elementary_symmetric_functions(eps[-i], order = 0, log = FALSE)[[1]]))
   }
   ## if input on log scale: include inner derivative
-  if(log) gamma1 <- exp(t(t(log(gamma1)) + beta))
+  if(log) gamma1 <- exp(t(t(log(gamma1)) - beta))
   ## return value
   rval[[2]] <- gamma1
   if(order < 2) return(rval)
@@ -379,7 +381,7 @@ elementary_symmetric_functions <- function(par, order = 0, log = TRUE, diff = FA
     gamma2[3,,] <- 1
     ## auxiliary variables
     eps_plus_eps <- outer(eps, eps, "+")
-    eps_times_eps <- exp(outer(beta, beta, "+"))
+    eps_times_eps <- exp(-outer(beta, beta, "+"))
     ## recursion: Jansen's Equation (Table 1, Forward, Second-Order)
     if(n > 2) for(q in 4:(n+1)) gamma2[q,,] <- gamma[q-2] -
       (eps_plus_eps * gamma2[q-1,,] + eps_times_eps * gamma2[q-2,,])
@@ -392,7 +394,7 @@ elementary_symmetric_functions <- function(par, order = 0, log = TRUE, diff = FA
 	  elementary_symmetric_functions(eps[-c(i, j)], order = 0, log = FALSE)[[1]])
       }
     }
-    if(log) eps_times_eps <- exp(outer(beta, beta, "+"))  
+    if(log) eps_times_eps <- exp(-outer(beta, beta, "+"))  
   }
   ## if input on log scale: include inner derivative
   if(log) for(q in 1:(n+1)) gamma2[q,,] <- eps_times_eps * gamma2[q,,]
@@ -410,17 +412,64 @@ vcov.RaschModel <- function(object, ...) object$vcov
 
 logLik.RaschModel <- function(object, ...) structure(object$loglik, df = object$df, class = "logLik")
 
+weights.RaschModel <- function(object, ...) if(!is.null(object$weights)) object$weights else rep(1, nrow(object$data))
+
 bread.RaschModel <- function(x, ...) x$vcov * x$n
 
-estfun.RaschModel <- function(x, ...) return(x$estfun)
+estfun.RaschModel <- function(x, ...) {
+  ## extract data and parameters of interest
+  par <- x$coefficients
+  esf <- x$elementary_symmetric_functions
+  y <- x$data
+  weights_orig <- x$weights
+  y <- y[weights_orig > 0, , drop = FALSE]
+  weights <- weights_orig[weights_orig > 0]
+  rs <- rowSums(y)
+  
+  ## analytical gradient
+  if(!x$na) {
+    agrad <- weights * (- y + esf[[2]][rs + 1, , drop = FALSE] / esf[[1]][rs + 1])[,-1, drop = FALSE]
+  } else {
+    ## set up return value
+    n <- nrow(y)
+    k <- ncol(y)
+    agrad <- matrix(0, nrow = n, ncol = k)
 
-worth.RaschModel <- function(object, ...) {
+    ## observed NA patterns
+    na_patterns <- factor(apply(is.na(y), 1, function(z) paste(which(z), collapse = "\r")))
+
+    ## loop over observed NA patterns	   
+    for(i in seq_along(levels(na_patterns))) {
+      ## parse NA pattern
+      lev_i <- levels(na_patterns)[i]
+      na_i <- which(na_patterns == lev_i)
+      wi_i <- as.integer(strsplit(lev_i, "\r")[[1]])
+      wi_i <- if(length(wi_i) < 1) 1:k else (1:k)[-wi_i]
+
+      ## compute gradient per pattern
+      esf_i <- esf[[i]]
+      rs_i <- rowSums(y[na_i, wi_i, drop = FALSE])
+      agrad[na_i, wi_i] <- weights[na_i] * (- y[na_i, wi_i, drop = FALSE] +
+    	esf_i[[2]][rs_i + 1, , drop = FALSE] / esf_i[[1]][rs_i + 1])
+    }
+
+    agrad <- agrad[, -1, drop = FALSE]
+  }
+
+  ## collect and return
+  grad <- matrix(0, ncol = length(par), nrow = length(weights_orig))
+  grad[weights_orig > 0,] <- agrad
+  return(grad)
+}
+
+worth.RaschModel <- function(object, difficulty = TRUE, ...) {
   cf <- c(0, object$coefficients)
+  if(!difficulty) cf <- -cf
   cf <- cf - mean(cf)
   rval <- structure(rep(NA, length(object$items)), .Names = names(object$items))
   rval[object$items == "0/1"] <- cf
-  rval[object$items == "0"] <- -Inf
-  rval[object$items == "1"] <- Inf
+  rval[object$items == "0"] <- if(!difficulty) -Inf else Inf
+  rval[object$items == "1"] <- if(!difficulty) Inf else -Inf
   return(rval)
 }
 
@@ -459,7 +508,7 @@ print.summary.RaschModel <- function(x, digits = max(3, getOption("digits") - 3)
   if(any(x$items != "0/1")) cat("Excluded items:",
     paste(names(x$items)[x$items != "0/1"], collapse = ", "), "\n\n")
 
-  cat("Parameters:\n")
+  cat("Difficulty parameters:\n")
   printCoefmat(x$coefficients, digits = digits, signif.stars = signif.stars, na.print = "NA", ...)
 
   cat("\nLog-likelihood:", format(signif(x$loglik, digits)),
@@ -468,13 +517,13 @@ print.summary.RaschModel <- function(x, digits = max(3, getOption("digits") - 3)
   invisible(x)
 }
 
-plot.RaschModel <- function(x,
+plot.RaschModel <- function(x, difficulty = TRUE,
   center = TRUE, index = TRUE, names = TRUE, abbreviate = FALSE, ref = TRUE,
   bg = hcl(c(0, 0, 180, 270), c(0, 80, 80, 80), c(95, 50, 50, 50)), cex = 1,
   type = NULL, lty = NULL, ylim = NULL, xlab = "Items", ylab = NULL, ...)
 {
   ## parameters to be plotted
-  cf <- worth(x)
+  cf <- worth(x, difficulty = difficulty)
   cf_ident <- is.finite(cf) & !is.na(cf)
   if(!center) cf <- cf - (cf[cf_ident])[1]
   cf_ref <- mean(cf[cf_ident])
@@ -499,7 +548,8 @@ plot.RaschModel <- function(x,
     names <- TRUE
   }
 
-  if(is.null(ylab)) ylab <- if(center) "Centered item parameters" else "Item parameters"
+  if(is.null(ylab)) ylab <- paste(if(center) "Centered item" else "Item",
+    if(difficulty) "difficulty" else "easiness", "parameters")
 
   ## abbreviation
   if(is.logical(abbreviate)) {

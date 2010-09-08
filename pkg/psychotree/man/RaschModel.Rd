@@ -50,8 +50,24 @@ RaschModel.fit(y, weights = NULL, start = NULL, gradtol = 1e-6,
 }
 
 \value{
-  An object of class \code{"StatModel"} that fits Rasch models
-  with the specified arguments.
+  \code{RaschModel} returns an S4 object of class \code{"StatModel"} that fits Rasch models
+  with the specified arguments. \code{RaschModel.fit} returns an S3 object of class
+  \code{"RaschModel"}, i.e., a list with components as follows.
+  \item{coefficients}{estimated item difficulty parameters (without first item
+    parameter which is always constrained to be 0),}
+  \item{vcov}{covariance matrix of the parameters in the model,}
+  \item{loglik}{log-likelihood of the fitted model,}
+  \item{df}{number of estimated parameters,}
+  \item{data}{the original data supplied (excluding columns without variance),}
+  \item{weights}{the weights used (if any),}
+  \item{n}{number of observations (with non-zero weights),}
+  \item{items}{status indicator (0, 0/1, 1) of all original items,}
+  \item{na}{logical indicating whether the data contains NAs,}
+  \item{elementary_symmetric_functions}{List of elementary symmetric functions
+    for estimated parameters (up to order 2; or 1 in case of numeric derivatives),}
+  \item{nlm_code}{convergence code from \code{nlm},}
+  \item{iterations}{number of iterations used by \code{nlm},}
+  \item{gradtol}{tolerance passed to \code{nlm}.}
 }
 
 \seealso{\code{\link{raschtree}}}
