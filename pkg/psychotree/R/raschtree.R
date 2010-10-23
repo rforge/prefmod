@@ -77,9 +77,9 @@ worth.raschtree <- function (object, node = NULL, ...)
 
 ## visualization function
 node_raschplot <- function(mobobj, id = TRUE, difficulty = TRUE,
-  center = TRUE, names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
-  col = "black", linecol = "black", refcol = "lightgray",
-  cex = 0.5, pch = 19, xscale = NULL, yscale = NULL,
+  center = TRUE, index = TRUE, names = NULL, abbreviate = FALSE, ref = TRUE,
+  col = cbind("lightgray", "black"), refcol = "lightgray", linecol = "black",
+  lty = 2, cex = 0.5, pch = cbind(19, 1), xscale = NULL, yscale = NULL,
   xaxis = TRUE, yaxis = TRUE, ylines = 1.5)
 {
     ## extract parameter of interest
@@ -90,11 +90,18 @@ node_raschplot <- function(mobobj, id = TRUE, difficulty = TRUE,
         worth(z$model, difficulty = difficulty) - worth(z$model, difficulty = difficulty)[1]
       }))
     rownames(cf) <- node
+    ncf <- NCOL(cf)
 
     ## labeling
+    if(is.null(names)) names <- !index
     if(is.character(names)) {
       colnames(cf) <- names
       names <- TRUE
+    }
+    if(!names & index) {
+      lab <- rep("", ncf)
+      lab[c(1, ncf)] <- c(1, ncf)
+      colnames(cf) <- lab
     }
 
     ## abbreviation
@@ -103,6 +110,26 @@ node_raschplot <- function(mobobj, id = TRUE, difficulty = TRUE,
       abbreviate <- if(abbreviate) as.numeric(cut(nlab, c(-Inf, 1.5, 4.5, 7.5, Inf))) else nlab
     }
     colnames(cf) <- abbreviate(colnames(cf), abbreviate)
+
+    ## graphical parameter processing  
+    if(NCOL(pch) == 2) {
+      pch2 <- pch[,2]
+      pch <- pch[,1]
+    } else {
+      pch2 <- NA
+    }
+    if(NCOL(col) == 2) {
+      col2 <- col[,2]
+      col <- col[,1]
+    } else {
+      col2 <- NULL
+    }
+    pch <- rep(pch, length.out = ncf)
+    col <- rep(col, length.out = ncf)
+    cex <- rep(cex, length.out = ncf)
+    pch2 <- rep(pch2, length.out = ncf)
+    col2 <- rep(col2, length.out = ncf)
+  
     
     if(index) {
       x <- 1:NCOL(cf)
@@ -111,14 +138,24 @@ node_raschplot <- function(mobobj, id = TRUE, difficulty = TRUE,
       x <- rep(0, length(cf))
       if(is.null(xscale)) xscale <- c(-1, 1)      
     }
-    if(is.null(yscale)) yscale <- range(cf) + c(-0.1, 0.1) * diff(range(cf))
+    yrange <- range(cf[is.finite(cf)], na.rm = TRUE)
+    if(is.null(yscale)) yscale <- yrange + c(-0.1 - 0.2 * any(cf <= -Inf), 0.1 + 0.2 * any(cf >= Inf)) * diff(yrange)
          
     ## panel function for bt plots in nodes
     rval <- function(node) {
     
         ## dependent variable setup
 	cfi <- cf[node$nodeID,]
-	cf_ref <- mean(cfi)
+	cf_ref <- mean(cfi)        
+
+        cf_ident <- is.finite(cfi) & !is.na(cfi)
+        cf_inf <- cfi >= Inf
+        cf_ninf <- cfi <= -Inf
+        cfi[is.na(cfi)] <- cf_ref
+        if(index) {
+          cfi[cf_ninf] <- yscale[1]
+          cfi[cf_inf] <- yscale[2]
+        }
 
         ## viewport setup
         top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
@@ -146,18 +183,10 @@ node_raschplot <- function(mobobj, id = TRUE, difficulty = TRUE,
 	
         grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = refcol), default.units = "native")
 	if(index) {
-	  grid.lines(x, cfi, gp = gpar(col = linecol, lty = 2), default.units = "native")
-          if(NCOL(pch) == 1L) {
-  	    grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
-          } else {
-	    grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch[,1], default.units = "native")
-	    grid.points(x, cfi, gp = gpar(           cex = cex), pch = pch[,2], default.units = "native")
-          }
-	  if(xaxis) {
-	    xlab <- if(names) names(cfi) else x
-	    xlab[x < max(x) & x > 1] <- ""
-	    grid.xaxis(at = x, label = xlab)
-	  }
+	  grid.lines(x, cfi, gp = gpar(col = linecol, lty = lty), default.units = "native")
+  	  grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = ifelse(cf_ident, pch, NA), default.units = "native")
+          if(!is.null(col2)) grid.points(x, cfi, gp = gpar(col = col2, cex = cex), pch = ifelse(cf_ident, pch2, NA), default.units = "native")
+	  if(xaxis) grid.xaxis(at = x, label = colnames(cf))
 	} else {	  
   	  if(names) grid.text(names(cfi), x = x, y = cfi, default.units = "native")
 	    else grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")

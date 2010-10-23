@@ -518,38 +518,33 @@ print.summary.RaschModel <- function(x, digits = max(3, getOption("digits") - 3)
 }
 
 plot.RaschModel <- function(x, difficulty = TRUE,
-  center = TRUE, index = TRUE, names = TRUE, abbreviate = FALSE, ref = TRUE,
-  bg = hcl(c(0, 0, 180, 270), c(0, 80, 80, 80), c(95, 50, 50, 50)), cex = 1,
-  type = NULL, lty = NULL, ylim = NULL, xlab = "Items", ylab = NULL, ...)
+  center = TRUE, index = TRUE, names = NULL, abbreviate = FALSE, ref = TRUE,
+  col = cbind("lightgray", "black"), refcol = "lightgray", linecol = "black", lty = 2,
+  cex = 1, pch = cbind(19, 1), type = NULL, ylim = NULL, xlab = "Items", ylab = NULL, ...)
 {
   ## parameters to be plotted
   cf <- worth(x, difficulty = difficulty)
   cf_ident <- is.finite(cf) & !is.na(cf)
+  cf_inf <- cf >= Inf
+  cf_ninf <- cf <= -Inf
   if(!center) cf <- cf - (cf[cf_ident])[1]
   cf_ref <- mean(cf[cf_ident])
-
-  ## background color
-  col <- if(index) bg[1] else hcl(0, 0, 0)
-  col <- rep(col, length(cf))
-  col[cf <= -Inf] <- bg[2]
-  col[cf >= Inf] <- bg[3]
-  col[is.na(cf)] <- bg[4]
-
-  ## substitute non-identified parameters with plottable values
-  if(is.null(ylim)) ylim <- range(cf[cf_ident])
-  ylim <- rep(ylim, length.out = 2)
-  cf[is.na(cf)] <- cf_ref
-  cf[cf <= -Inf] <- ylim[1]
-  cf[cf >= Inf] <- ylim[2]
+  ncf <- length(cf)
 
   ## labeling
+  if(is.null(names)) names <- !index
   if(is.character(names)) {
     names(cf) <- names
     names <- TRUE
   }
-
-  if(is.null(ylab)) ylab <- paste(if(center) "Centered item" else "Item",
-    if(difficulty) "difficulty" else "easiness", "parameters")
+  if(!names & index) {
+    lab <- rep(NA, ncf)
+    lab[c(1, ncf)] <- c(1, ncf)
+    pr <- pretty(1:ncf)
+    pr <- pr[pr > 1 & pr < ncf]
+    lab[pr] <- pr    
+    names(cf) <- lab
+  }
 
   ## abbreviation
   if(is.logical(abbreviate)) {
@@ -558,23 +553,69 @@ plot.RaschModel <- function(x, difficulty = TRUE,
   }
   names(cf) <- abbreviate(names(cf), abbreviate)
 
+  ## graphical parameter processing  
+  if(is.null(type)) type <- if(index) "b" else "p"
+
+  if(NCOL(pch) == 2) {
+    pch2 <- pch[,2]
+    pch <- pch[,1]
+  } else {
+    pch2 <- NULL
+  }
+  if(NCOL(col) == 2) {
+    col2 <- col[,2]
+    col <- col[,1]
+  } else {
+    col2 <- NULL
+  }
+  pch <- rep(pch, length.out = ncf)
+  col <- rep(col, length.out = ncf)
+  cex <- rep(cex, length.out = ncf)
+  pch[!cf_ident] <- NA
+  pch2 <- rep(pch2, length.out = ncf)
+  col2 <- rep(col2, length.out = ncf)
+  if(!is.null(pch2)) pch2[!cf_ident] <- NA
+  
+  if(is.null(ylim)) ylim <- range(cf[cf_ident])
+  ylim <- rep(ylim, length.out = 2)
+  if(any(!is.finite(cf))) {
+    ydiff <- diff(ylim) * 0.7
+    if(index & any(cf_ninf)) ylim[1] <- ylim[1] - ydiff
+    if(index & any(cf_inf))  ylim[2] <- ylim[2] + ydiff
+  }
+
+  ## substitute non-identified parameters with plottable values
+  cf[is.na(cf)] <- cf_ref
+  if(index) {
+    cf[cf_ninf] <- ylim[1]
+    cf[cf_inf] <- ylim[2]
+  }
+
+  if(is.null(ylab)) ylab <- paste(if(center) "Centered item" else "Item",
+    if(difficulty) "difficulty" else "easiness", "parameters")
+
   ## raw plot
-  ix <- if(index) seq(along = cf) else rep(0, length(cf))
+  ix <- if(index) seq(along = cf) else rep(0, ncf)
   plot(ix, cf, xlab = xlab, ylab = ylab, type = "n", axes = FALSE, ylim = ylim, ...)
-  if(ref) abline(h = cf_ref, col = "lightgray")
+  if(ref) abline(h = cf_ref, col = refcol)
   axis(2)
   box()  
 
   ## actual data
-  if(index) {
-    if(is.null(type)) type <- "b"
-    if(is.null(lty)) lty <- 2
-    if(type %in% c("b", "p")) points(ix, cf, pch = 19, col = col, cex = cex)
-    lines(ix, cf, type = type, lty = lty, col = ifelse(cf_ident, "black", "transparent"), cex = cex)
-    axis(1, at = ix, labels = if(names) names(cf) else TRUE)
+  if(!index & names) {
+    text(names(cf), x = ix, y = cf, col = if(!is.null(col2)) col2 else col, ...)
+    if(any(!cf_ident)) {
+      legend("topright", c("Not identified:", names(cf)[!cf_ident]), bty = "n")
+    }
   } else {
-    if(is.null(type)) type <- "p"
-    if(names) text(names(cf), x = ix, y = cf, col = col, ...) else lines(ix, cf, type = type, lty = lty, col = col)
+    if(type %in% c("l", "b", "o")) lines(ix, cf, type = type, lty = lty, pch = NA, col = linecol)
+    lines(ix, cf, type = type, lty = 0, pch = pch, col = col, cex = cex)
+    if(type %in% c("b", "p", "o")) points(ix, cf, pch = pch2, col = col2, cex = cex)
+    if(index) axis(1, at = ix, labels = names(cf))
+    if(type %in% c("l", "b", "o")) {
+      if(any(cf_ninf)) for(i in which(cf_ninf)) lines(c(ix[i], ix[i]), c(ylim[1], ylim[1] - 10 * ydiff), type = "l", lty = lty)
+      if(any(cf_inf)) for(i in which(cf_inf))   lines(c(ix[i], ix[i]), c(ylim[2], ylim[2] + 10 * ydiff), type = "l", lty = lty)
+    }    
   }
 }
 

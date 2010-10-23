@@ -13,7 +13,6 @@
 \alias{vcov.RaschModel}
 \alias{bread.RaschModel}
 \alias{estfun.RaschModel}
-\alias{plot.RaschModel}
 
 
 \title{Model-Generating Function for Rasch Models}
