@@ -56,7 +56,7 @@ bttree(formula, data, na.action = na.pass,
 \value{
   An object of S3 class \code{"bttree"} which is a list containing only
   a single element of S4 class \code{"mob"} (because this is currently not
-  exported).
+  exported from the party package).
 }
 
 \references{ 

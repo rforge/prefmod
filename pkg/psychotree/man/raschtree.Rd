@@ -54,7 +54,7 @@ raschtree(formula, data, minsplit = 10, gradtol = 1e-6,
 \value{
   An object of S3 class \code{"raschtree"} which is a list containing only
   a single element of S4 class \code{"mob"} (because this is currently not
-  exported).
+  exported from the party package).
 }
 
 \seealso{\code{\link[party]{mob}}, \code{\link{RaschModel}}, \code{\link{bttree}}}
