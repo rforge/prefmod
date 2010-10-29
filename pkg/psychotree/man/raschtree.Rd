@@ -49,6 +49,16 @@ raschtree(formula, data, minsplit = 10, gradtol = 1e-6,
   etc.). \code{worth} behaves analogously to \code{coef} and extracts the
   item parameters from the Rasch models in the nodes of the tree. The \code{plot}
   method employs the \code{\link{node_raschplot}} panel-generating function.
+
+  Rasch tree models are introduced in Strobl et al. (2010) whose analysis
+  for the \code{\link{SPISA}} data is replicated in
+  \code{vignette("raschtree", package = "psychotree")}. Their illustration
+  employing artificial data is replicated below.
+}
+
+\references{
+  Strobl, C., Kopf, J., and Zeileis, A. (2010). A New Method for Detecting
+  Differential Item Functioning in the Rasch Model. Unpublished Manuscript.
 }
 
 \value{
@@ -58,5 +68,22 @@ raschtree(formula, data, minsplit = 10, gradtol = 1e-6,
 }
 
 \seealso{\code{\link[party]{mob}}, \code{\link{RaschModel}}, \code{\link{bttree}}}
+
+\examples{
+  ## artificial data
+  data("DIFSim", package = "psychotree")
+  
+  ## fit Rasch tree model
+  rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
+  plot(rt)
+  
+  ## extract item parameters
+  coef(rt)
+  worth(rt)
+  
+  ## inspect parameter stability tests in all splitting nodes
+  sctest(rt, node = 1)
+  sctest(rt, node = 2)
+}
 
 \keyword{tree}
