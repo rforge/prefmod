@@ -32,7 +32,7 @@ A data frame containing 303 observations on 10 variables.
 }
 
 \details{
-  Students at Wirtschaftsuniversität Wien (\url{http://www.wu-wien.ac.at/}) can study abroad
+  Students at Wirtschaftsuniversität Wien (\url{http://www.wu.ac.at/}) can study abroad
   visiting one of currently 17 CEMS universities (Community of European Management
   Schools and International Companies). Dittrich et al. (1998) conduct and analyze
   a survey of 303 students to examine the student's preferences for 6 universities:
