@@ -421,7 +421,7 @@ estfun.RaschModel <- function(x, ...) {
   par <- x$coefficients
   esf <- x$elementary_symmetric_functions
   y <- x$data
-  weights_orig <- x$weights
+  weights_orig <- weights(x)
   y <- y[weights_orig > 0, , drop = FALSE]
   weights <- weights_orig[weights_orig > 0]
   rs <- rowSums(y)
