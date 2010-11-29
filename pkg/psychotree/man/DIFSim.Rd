@@ -21,7 +21,7 @@ A data frame containing 200 observations on 4 variables.
 }
 
 \details{  
-  The data are employed for illustration in Strobl et al. (2010)
+  The data are employed for illustration in Strobl et al. (2010),
   whose results are replicated on the manual page for
   \code{\link{raschtree}}.
 }

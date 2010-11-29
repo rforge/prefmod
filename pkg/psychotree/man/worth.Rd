@@ -17,7 +17,7 @@
   \item{\dots}{arguments passed to methods.}
 }
 
-\seealso{\code{\link{bttree}}}
+\seealso{\code{\link{bttree}}, \code{\link{raschtree}}}
 
 \examples{
 data("CEMSChoice", package = "psychotree")

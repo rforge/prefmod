@@ -44,10 +44,10 @@ A data frame containing 1075 observations on 6 variables.
   (so that all subjects have answered the same set of items). Excluding
   all incomplete records, this subsample contains 1075 observations.
   
-  The data are analyzed in Strobl et al. (2010) whose analysis is replicated
+  The data are analyzed in Strobl et al. (2010), whose analysis is replicated
   in \code{vignette("raschtree", package = "psychotree")}.
 
-  The full list of items in questionnaire 20 was is given below.
+  The full list of items in questionnaire 20 is given below.
   
   Politics:\cr
   Who determines the rules of action in German politics according to the constitution?

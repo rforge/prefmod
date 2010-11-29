@@ -46,11 +46,13 @@ raschtree(formula, data, minsplit = 10, gradtol = 1e-6,
   
   Various methods are provided for \code{"raschtree"} objects, most of them
   inherit their behavior from \code{"mob"} objects (e.g., \code{print}, \code{summary},
-  etc.). \code{worth} behaves analogously to \code{coef} and extracts the
-  item parameters from the Rasch models in the nodes of the tree. The \code{plot}
-  method employs the \code{\link{node_raschplot}} panel-generating function.
+  etc.). For the Rasch models in the nodes of a tree, \code{coef} extracts all item
+  parameters except the first one which is always restricted to be zero. \code{worth}
+  extracts all item parameters (including the first one) and restricts their sum to
+  be zero. The \code{plot} method employs the \code{\link{node_raschplot}}
+  panel-generating function.
 
-  Rasch tree models are introduced in Strobl et al. (2010) whose analysis
+  Rasch tree models are introduced in Strobl et al. (2010), whose analysis
   for the \code{\link{SPISA}} data is replicated in
   \code{vignette("raschtree", package = "psychotree")}. Their illustration
   employing artificial data is replicated below.

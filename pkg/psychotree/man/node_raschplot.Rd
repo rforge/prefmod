@@ -30,13 +30,13 @@ node_raschplot(mobobj, id = TRUE, difficulty = TRUE,
   \item{difficulty}{logical. Should item difficulty (or alternatively: easiness)
     parameters be displayed?}
   \item{center}{logical. Should the item parameters be centered?}
-  \item{index}{logical. Should different indexes for different stimuli be used?}
+  \item{index}{logical. Should different indexes for different items be used?}
   \item{names}{logical. Should the names for the objects be displayed?}
   \item{abbreviate}{logical or numeric. Should object names be abbreviated?
     If numeric this controls the length of the abbreviation.}
   \item{ref}{logical. Should a horizontal line for the reference level be drawn?}
   \item{col, pch, cex}{graphical appearance of plotting symbols. Can be of the same
-    length as number of stimuli. Additionally \code{col} and \code{pch} can
+    length as number of items. Additionally \code{col} and \code{pch} can
     be matrices with two columns resulting in two symbols being overplotted.}
   \item{refcol}{line color for reference line (if \code{ref}).}
   \item{linecol}{line color.}

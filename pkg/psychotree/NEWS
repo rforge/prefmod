@@ -1,13 +1,14 @@
 Changes in Version 0.11-1
 
-  o Enhanced raschtree() functionality.
+  o Enhanced raschtree() functionality, introduced in detail
+    in the new vignette("raschtree", package = "psychotree").
   
   o Added subsample from SPIEGEL Studentenpisa (SPISA) quiz
     for students from Bavaria that answered the same set of
     questions.
     
-  o Added artificial data set exhibiting differential item
-    functioning, employed for illustrating Rasch trees.
+  o Added artificial data set DIFSim exhibiting differential
+    item functioning, employed for illustrating Rasch trees.
     
 
 Changes in Version 0.9-1
