@@ -1,5 +1,6 @@
 \name{DIFSim}
 \alias{DIFSim}
+\encoding{latin1}
 
 \title{Artificial Data with Differential Item Functioning}
 
@@ -28,7 +29,9 @@ A data frame containing 200 observations on 4 variables.
 
 \references{
   Strobl, C., Kopf, J., and Zeileis, A. (2010). A New Method for Detecting
-  Differential Item Functioning in the Rasch Model. Unpublished Manuscript.
+  Differential Item Functioning in the Rasch Model. Technical Report 92.
+  Department of Statistics, Ludwig-Maximilians-Universität München.
+  \url{http://epub.ub.uni-muenchen.de/11915/}
 }
 
 \seealso{\code{\link{raschtree}}}

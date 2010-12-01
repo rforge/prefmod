@@ -13,6 +13,8 @@
 \alias{worth.raschtree}
 \alias{weights.raschtree}
 
+\encoding{latin1}
+
 \title{Rasch Tree Models}
 
 \description{
@@ -60,7 +62,9 @@ raschtree(formula, data, minsplit = 10, gradtol = 1e-6,
 
 \references{
   Strobl, C., Kopf, J., and Zeileis, A. (2010). A New Method for Detecting
-  Differential Item Functioning in the Rasch Model. Unpublished Manuscript.
+  Differential Item Functioning in the Rasch Model. Technical Report 92.
+  Department of Statistics, Ludwig-Maximilians-Universität München.
+  \url{http://epub.ub.uni-muenchen.de/11915/}
 }
 
 \value{

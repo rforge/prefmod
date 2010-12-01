@@ -27,15 +27,15 @@ citEntry(entry = "TechReport",
   year         = "2010",
   type         = "Technical Report",
   number       = "92",
-  month        = "November",
-  url	       = "http://epub.ub.uni-muenchen.de/",
+  month        = "December",
+  url	       = "http://epub.ub.uni-muenchen.de/11915/",
   
   textVersion  = 
   paste("Carolin Strobl, Julia Kopf, Achim Zeileis (2010).", 
 	"A New Method for Detecting Differential Item Functioning in the Rasch Model.",
  	"Technical Report 92.",
  	"Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen.",
-	"URL http://epub.ub.uni-muenchen.de/"),
+	"URL http://epub.ub.uni-muenchen.de/11915/"),
 	
   header       = "If you use Rasch trees, raschtree(), please cite:"
 )

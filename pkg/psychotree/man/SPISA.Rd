@@ -152,7 +152,9 @@ A data frame containing 1075 observations on 6 variables.
 
 \references{
   Strobl, C., Kopf, J., and Zeileis, A. (2010). A New Method for Detecting
-  Differential Item Functioning in the Rasch Model. Unpublished Manuscript.
+  Differential Item Functioning in the Rasch Model. Technical Report 92.
+  Department of Statistics, Ludwig-Maximilians-Universität München.
+  \url{http://epub.ub.uni-muenchen.de/11915/}
 
   SPIEGEL Online (2009). Studentenpisa -- Alle Fragen, alle Antworten.
   In German. Accessed 2010-10-26.
