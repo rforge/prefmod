@@ -1,4 +1,4 @@
-checkMIS<-function(obj,nitems,verbose=FALSE){
+checkMIS<-function(obj,nitems,MISmodel="obj",verbose=FALSE){
 
 
   nobj<-nitems
@@ -31,13 +31,19 @@ checkMIS<-function(obj,nitems,verbose=FALSE){
    mism[upper.tri(mism,diag=FALSE)]<-misv
    mism<-mism+t(mism)
    rownames(mism)<-colnames(mism)<-paste("o",1:nobj,sep="")
-   compMis<-colSums(mism)
-   names(compMis)<-paste("o",1:nobj,sep="")
+   objMis<-colSums(mism)
+   names(objMis)<-paste("o",1:nobj,sep="")
    if(verbose){
      cat("number of missing comparisons:\n")
      print(mism)
-     cat("number of missing comparisons for objects:\n",compMis,"\n")
+     cat("number of missing comparisons for objects:\n",objMis,"\n")
    }
-   compMis<-ifelse(compMis==0,F,T)
-   invisible(compMis)
+   if (MISmodel=="obj")
+      RET<-ifelse(objMis==0,F,T)
+   else if (MISmodel=="comp")
+      RET<-ifelse(misv==0,F,T)
+   else
+      stop('\nNo output: MISmodel not correctly specified. Use "obj" or "comp"\n')
+
+   invisible(RET)
 }

@@ -6,18 +6,33 @@ NIblcontrib<-function(obj,lambda,X,nobj,ENV)
 
       ncat<-ENV$ncat                                                      #  7.12.09
       R<-matrix(rep(naidx,ncat^ENV$ncomp),nr=ncat^ENV$ncomp,byrow=T)      #
-      RBstar<-R %*%abs(pcdesign(nobj))  # alpha_i + alpha_j
-      #RBstar<-R %*%(pcdesign(4))    # alpha_i - alpha_j
 
-      YRBstar<-do.call(cbind,lapply(1:(nobj),function(i) RBstar[,i]*ENV$Y[,i])) # betas
 
-      #####    nonresponse model alpha_i+alpha_j/alpha_i-alpha_j
       XX<-X                              # only lambdas
- ##     if (ENV$MISalpha) XX<-cbind(X,RBstar[,1:nobj])          # lambdas, alpha_i
-      if (ENV$MISalpha) XX<-cbind(X,RBstar[,ENV$Malph])          # lambdas, alpha_i
- ##     if (ENV$MISbeta)  XX<-cbind(X,RBstar[,1:nobj],YRBstar)  # lambdas, alpha_i. beta_i
-      if (ENV$MISbeta)  XX<-cbind(X,RBstar[,ENV$Malph],YRBstar[,ENV$Mbeta])  # lambdas, alpha_i. beta_i
 
+      #####    nonresponse models alpha_i+alpha_j/alpha_i-alpha_j
+      if (ENV$MISmod=="obj"){
+          if (ENV$MISalpha){
+             #RBstar<-R %*%(pcdesign(nobj))           # alpha_i - alpha_j
+             RBstar<-R %*%abs(pcdesign(nobj))         # alpha_i + alpha_j
+             XX<-cbind(X,RBstar[,ENV$Malph])          # lambdas, alpha_i
+          }
+          if (ENV$MISbeta){
+             YRBstar<-do.call(cbind,lapply(1:(nobj),function(i) RBstar[,i]*ENV$Y[,i])) # betas
+             XX<-cbind(X,RBstar[,ENV$Malph],YRBstar[,ENV$Mbeta])  # lambdas, alpha_i. beta_i
+          }
+      }
+
+      #####    nonresponse model alpha_ij
+      if (ENV$MISmod=="comp"){
+          if (ENV$MISalpha)
+              XX<-cbind(X,R[,ENV$Malph])
+          if (ENV$MISbeta){
+              ##YR<-do.call("cbind", lapply((1:ENV$ncomp)[ENV$Mbeta], function(i) Y[,i] * R[,i])) # design matrix YR
+              YR<-ENV$Y[,ENV$Mbeta] * R[,ENV$Mbeta] # design matrix YR
+              XX<-cbind(X,R[,ENV$Malph],YR)
+          }
+      }
 
       #####    nonresponse model common alpha
       if (ENV$MIScommon) {

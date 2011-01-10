@@ -17,8 +17,8 @@ Fits pattern mixture models using a nonparametric ML approach.
 \tabular{ll}{
 Package: \tab prefmod\cr
 Type: \tab Package\cr
-Version: \tab 0.8-21\cr
-Date: \tab 2010-06-28\cr
+Version: \tab 0.8-22\cr
+Date: \tab 2011-01-07\cr
 Depends: \tab stats\cr
 License: \tab GPL\cr
 }

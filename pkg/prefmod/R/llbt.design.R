@@ -11,34 +11,64 @@
 #                                                                      #
 # ---------------------------------------------------------------------#
 
-llbt.design<-function(obj, nitems=NULL, objnames="", blnCasewise=FALSE, cov.sel="",
-       blnGLIMcmds=FALSE,glimCmdFile="",outFile="")
+# changes 2010-12-21
+### new: option objcovs (must be data.frame)
+### value: object of class "llbtdes"
+
+#llbt.design2<-function(obj, nitems=NULL, objnames="", obj.covs=NULL, blnCasewise=FALSE, cov.sel="",
+#       blnGLIMcmds=FALSE, glimCmdFile="",outFile="")
+#{
+#llbt.design<-function(obj, nitems=NULL, objnames="", obj.covs=NULL, cov.sel="", casewise=FALSE,...)
+
+llbt.design<-function(data, nitems=NULL, objnames="",
+          objcovs=NULL, cat.scovs=NULL, num.scovs=NULL, casewise=FALSE,...)
 {
 
 #
 # initialisations
 #
+
+
+### 2010-12-28 deprecated options, for backwards compatibility
+dots<-as.list(substitute(list(...)))[-1]
+nn<-names(dots)
+for (i in seq(along=dots)) assign(nn[i],dots[[i]])
+
+if(!exists("blnGLIMcmds")) blnGLIMcmds=FALSE
+if(!exists("blnCasewise")) blnCasewise=casewise
+if(!exists("glimCmdFile")) glimCmdFile=""
+if(!exists("outFile")) outFile=""
+if(!exists("cov.sel")) cov.sel=""
+
+cov.sel<-eval(cov.sel)
+blnGLIMcmds <- ifelse(blnGLIMcmds=="T",TRUE,FALSE)
+blnCasewise <- ifelse((blnCasewise==TRUE) || (blnCasewise=="T") ,TRUE,FALSE)
+###
+
   dfr<-NULL
-  if(is.character(obj)){
-          datafile<-obj
+  if(is.character(data)){          # argument obj changed to data 2010-12-30
+          datafile<-data
           nobj         <- nitems
           objnames     <- objnames
           casewise     <- blnCasewise
           glimoutput   <- blnGLIMcmds
           glimoutFile  <- glimCmdFile
           outFile      <- outFile
-  } else if(is.data.frame(obj)){
-          dfr<-obj
+  } else if(is.data.frame(data)){  # argument obj changed to data 2010-12-30
+          dfr<-data
           nobj         <- nitems
           objnames     <- objnames
+          cov.sel      <- cov.sel
           casewise     <- blnCasewise
           glimoutput   <- blnGLIMcmds
           glimoutFile  <- glimCmdFile
           outFile      <- outFile
-  } else if (is.list(obj)) {
+  } else if (is.list(data)) {
+          obj<-data                # argument obj changed to data 2010-12-30
           datafile     <- obj$datafile
           nobj         <- obj$nitems
           objnames     <- obj$objnames
+          objcovs      <- obj$objcovs
           #reduce.cat   <- obj$blnReducecat
           casewise     <- obj$blnCasewise
           cov.sel      <- obj$cov.sel
@@ -79,6 +109,10 @@ if (is.null(nobj)) stop("number of items not defined")
         dat<-as.matrix(dfr)                                  # dataframe
         dat<-apply(dat,2,as.numeric)
     }
+
+    # which variables are factors 2010-12-28 --- obsolete for time being
+    # facs<-sapply(dfr,is.factor)
+
     nrespcat<-diff(range(dat[,1:ncomp],na.rm=TRUE))   # number of response categories categories
     raw.data <- dat[,1:ncomp]
 
@@ -110,15 +144,30 @@ if (is.null(nobj)) stop("number of items not defined")
     nsubj<-nrow(dat)
     nrows <- ncomp * (nrespcat+1)        # number of rows for 1 design matrix (1 subject or no covs)
 
+    ## treatment of subject covariates 201-12-30
+    scovs <- c(num.scovs, cat.scovs)
+    if (length(scovs)>0)
+         cov.sel <- scovs
+    if (length(num.scovs)>0) casewise <- TRUE
     blnSubjcov<-cov.sel[1]!=""             #    FALSE if ""
 
     if (blnSubjcov) {
        inpcovnames <- colnames(dat)[(ncomp+1):ncol(dat)]
+       if (length(cov.sel)>1 && any(toupper(cov.sel[1])=="ALL"))  ## 2010-12-30
+           stop("\n subject covariates incorrectly specified\n")
        if (toupper(cov.sel[1]) == "ALL"){   # all covariates included
           cov.sel <- inpcovnames
        } else if(length(setdiff(cov.sel,inpcovnames))>0) {
-           stop("\ncovariate name(s) in cov.sel incorrectly specified\n")
+           stop("\n subject covariates incorrectly specified\n")
        }
+       ## 2010-12-30 --- obsolete for time being
+       # check if casewise is specified for continuous covs
+       # distinguish factors and variates
+       # tst<-intersect(names(facs),cov.sel)
+       # if (any(facs[tst]==FALSE)&&!casewise)
+       #    stop("Not all selected subject covariates are factors, use casewise=TRUE.")
+
+
        cov.case<-as.matrix(dat[,c(cov.sel)])
        #if (any(is.na(cov.case)))
        #    stop("subject covariates with NAs not allowed")
@@ -138,8 +187,8 @@ if (is.null(nobj)) stop("number of items not defined")
        covnames<-cov.sel
        covlevels<-apply(cov.case,2,max)
        ncov<-length(cov.sel)
-       if (any(apply(cov.case,2,min)<1))
-           warning("subject covariates with values < 1, if these are factors recode them")
+       # if (any(apply(cov.case,2,min)<1))   # removed 2010-12-28
+       #    warning("subject covariates with values < 1, if these are factors recode them")
     } else {
        cov.case=NULL
        covlevels=NULL
@@ -199,7 +248,7 @@ ones.nrows<-rep(1,nrows)         # vector for kronecker products
 
 
 
-obj<- objdesign(nrows,nobj,nrespcat)# /nrespcat  ## to make design -1 0 1 instead of -2 0 2 in case of undecided
+obj <- objdesign(nrows,nobj,nrespcat)# /nrespcat  ## to make design -1 0 1 instead of -2 0 2 in case of undecided
 obj<- ones.totlev %x% obj        # stack object design matrix totlev times
 
 
@@ -303,7 +352,21 @@ if (ncov == 0 && !casewise) {
       varnames<-c("mu",gamnames,objnames,covnames)
 }
 
+### new: object specific covariates
+if(!is.null(objcovs)){
+   if(!is.data.frame(objcovs)) stop("object specific covariates must be specified as a data frame")
+   if(any(sapply(objcovs,is.factor))) stop("object specific covariates must not be factors (use model.matrix first)")
+   dm<-data.frame(dm, obj %*% as.matrix(objcovs)) # add obj covs to design data frame
+   objcovnames <- colnames(objcovs)
+   varnames <- c(varnames, objcovnames)
+   rownames(objcovs) <- objnames
+   attr(dm, which="objcovs")<-as.matrix(objcovs, drop=FALSE)
+}
 
+### new: attributes in design data frame
+attr(dm, which="objnames")<-objnames
+names(dm)<-c("y",varnames)
+class(dm)<-c("data.frame","llbtdes")
 
 ################################################################
 #
@@ -350,7 +413,16 @@ if (glimoutput) {
     write("$RETURN",file=glimoutFile,append=T)
 }
 
-names(dm)<-c("y",varnames)
+# define factors according to input data frame 2010-12-28 obsolete for the time being
+# facnam<-names(facs[facs])
+
+# define factors according cat.scov 2010-12-30
+if (length(cat.scovs)>0){
+   if(toupper(cat.scovs)=="ALL") facnam<-cov.sel else facnam<-cat.scovs
+   dmnam<-intersect(facnam,colnames(dm))
+   dm[dmnam]<-lapply(dm[dmnam],factor)
+}
+
 if (glimoutput) {
   invisible(dm)
 } else {

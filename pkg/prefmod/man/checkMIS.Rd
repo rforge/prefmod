@@ -8,18 +8,21 @@ missing.  It can also be used to avoid failure of nonresponse-parameter
 for nonresponse models in
 }
 \usage{
-checkMIS(obj, nitems, verbose = FALSE)
+checkMIS(obj, nitems, MISmodel="obj", verbose = FALSE)
 }
 \arguments{
   \item{obj}{dataframe or datafile path/name (like \code{\link{pattPC.fit}}).}
   \item{nitems}{the number of compared objects, not the number of comparisons
        (like \code{\link{pattPC.fit}}).}
+  \item{MISmodel}{specifies the nonresponse model, either \code{obj} (default) for
+        missing mechanisms based on objects, or \code{comp} based on comparisons. This
+        argument is only relevant for the (invisible) output of \code{checkMIS}.}
   \item{verbose}{if \code{TRUE} printed output, otherwise only invisible output
-        to be used, e.g., in the specification of \code{MISalpha} in
-        \code{\link{pattPC.fit}}.}
+        to be used, e.g., in the specification of \code{MISalpha} and \code{MISbeta}
+        in \code{\link{pattPC.fit}}.}
 }
 \value{
-  a logical vector (returned invisibly) specifying for which object
+  a logical vector (returned invisibly) specifying for which object/comparison
   there are NA responses in the data (\code{obj)}.
 }
 \seealso{\code{\link{pattPC.fit}}}

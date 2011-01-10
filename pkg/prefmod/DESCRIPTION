@@ -1,8 +1,8 @@
 Package: prefmod
 Type: Package
 Title: Utilities to fit paired comparison models for preferences
-Version: 0.8-21
-Date: 2010-06-28
+Version: 0.8-22
+Date: 2011-01-07
 Author: Reinhold Hatzinger
 Maintainer: Reinhold Hatzinger <reinhold.hatzinger@wu.ac.at>
 Depends: stats, gnm (>= 1.0-0), colorspace
@@ -17,3 +17,5 @@ Description: Generates design matrix for analysing real paired
              for paired comparison, rating and ranking patterns using
              a nonparametric ML approach.
 License: GPL
+LazyData: yes
+LazyLoad: yes

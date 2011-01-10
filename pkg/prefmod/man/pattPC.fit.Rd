@@ -6,8 +6,8 @@
 \usage{
 pattPC.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "paircomp",
     obj.names = NULL, undec = FALSE, ia = FALSE, NItest = FALSE,
-    NI = FALSE, MISalpha = NULL, MIScommon = FALSE, MISbeta = NULL,
-    pr.it = FALSE)
+    NI = FALSE, MIScommon = FALSE, MISmodel="obj", MISalpha = NULL,
+    MISbeta = NULL, pr.it = FALSE)
 }
 \arguments{
   \item{obj}{either a dataframe or the path/name of the datafile to be read.
@@ -36,21 +36,28 @@ pattPC.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "paircomp",
         }
   \item{NI}{if  \code{TRUE}, fits large table (crossclassification with NA patterns), for comparison
         with models including \code{MISalpha} (and \code{MISbeta}). }
-  \item{MISalpha}{if not \code{NULL}, specification to fit parameters for
-        NA indicators using a
-        logical vector, where \code{TRUE} means that the NA indicator parameter
-        for the corresponding object should be estimated (see example below).
-        Currently each comparison is reparameterized  with
-        \eqn{\alpha_i+\alpha_j}{alpha_i + alpha_j}.}
   \item{MIScommon}{if \code{TRUE}, fits a common parameter for NA indicators,
         i.e.,
         \eqn{\alpha=\alpha_i=\alpha_j=\dots}{alpha = alpha_i = alpha_j = ...}.}
+  \item{MISmodel}{either \code{obj} (default) or \code{comp}. Specifies the
+        model for missing values. If \code{obj}, parameters for missing objects
+        or if \code{comp}, parameters for missing comparisons are estimated. In both
+        cases \code{MISalpha} (and optionally \code{MISbeta}) specify which parameters
+        are involved.
+        }
+  \item{MISalpha}{if not \code{NULL}, specification to fit parameters for
+        NA indicators using a
+        logical vector, where \code{TRUE} means that the NA indicator parameter
+        for the corresponding object (or comparison, dependent on \code{MISmodel})
+        should be estimated (see example below).
+        For \code{MISmodel="obj"} each comparison is reparameterized  with
+        \eqn{\alpha_i+\alpha_j}{alpha_i + alpha_j}, for \code{MISmodel="comp"}
+        each comparison is reparameterized  with \eqn{\alpha_{ij}}{\alpha_{ij}}.
+        }
   \item{MISbeta}{if not \code{NULL}, fits parameters for MNAR model, i.e., interactions
-        between outcome model object parameters and NA indicator parameters.
-        Currently each comparison is reparameterized  with
-        \eqn{\beta_i+\beta_j}{beta_i + beta_j}. The specification is the same as
-        for \code{MISalpha} (see example below). Usually, the specification for
-        \code{MISbeta} is the same as for \code{MISalpha}, but any subset is
+        between outcome model parameters and NA indicator parameters.
+        The reparameterization is analogous to \code{MISalpha}. Usually,
+        the specification for \code{MISbeta} is the same as for \code{MISalpha}, but any subset is
         reasonable. If \code{MISalpha = NULL} but \code{MISbeta} is not, then
         \code{MISalpha} is set to  \code{MISbeta}.
         }

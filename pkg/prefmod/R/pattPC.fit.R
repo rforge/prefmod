@@ -1,6 +1,7 @@
-####### new version (in pkg9test) for MNAR models   #############################################
 pattPC.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="paircomp",obj.names=NULL,
-         undec=FALSE, ia=FALSE, NItest=FALSE,NI=FALSE,MISalpha=NULL,MIScommon=FALSE,MISbeta=NULL, pr.it=FALSE)
+         undec=FALSE, ia=FALSE, NItest=FALSE,NI=FALSE, MIScommon=FALSE,
+         MISmodel="obj", MISalpha=NULL,MISbeta=NULL,
+         pr.it=FALSE)
 {
     call<-match.call()
     ENV<-new.env()
@@ -83,6 +84,8 @@ pattPC.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="paircomp",obj.names
     # missing values specifications
     #  check different combinations of MISalpha & MISbeta
 
+    if(is.null(MISmodel)) MISmodel=" "
+
     if(is.null(MISalpha) || sum(MISalpha)==0 ){     # alpha not specified or all F
        if(is.null(MISbeta) || sum(MISbeta)==0 ){    #   beta not specified or all F
            MISalpha<-FALSE
@@ -115,6 +118,15 @@ pattPC.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="paircomp",obj.names
     ENV$MISalpha <- MISalpha
     ENV$MISbeta <- MISbeta
     ENV$MIScommon <- MIScommon
+
+    if(is.null(MISmodel)) MISmodel=" "
+    if(MISalpha && !(MISmodel %in% c("obj","comp")))
+       #if(MISmodel %in% c("obj","comp"))
+       #   ENV$MISmod <- MISmodel
+       #else
+          stop('\nMISmodel not correctly specified. Use "obj" or "comp"\n')
+    ENV$MISmod <- MISmodel
+
 
     if(NI)
       if(!any(is.na(dat)))
