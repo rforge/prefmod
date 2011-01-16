@@ -17,7 +17,7 @@ splitCovs<-function(dat,covs,formel,elim,ENV)
    if(elim=="~1"){               # subject covariates
       covdesmat<-matrix(1,1)
       elimdesmat<-covdesmat
-      covs<-as.matrix(rep(1,nrow(dat)),nc=1)
+      covs<-as.matrix(rep(1,nrow(dat)),ncol=1)
    } else {                      # there are terms to eliminate
       if (formel=="~1"){         #   no covariates in actual model
            covdesmat<-matrix(1,1)

@@ -134,7 +134,7 @@ function(obj, nitems=NULL, objnames="", resptype="paircomp", blnRevert=FALSE, co
          }
          levmult <- rev(cumprod(baslev[indx]))
          # transform subject covariates data into covariate vectors
-         scov<-matrix(0,nr=totlev*npatt,nc=ncov)
+         scov<-matrix(0,nrow=totlev*npatt,ncol=ncov)
          colnames(scov)<-covnames
          scov<-data.frame(scov)
          for (j in 1:ncov) {

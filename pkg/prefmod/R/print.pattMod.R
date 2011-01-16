@@ -48,11 +48,11 @@ print.pattMod<-function(x,...)                     #cmat,nobj,elim, ilabels,ENV)
    colon<-c(rep("",length(obj.names)),rep(":",length(cov.names)-length(obj.names)))
    par.names<-paste(obj.names,colon,cov.names,sep="")
 
-   se<-round(sqrt(diag(solve(obj$hessian))),digit=5)
+   se<-round(sqrt(diag(solve(obj$hessian))),digits=5)
    zval<-round(obj$estimate/se,digits=3)
    pval<-round(2*(1-pnorm(abs(zval))),digits=4)
 
-   coef.table<-cbind(round(obj$estimate,digit=5),se,zval,pval)
+   coef.table<-cbind(round(obj$estimate,digits=5),se,zval,pval)
 
    if(envList$NItest) par.names<-c(par.names,paste("mis.",par.names,sep=""))
 

@@ -17,38 +17,16 @@ Fits pattern mixture models using a nonparametric ML approach.
 \tabular{ll}{
 Package: \tab prefmod\cr
 Type: \tab Package\cr
-Version: \tab 0.8-22\cr
-Date: \tab 2011-01-07\cr
+Version: \tab 0.8-23\cr
+Date: \tab 2011-01-16\cr
 Depends: \tab stats\cr
 License: \tab GPL\cr
 }
-
-%Index:
-%\preformatted{
-%cemspc                  Data: CEMS
-%checkMIS                check and display NAs in paired comparisons data
-%dat4                    Data: dat4
-%issp2000                Data: ISSP 2000 Survey on Environmental Issues
-%llbt.design             Loglinear Bradley-Terry Model (LLBT) - Design
-%                        Matrix Generation
-%llbt.fit                Function to fit an LLBT
-%baseball                Data: Baseball Games
-%music                   Data: Music (Music (General social survey)
-%patt.design             Paired Comparison Patterns - Design Matrix
-%                        Generation
-%pattL.fit               Function to fit a pattern model for ratings
-%                        (Likert items)
-%pattPC.fit              Function to fit a pattern model for paired
-%                        comparisons
-%pattR.fit               Function to fit a pattern model for rankings
-%salad                   Data: Salad Dressings (Critchlow and Fligner)
-%xmpl                    Data: Example Data Set
-%}
 }
 \author{
 Reinhold Hatzinger
 
-Maintainer: Reinhold Hatzinger <reinhold.hatzinger@wu-wien.ac.at>
+Maintainer: Reinhold Hatzinger <reinhold.hatzinger@wu.ac.at>
 }
 \keyword{ package }
 \examples{

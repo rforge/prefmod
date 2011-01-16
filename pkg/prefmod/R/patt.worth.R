@@ -12,16 +12,16 @@ patt.worth<-function(obj, obj.names=NULL, outmat="worth")
          nobj<-obj$envList$nobj
          npar<-(nobj - 1) * ncovpar
          lambda<-obj$coefficients[1:npar]
-         lmat<-matrix(lambda,nr=nobj-1)
+         lmat<-matrix(lambda,nrow=nobj-1)
          lmat<-rbind(lmat,rep(0,ncol(lmat)))
     } else {                                             # time model
          tpoints<-envList$tpoints
          nobj<-(envList$nitems-1)
          npar<-nobj*ncovpar*tpoints
          lambda<-obj$coefficients[1:npar]
-         lmat<-matrix(lambda,nr=nobj)
+         lmat<-matrix(lambda,nrow=nobj)
          lmat<-rbind(lmat,rep(0,ncol(lmat)))
-         lmat<-matrix(lmat,nc=tpoints)
+         lmat<-matrix(lmat,ncol=tpoints)
          nobj<-envList$nitems*tpoints
     }
 
@@ -52,7 +52,7 @@ patt.worth<-function(obj, obj.names=NULL, outmat="worth")
 
     mltp<-2
     worthmatrix<-NULL
-    est<-matrix(group.est,nr=nobj/tpoints)
+    est<-matrix(group.est,nrow=nobj/tpoints)
 
     ## worth matrix
     for (i in 1:ncol(est)) {

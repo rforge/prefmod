@@ -68,7 +68,7 @@ normalize<-function(lambda,X,nobj,ENV){
 
    R<-patternmat2(nobj)
    if(ENV$MIScommon)
-     R<-matrix(rowSums(R),nc=1)
+     R<-matrix(rowSums(R),ncol=1)
 
    Bstar<-abs(pcdesign(nobj))  # alpha_i + alpha_j
    nrm.bl.vec<-apply(R,1,nrm,eta,Bstar,alpha,betas,Xundec,XIthet,ENV)        # 7.12.09  Xundec added

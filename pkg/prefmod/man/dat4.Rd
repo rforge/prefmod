@@ -3,21 +3,13 @@
 \docType{data}
 \title{Data (paired comparisons): dat4}
 \description{
-  A fictitious data set with 100 observations on 6 paired comparisons.
-  The responses are 1 assigned if the first object in a comparison is the preferred one and -1 if it is not preferred.
-  For the ordering of objects and comparisons see \code{\link{llbt.design}}.
+  A fictitious dataset with 100 observations on 6 paired comparisons.
+  The responses get the value 1 if the first object in a comparison is preferred and -1 otherwise.                                                                                                     
+  For the arrangement of objects and comparisons see \code{\link{llbt.design}}.
 }
 \usage{data(dat4)}
 \format{
-  A data frame with 100 observations on 6 comparisons:
-  \describe{
-    \item{\code{comp1}}{responses to first comparison}
-    \item{\code{comp2}}{responses to second comparison}
-    \item{\code{comp3}}{responses to third comparison}
-    \item{\code{comp4}}{responses to fourth comparison}
-    \item{\code{comp5}}{responses to fifth comparison}
-    \item{\code{comp6}}{responses to sixth comparison}
-  }
+  A data frame with 100 observations on 6 comparisons (\code{comp1} to \code{comp6})
 }
 \examples{
 data(dat4)

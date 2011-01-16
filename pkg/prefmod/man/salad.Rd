@@ -3,16 +3,14 @@
 \docType{data}
 \title{Data (ranks): Salad Dressings (Critchlow and Fligner)}
 \description{
-  The data frame shows the ranking of four salad dressing concerning tartness by 32 judges, whereas (1) is assigned as most tart and (4) is assigned as least tart.
+  The dataset contains the rankings of four salad dressings concerning tartness by 32 judges, 
+  with values ranging from 1 (most tart) 
+  to 4 (least tart).
 }
 \usage{data(salad)}
 \format{
-\describe{
-    \item{\code{A}}{salad dressing preparation A}
-    \item{\code{B}}{salad dressing preparation B}
-    \item{\code{C}}{salad dressing preparation C}
-    \item{\code{D}}{salad dressing preparation D}
-  }
+  A data frame with 32 observations on 4 variables (\code{A}, \code{B}, \code{C}, \code{D}) each
+ representing a different salad dressing.
 }
 \references{
   Douglas E. Crichtlow and Michael A. Fligner (1991), Paired Comparison, Triple Comparison, and Ranking Expermients As Generalized Linear Models, and Their Implementation on GLIM. Psychometrika Vol. 56, No. 3

@@ -17,9 +17,9 @@ llbt.fit<-function(y,Xmodel,q,ncat,maxiter=100)
              b.old <- b
              dev.old <- dev
              z <- eta + (y - fv)/fv
-             a22inv <- 1/colSums(matrix(fv, nr = ncat))
+             a22inv <- 1/colSums(matrix(fv, nrow = ncat))
              WX <- fv * cbind(z, Xmodel)
-             A21 <- matrix(colSums(matrix(WX[, 1:(p + 1)], nr = ncat)), nc = p + 1)
+             A21 <- matrix(colSums(matrix(WX[, 1:(p + 1)], nrow = ncat)), ncol = p + 1)
              A11 <- crossprod(cbind(z, Xmodel), WX)
              A22inv.A21 <- -a22inv * A21
              A.11 <- solve(A11 + crossprod(A21, A22inv.A21))

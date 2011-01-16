@@ -3,7 +3,9 @@
 \docType{data}
 \title{Data (ratings): Music (General social survey)}
 \description{
-  The General Social Survey has been conducted by the National Opinion Research Center in 1993. The dataset focusses on 11 items with a 5-point Likert type response scale. The respondents were asked about their music preferences.
+  The General Social Survey has been conducted by the National Opinion Research Center in 1993. 
+  The dataset focusses on 11 items with a 5-point Likert type response scale. 
+  The respondents were asked about their music preferences.
 }
 \usage{data(music)}
 \format{
@@ -23,7 +25,9 @@
   }
 }
 \details{
-  The 11 variables are items to be anserwed on a 5-point Likert type scale with response categories: (1) like it very much, (2) like it, (3) have mixed feelings, (4) dislike it and (5) dislike it very much.
+  The 11 variables are items to be anserwed on a 5-point rating scale (Likert type) with response categories: 
+  (1) like it very much, (2) like it, 
+  (3) have mixed feelings, (4) dislike it and (5) dislike it very much.
 }
 \source{
     Dataset: General Social Survey 1993 [United States]\cr
@@ -32,7 +36,8 @@
    \url{http://www.cpanda.org/cpanda/getDDI.xq?studyID=a00006#dataDscr}\cr
 }
 \references{
-This is just an abstract for further information concerning the General Social Survey dataset have a look at the Cultural Policy and the Arts National Data Archive.
+This is just a brief description, for further information concerning the General Social Survey dataset 
+have a look at the Cultural Policy and the Arts National Data Archive.
 }
 \examples{
 data(music)

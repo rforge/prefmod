@@ -416,9 +416,9 @@ if (glimoutput) {
 # define factors according to input data frame 2010-12-28 obsolete for the time being
 # facnam<-names(facs[facs])
 
-# define factors according cat.scov 2010-12-30
+# define factors according cat.scovs 2010-12-30
 if (length(cat.scovs)>0){
-   if(toupper(cat.scovs)=="ALL") facnam<-cov.sel else facnam<-cat.scovs
+   if("ALL" %in% toupper(cat.scovs)) facnam<-cov.sel else facnam<-cat.scovs
    dmnam<-intersect(facnam,colnames(dm))
    dm[dmnam]<-lapply(dm[dmnam],factor)
 }

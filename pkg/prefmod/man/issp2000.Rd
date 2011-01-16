@@ -6,14 +6,14 @@
   In 2000 the International Social Survey Programme (ISSP) has
 addressed the topic of attitudes to environmental protection and preferred
 government measures for environmental protection. This dataset focusses
-on six items (with a 5-point Likert type response scale) where respondents
+on six items (with a 5-point rating scale (Likert type)) where respondents
 from Austria and Great Britain
 were asked about their perception of environmental dangers.
 }
 \usage{data(issp2000)}
 \format{
   A data frame with 1595 observations on the following 11 variables. The first six
-  variables are items to be answered on a 5-point Likert type scale with
+  variables are items to be answered on a 5-point rating scale (Likert type) with
   response categories: (1) \emph{extremely dangerous for the environment} to
   (5) \emph{not dangerous at all for the environment}.
   \describe{

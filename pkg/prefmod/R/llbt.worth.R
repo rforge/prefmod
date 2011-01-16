@@ -36,14 +36,14 @@ if (llbtdesignmodel){
 
           # extract subject covariates from formula
           fterm<-deparse(fitobj$call$formula)
-          fterms<-unique(unlist(strsplit(eterm,"[ ()+*:~]")))
+          fterms<-unique(unlist(strsplit(fterm,"[ ()+*:~]")))
           subjcov.names<-intersect(eterms,fterms)
           ### achtung laenge 0
 
           # set up subj cov design
           levlist<-lapply(fitobj$model[subjcov.names],levels)
           maxlev<-sapply(levlist,length)
-          subjdes<-prefmod:::gfac2(maxlev)
+          subjdes<-gfac2(maxlev)
           colnames(subjdes)<-names(maxlev)
 
       } else
@@ -250,7 +250,7 @@ if (llbtdesignmodel){
           # estimates in same order as in model matrix
           lambda<-lambda[match(lo,names(lambda))]
 
-          lambda.mat<-matrix(lambda,nr=nobj,b=T)
+          lambda.mat<-matrix(lambda,nrow=nobj,byrow=T)
 
           colnames(lambda.mat) <- unique(nam.new)
           rownames(lambda.mat) <- nam.lambda[1:nobj]

@@ -6,7 +6,7 @@ Rpatternmat<-function(nobj)
       # ? ENV$RpattStr<-sort(RpattStr)
 
       ncomp<-nobj*(nobj-1)/2
-      diffs<-matrix(,nc=ncomp,nr=nrow(Rpatt))
+      diffs<-matrix(,ncol=ncomp,nrow=nrow(Rpatt))
       c<-0
       for (j in 2:nobj)
           for (i in 1:(j-1) ){

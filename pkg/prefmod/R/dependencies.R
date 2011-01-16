@@ -1,7 +1,7 @@
 # dependencies
 dependencies<-function(nobj,Y)
 {
-     m<-matrix(,nr=nobj-1,nc=nobj)
+     m<-matrix(,nrow=nobj-1,ncol=nobj)
 
      label.comps<-NULL
      for (j in 2:nobj){
@@ -21,7 +21,7 @@ dependencies<-function(nobj,Y)
 
      label.intpars<-NULL
      dncol<-(nobj)*(nobj-1)*(nobj-2)/2
-     d<-matrix(,nc=dncol,nr=nrow(Y))
+     d<-matrix(,ncol=dncol,nrow=nrow(Y))
      l<-1
      for (k in 1:(nobj)){
        for (i in 1:(nobj-2)){

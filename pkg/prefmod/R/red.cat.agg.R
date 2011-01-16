@@ -7,7 +7,7 @@ red.cat.agg<-function(x,nrespcat) {
 # no aggregated data for the time being
 #
 # i <- red.cat(0:nrespcat,nrespcat)
-# x<-matrix(x,nc=nrespcat+1,byrow=T)
+# x<-matrix(x,ncol=nrespcat+1,byrow=T)
 # out<-NULL
 # for (k in 1:dim(x)[1])
 #   for (j in 0:max(i)){

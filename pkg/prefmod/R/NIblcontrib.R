@@ -5,7 +5,7 @@ NIblcontrib<-function(obj,lambda,X,nobj,ENV)
       naidx<-1-as.numeric(obj$notnaidx)  # R=1 missing, R=0 observed
 
       ncat<-ENV$ncat                                                      #  7.12.09
-      R<-matrix(rep(naidx,ncat^ENV$ncomp),nr=ncat^ENV$ncomp,byrow=T)      #
+      R<-matrix(rep(naidx,ncat^ENV$ncomp),nrow=ncat^ENV$ncomp,byrow=T)      #
 
 
       XX<-X                              # only lambdas
