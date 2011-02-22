@@ -4,7 +4,7 @@
 \title{Quality of Multichannel Reproduced Sound}
 
 \description{
-  Paired comparison judgments of 39 selected listeners with respect to
+  Paired comparison judgments of 40 selected listeners with respect to
   eight audio reproduction modes and for types of music. 
 }
 
