@@ -490,8 +490,14 @@ plot.paircomp <- function(x, off = 0.05,
   ## basic dimensions
   lab <- labels(x)
   nobj <- length(lab)
-  ix <- which(upper.tri(diag(nobj)), arr.ind = TRUE)
-  npc <- nrow(ix)
+  if(attr(x, "ordered")) {
+    ix <- which(upper.tri(diag(nobj)), arr.ind = TRUE)
+    ix <- rbind(ix, ix[,2:1])
+    npc <- nrow(ix)
+  } else {
+    ix <- which(upper.tri(diag(nobj)), arr.ind = TRUE)
+    npc <- nrow(ix)
+  }
   has_undecided <- min(abs(mscale(x))) < 1
 
   ## labeling
@@ -543,6 +549,9 @@ plot.paircomp <- function(x, off = 0.05,
   axis(2, at = ycprob - yprob/2, labels = alab[ix[,1]], tick = FALSE, las = 1)
   axis(4, at = ycprob - yprob/2, labels = alab[ix[,2]], tick = FALSE, las = 1)
   box()
+
+  ## separate within-pair orders by horizontal line
+  if(attr(x, "ordered")) abline(h = ycprob[npc/2 + 1] + off/2, xpd = TRUE)
 
   ## return centered y coordinates invisibly
   invisible(ycprob - yprob/2)
