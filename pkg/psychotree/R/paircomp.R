@@ -490,14 +490,9 @@ plot.paircomp <- function(x, off = 0.05,
   ## basic dimensions
   lab <- labels(x)
   nobj <- length(lab)
-  if(attr(x, "ordered")) {
-    ix <- which(upper.tri(diag(nobj)), arr.ind = TRUE)
-    ix <- rbind(ix, ix[,2:1])
-    npc <- nrow(ix)
-  } else {
-    ix <- which(upper.tri(diag(nobj)), arr.ind = TRUE)
-    npc <- nrow(ix)
-  }
+  ix <- which(upper.tri(diag(nobj)), arr.ind = TRUE)
+  if(attr(x, "ordered")) ix <- rbind(ix, ix[,2:1])
+  npc <- nrow(ix)
   has_undecided <- min(abs(mscale(x))) < 1
 
   ## labeling
