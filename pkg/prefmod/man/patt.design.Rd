@@ -5,67 +5,65 @@
 }
 \description{
 The function \code{patt.design} converts (i) real paired comparison
-responses, or (ii) a set of ratings (Likert type responses measured on a
+responses, or (ii) a set of ratings (or Likert type responses measured on a
 commmon scale), or (iii) full rankings into paired comparison patterns,
 returning a new data frame containing the design matrix for a loglinear
 paired comparison model.  Additionally, the frequencies of these
 patterns are computed and are stored in the first column of the data
-frame.  Optionally, the function provides all necessary structures
-(commands, data/design files) to fit the loglinear paired comparisons
-pattern model in GLIM, which is often more efficient at fitting large
-loglinear models of this type.
+frame.
 }
 \usage{
-patt.design(obj, nitems = NULL, objnames = "", resptype = "paircomp",
-     blnRevert = FALSE, cov.sel = "", blnIntcovs = FALSE,
-     blnGLIMcmds = FALSE, glimCmdFile = "", outFile = "", intFile = "")
+patt.design(obj, nitems = NULL, objnames = "", objcovs = NULL,
+            cat.scovs = NULL, num.scovs=NULL, resptype = "paircomp",
+            reverse = FALSE, ia = FALSE, casewise = FALSE, ...)
 }
 \arguments{
-  \item{obj}{either a data frame, a data file name, or a
-           control object.
-       }
+  \item{obj}{either a data frame or a data file name.}
   \item{nitems}{number of items (objects). \code{nitems} is not the
            number of comparisons!
        }
   \item{objnames}{an optional character vector with names for the objects
            These names are the columns names in the ouput data frame.
-           If \code{objnames} is not specified consecutive letters
-           starting with "a" will be used.
+           If \code{objnames} is not specified \code{o1},\code{o2}, etc.
+           will be used.
+       }
+  \item{objcovs}{an optional data frame with object specific covariates. The rows correspond
+           to the objects, the columns define the covariates. The column names of this data frame
+           are later used to fit the covariates. Factors are not allowed. In that case dummy
+           variables have to be set up manually (favourably using \code{\link{model.matrix}}).
+       }
+  \item{cat.scovs}{a character vector with the names of the categorical subject covariates
+           in the data file to be included into the design matrix.
+           (example: \code{cat.scovs = c("SEX", "WORK")}). If all covariates in the data
+           are categorical and should be included,  the specification can be abbreviated to
+           \code{cat.scovs = "ALL"}. In that case, \code{num.scovs} must not be specified.
+           For no categorical covariates: \code{cat.scovs = ""}, the default.
+       }
+  \item{num.scovs}{analogous to  \code{cat.scovs} for numerical (continuous) subject covariates. If
+           any numerical covariates are specified, \code{casewise} is set to \code{TRUE}.
        }
   \item{resptype}{one of \code{"paircomp"}, \code{"rating"}, or \code{"ranking"}.
        }
-  \item{blnRevert}{If the responses are such that
-           low values correspond to high preference or agreement and high values
-           to low preference or agreement (e.g., (1) \emph{I strongly agree} \ldots
+  \item{reverse}{If the responses are such that
+           low values correspond to high preference (or agreement or rank) and high values
+           to low preference (or agreement or ranks) (e.g., (1) \emph{I strongly agree} \ldots
            (5)  \emph{I strongly disagree}) then \code{blnRevert}
-           should be specified to be \code{FALSE}. Otherwise
-           set \code{blnRevert = TRUE}.
+           should be specified to be \code{FALSE}, the default. Otherwise
+           set \code{reverse = TRUE}. The only exception is paired comparison responses
+           that are coded 1/-1. Then 1 is treated as preferred and -1 as not preferred.
+           (See Input Data below)
        }
-  \item{cov.sel}{a character vector with the names of the subject covariates
-           in the data file to be included into the design matrix.
-           (example: \code{cov.sel = c("SEX", "AGE")}). If all covariates are to be
-           included the specification can be abbreviated to \code{cov.sel = "ALL"}.
-           For no covariates specify \code{cov.sel = ""}.
+  \item{ia}{generates covariates for interactions between comparisons if
+           \code{ia = TRUE}.
        }
-  \item{blnIntcovs}{generates covariates for interactions between comparisons if
-           \code{blnIntcovs = TRUE}.
+  \item{casewise}{If \code{casewise = TRUE} a separate design structure is set up
+       for each subject in the data. This is required when fitting continuous
+       subject covariates. However, the design can become very large in the case of many subjects
+       and/or comparisons. See Details below.
        }
-  \item{blnGLIMcmds}{\code{TRUE}, if GLIM output is wanted. If \code{blnGLIMcmds = FALSE}
-           the following items can be set to any value (such as a null text string) and are ignored.
-           Please note that if \code{blnGLIMcmds} is set to be \code{TRUE} there is no output in \R
-           but instead goes to the the following files.
-       }
-  \item{glimCmdFile}{name of the output file which will contain all necessary commands to
-          fit a basic model (defining all structures and reading the
-          necessary data).
-       }
-  \item{outFile}{name of the data/design file to be read into GLIM. It consists
-           of the response frequencies and the covariates for the objects,
-           the undecided comparison responses and the subject effects.
-       }
-  \item{intFile}{name of the design file for the interaction effects.
-          This file is only generated if \code{blnIntcovs = TRUE}.
-       }
+  \item{...}{deprecated options to allow for backwards compatibility (see Deprecated below)
+  }
+
 }
 \details{
 
@@ -131,7 +129,7 @@ patt.design(obj, nitems = NULL, objnames = "", resptype = "paircomp",
 \section{Input Data}{
         Responses have to be coded as consecutive integers (e.g.,
         (0,1), or (1,2,3,\dots). For paired comparison without undecided category
-        (-1,1), or (1,0,-1) for paired comparison with an undecided category, can also be used
+        (1,-1), or (1,0,-1) for paired comparison with an undecided category, can also be used
         ('-1' is the not preferred category).
 
         Input data (via the first argument \code{obj} in the function call)
@@ -160,8 +158,7 @@ patt.design(obj, nitems = NULL, objnames = "", resptype = "paircomp",
         \code{\link{pattPC.fit}}, \code{\link{pattL.fit}}, or \code{\link{pattR.fit}} instead),
         and treated such that
         rows with NAs are removed from the resulting design structure and a message is printed.
-        For an example see \code{\link{xmpl}} or the file \code{xmpl.dat} in the package's
-        \code{data/} directory.
+        For an example see \code{\link{xmpl}}.
 
         (Besides supplying data via a dataframe or a datafile name, \code{obj} can also
         be specified as a control list with the same elements as the arguments in the function call.
@@ -190,9 +187,16 @@ patt.design(obj, nitems = NULL, objnames = "", resptype = "paircomp",
 %%       the rows of the dataframe are in standard order, with the patterns varying within
 %%       covariate combinations, and the patterns varying with the leftmost comparison
 %%       (1,2), (1,3), (2,3), (1,4) etc varying fastest.
-       Alternatively, the function \code{patt.design} does not produce output in \R if GLIM output
-       is requested via \code{blnGLIMcmds = TRUE}. The output is then written to
-       the corresponding files (see \bold{The Control List} below).
+}
+\section{Deprecated }{The following options are for backwards compatibility and should
+       no longer be used..
+\describe{
+  \item{blnCasewise}{same as \code{casewise}.}
+  \item{cov.sel}{same as \code{cat.scovs}.}
+}
+Options for requesting GLIM commands and data structures are no longer supported.
+Specifying the input to \code{llbt.design} via a control list is also deprecated.
+If you want to use these features you have to install prefmod <= 0.8-22.
 }
 \references{Dittrich, R., Francis, B.J., Hatzinger R., Katzenbeisser, W. (2007),
 A Paired Comparison Approach for the Analysis of Sets of Likert Scale Responses.
@@ -241,32 +245,6 @@ summary(glm(y~SEX:EDU + CAR+IND+FARM+WATER+TEMP+GENE
                 + (CAR+IND+FARM+WATER+TEMP+GENE):SEX
                 + u12+u13+u23+u14+u24+u34+u15+u25+u35+u45+u16+u26+u36+u46+u56,
              family=poisson, data=design))
-
-\dontrun{
-## example with control list
-## not run because input data file does not exist
-
-
-# defining the ctrl list
-# would be typically read from file using source()
-testex1<-list(
-   resptype     = "paircomp",
-   datafile     = "test/test.dat",
-   nitems       = 5,
-   blnRevert    = FALSE,
-   blnReducecat = TRUE,
-   blnIntcovs   = FALSE,
-   cov.sel      = c("SEX","URB"),
-
-   blnGLIMcmds  = TRUE,
-   glimCmdFile  = "test/test.gli",
-   outFile      = "test/test.design",
-   intFile      = ""        # since blnIntcovs = FALSE
-)
-patt.design(testex1)
-}
-
-
 }
 \keyword{models}
 \keyword{regression}

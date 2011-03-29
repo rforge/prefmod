@@ -19,7 +19,7 @@ expand.mat(mat, freq)
   the expanded matrix
 }
 \note{This utility allows to generate input data for the for the design generating
-      and model fitting functions of the \code{prefmode} package
+      and model fitting functions of the \code{prefteste} package
       from aggregated data.
 }
 \examples{

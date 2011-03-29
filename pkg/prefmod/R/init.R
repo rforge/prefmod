@@ -56,7 +56,6 @@ function(dfr){
        ncatPC<-ncatL*2-1                   #    number of categories for differences
     }
 
-
     blnSubjcov<-cov.sel[1]!=""             #    FALSE if ""
 
     if (blnSubjcov) {

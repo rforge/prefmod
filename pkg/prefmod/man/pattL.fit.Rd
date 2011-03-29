@@ -74,8 +74,7 @@ pattL.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "rating",
        the first row as readable via the command \code{read.table(datafilename,
        header = TRUE)}.
 
-       For an example see \code{\link{issp2000}} or the file \code{issp2000.dat} in
-       the package's \code{data/} directory.
+       For an example see \code{\link{issp2000}}.
        }
 \value{
   \code{pattL.fit} returns an object of class \code{pattMod}. The function

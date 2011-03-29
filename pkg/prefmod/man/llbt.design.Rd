@@ -6,10 +6,7 @@ The function \code{llbt.design}
 returns a data frame containing the design matrix for a loglinear
 paired comparison model.  Additionally, the frequencies of the
 pairwise comparisons are computed and are stored in the first column of the data
-frame.  Optionally, the function provides all necessary structures
-(commands, data/design files) to fit the loglinear paired comparisons
-pattern model in GLIM, which is often more efficient at fitting large
-loglinear models of this type.
+frame.
 }
 \usage{
   llbt.design(data, nitems=NULL, objnames="", objcovs=NULL,
@@ -75,7 +72,7 @@ loglinear models of this type.
         Responses have to be coded as consecutive integers (e.g.,
         (0,1), or (1,2,3,\dots), where the lowest value corresponds to
         (highest) preference for the first object in a comparison. For paired comparison without undecided category
-        (-1,1), or (1,0,-1) for paired comparison with an undecided category, can also be used
+        (1,-1), or (1,0,-1) for paired comparison with an undecided category, can also be used
         ('-1' is the not preferred category). Missing responses (for paired comparisons but not for subject covariates)
         are allowed
         under a missing at random assumption and specified via \code{NA}.
@@ -97,8 +94,7 @@ loglinear models of this type.
         and treated such that
         rows with NAs are removed from the resulting design structure and a message is printed.
 
-        For an example see \code{\link{xmpl}} or the file \code{xmpl.dat} in the package's
-        \code{data/} directory.
+        For an example see \code{\link{xmpl}}.
 }
 \value{
        The output is a dataframe of class \code{llbtdes}. Each row represents a decision in a certain comparison.
@@ -116,47 +112,15 @@ loglinear models of this type.
 
 }
 \section{Deprecated }{The following options are for backwards compatibility and should
-       only be used with care.
+       no longer be used..
 \describe{
-  \item{blnCasewise}{If \code{blnCasewise = TRUE} a separate design structure is set up
-       for each subject in the data. This is required when fitting continuous
-       subject covariates. However, the design can become very large in the case of many subjects
-       and/or comparisons. See Details below.}
-  \item{cov.sel}{a character vector with the names of the subject covariates
-           in the data file to be included into the design matrix.
-           (example: \code{cov.sel = c("SEX", "AGE")}). If all covariates are to be
-           included the specification can be abbreviated to \code{cov.sel = "ALL"}.
-           For no covariates specify \code{cov.sel = ""}. As opposed to using the otions
-           \code{cat.scovs} and \code{num.scovs} no distinction is made between categorical and
-           continuous variables. Prior to fit a model, the categorical subject covariates have to
-           be declared as \code{\link{factor}(s)}.
-       }
-  \item{blnGLIMcmds}{\code{TRUE}, if GLIM output is wanted. If \code{blnGLIMcmds = FALSE}
-           the following items can be set to any value (such as a null text string) and are ignored.
-           Please note that if \code{blnGLIMcmds} is set to be \code{TRUE} there is no output in \R
-           but instead goes to the the following files.
-       }
-  \item{glimCmdFile}{name of the output file which will contain all necessary commands to
-          fit a basic model (defining all structures and reading the
-          necessary data).
-       }
-  \item{outFile}{name of the data/design file to be read into GLIM. It consists
-           of the response frequencies and the covariates for the objects,
-           the undecided comparison responses and the subject effects.
-       }
+  \item{blnCasewise}{same as \code{casewise}.}
+  \item{cov.sel}{same as \code{cat.scovs}.}
 }
-
-Besides supplying data via a dataframe or a datafile name, \code{data} can also
-be specified as a control list with the same elements as the arguments in the function call.
-The data must then be specified as a path/filename using the element \code{datafile = "filename"}.
-The control list feature is deprecated. An example with slightly different specification
-is given in \code{\link{patt.design}}.
-
-The function \code{llbt.design} does not produce visible output in \R if GLIM output
-is requested via \code{blnGLIMcmds = TRUE}. The output is then written to
-the corresponding files.
+Options for requesting GLIM commands and data structures are no longer supported.
+Specifying the input to \code{llbt.design} via a control list is also deprecated.
+If you want to use these features you have to install prefmod <= 0.8-22.
 }
-
 \references{R. Dittrich, R. Hatzinger and W. Katzenbeisser.
 Modelling the effect of subject-specific covariates in paired
 comparison studies with an application to university rankings.

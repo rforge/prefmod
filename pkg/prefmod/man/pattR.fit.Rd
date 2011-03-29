@@ -77,8 +77,7 @@ pattR.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "ranking",
        header = TRUE)}.
 
        For an example without covariates and no mising values
-       see \code{\link{salad}} or the file \code{salad.dat} in
-       the package's \code{data/} directory.
+       see \code{\link{salad}}.
        }
 \value{
   \code{pattR.fit} returns an object of class \code{pattMod}. The function

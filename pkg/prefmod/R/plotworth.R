@@ -1,5 +1,5 @@
 plotworth<-function(worthmat, main="Preferences", ylab="Estimate",
-              psymb=NULL, pcol=NULL, ylim = range(worthmat))
+              psymb=NULL, pcol=NULL, ylim = range(worthmat),...)
 {
 #
 # plot ranking
@@ -54,7 +54,7 @@ pomi <- c(0.2,0.2,0.5,0.2)
 if (!(all(pomi==par("omi"))))        # if already set don't reset omi
     par(omi = pomi, mar=c(3,4,0.1,0) ) # makes plot fill the whole region
 
-plot(c(0.5,ngroups+0.5),c(min(coeff),max(coeff)),type="n",axes=FALSE, xlab="",ylab=ylab,ylim=ylim)
+plot(c(0.5,ngroups+0.5),c(min(coeff),max(coeff)),type="n",axes=FALSE, xlab="",ylab=ylab,ylim=ylim,...)
 title(main,outer=TRUE)
 box()
 axis(2)

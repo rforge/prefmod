@@ -102,8 +102,7 @@ pattPC.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "paircomp",
        the first row as readable via the command \code{read.table(datafilename,
        header = TRUE)}.
 
-       For an example see \code{\link{cemspc}} or the file \code{cemspc.dat} in
-       the package's \code{data/} directory.
+       For an example see \code{\link{cemspc}}.
        }
 \value{
   \code{pattPC.fit} returns an object of class \code{pattMod}. The function

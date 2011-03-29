@@ -7,7 +7,7 @@ The parameter matrix is produced by \code{llbt.worth} or \code{patt.worth}.
 }
 \usage{
 plotworth(worthmat, main = "Preferences", ylab = "Estimate",
-       psymb = NULL, pcol = NULL, ylim = range(worthmat))
+       psymb = NULL, pcol = NULL, ylim = range(worthmat),...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,6 +20,7 @@ plotworth(worthmat, main = "Preferences", ylab = "Estimate",
   \item{psymb}{plotsymbols for objects, see Details below}
   \item{pcol}{colours for objects, see Details below}
   \item{ylim}{limits for y-axis}
+  \item{...}{further graphical parameters, use e.g. \code{log = "y"} to obtain a logarithmic plot}
 }
 \details{
   Plotsymbols can be defined as an integer vector of length equal to the

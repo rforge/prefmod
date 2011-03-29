@@ -17,19 +17,30 @@ if (!llbtPCfitmodel){
    if("llbtdes" %in% class(x)) llbtdesignmodel <- TRUE
 }
 if (llbtdesignmodel == llbtPCfitmodel)
-     stop("Function must use result either from llbtPCfit or having used llbtdesign")
+     stop("Model result must be either from llbtPC.fit or having used llbt.design")
 
 
 ## fitobj from llbtdesign, gnm
 if (llbtdesignmodel){
 
       ## subject covariates
+      num.scovs<-attr(get(dterm),"num.scovs")
+      if(!is.null(num.scovs))
+          warning("Numerical subject covariates not (yet) implemented, they are ignored.\n
+          Result is a matrix of intercepts for regression on numerical subject covariates!!")
 
-      # extract subject covariates from eliminate
-      eterm<-deparse(fitobj$call$eliminate)
-      eterms<-unlist(strsplit(eterm,":"))
-      if("mu" %in% eterms)
-         eterms<-eterms[-which(eterms=="mu")]
+      # extract subject covariates from design frame attribute
+      cat.scovs<-attr(get(dterm),"cat.scovs")
+      if(!is.null(cat.scovs))
+        eterms <- cat.scovs
+      else
+        eterms <- vector(,0)
+
+      ## extract subject covariates from eliminate
+      #eterm<-deparse(fitobj$call$eliminate)
+      #eterms<-unlist(strsplit(eterm,":"))
+      #if("mu" %in% eterms)
+      #   eterms<-eterms[-which(eterms=="mu")]
 
       ### achtung laenge 0
       if(length(eterms>0)) {
@@ -38,14 +49,16 @@ if (llbtdesignmodel){
           fterm<-deparse(fitobj$call$formula)
           fterms<-unique(unlist(strsplit(fterm,"[ ()+*:~]")))
           subjcov.names<-intersect(eterms,fterms)
-          ### achtung laenge 0
-
-          # set up subj cov design
-          levlist<-lapply(fitobj$model[subjcov.names],levels)
-          maxlev<-sapply(levlist,length)
-          subjdes<-gfac2(maxlev)
-          colnames(subjdes)<-names(maxlev)
-
+          if(length(subjcov.names)>0) { ### achtung laenge 0
+            # set up subj cov design
+            levlist<-lapply(fitobj$model[subjcov.names],levels)
+            maxlev<-sapply(levlist,length)
+            subjdes<-gfac2(maxlev)
+            colnames(subjdes)<-names(maxlev)
+          } else {
+            maxlev <- 1
+            length(eterms)<-0
+          }
       } else
           maxlev<-1
 
@@ -136,7 +149,7 @@ if (llbtdesignmodel){
       # remove NA estimates from coefficients
       notna<-!is.na(coefs)
       if (length(notna)>0){
-          sumMat<-sumMat[,notna,drop=F]
+          sumMat<-sumMat[,notna,drop=FALSE]
           coefs<-coefs[notna]
       }
 

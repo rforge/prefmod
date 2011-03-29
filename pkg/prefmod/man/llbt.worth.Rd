@@ -5,8 +5,6 @@
    Worth parameters are calculated from the results of an LLBT model fit, i.e., from
    \code{\link{llbtPC.fit}} or from a \code{gnm}-fit, respectively. For the latter, the
    function only works if the design matrix had been generated using \code{llbt.design}.
-   The resulting estimates for all groups are based on the subject covariates as
-   specified in the model formula (\code{formel}) of the  LLBT model.
 }
 \usage{
 llbt.worth(fitobj, outmat = "worth")
@@ -17,6 +15,17 @@ llbt.worth(fitobj, outmat = "worth")
         }
   \item{outmat}{a matrix of estimated worth parameters (\code{outmat = "worth"}, the default) or
         LLBT model parameters (\code{outmat = "lambda"}).}
+}
+\details{If the LLBT model includes categorical subject covariates, the
+  function provides estimates for all groups formed by the full
+  crossclassification. Numerical subject covariates are not implemented (yet)(see Warning below).
+}
+\section{Warning}{
+  If the LLBT model has been fitted including numerical subject covariates, they are
+  ignored. However, estimates for the remaining predictors are calculated for convenience.
+  Please note, that these cannot be interpreted as standard estimates but are intercepts
+  in the regression model where the objects (or reparameterized objects) are explained
+  by one or more numerical subject covariates.
 }
 \value{
   \code{llbt.worth} returns a matrix
