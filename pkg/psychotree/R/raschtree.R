@@ -55,10 +55,12 @@ coef.raschtree <- function (object, node = NULL, ...)
 {
   object <- object$mob
   if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
-  rval <- sapply(nodes(object, node), function(z) coef(z$model, ...))
+  nam <- names(object@tree$model$coefficients)
+  rval <- sapply(nodes(object, node), function(z) coef(z$model, ...)[nam])
   if (!is.null(dim(rval))) {
     rval <- t(rval)
     rownames(rval) <- node
+    colnames(rval) <- nam
   }
   return(rval)
 }
