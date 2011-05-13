@@ -1,5 +1,5 @@
 pattR.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="ranking",
-         ia=FALSE, NItest=FALSE, pr.it=FALSE)
+         obj.names=NULL, ia=FALSE, NItest=FALSE, pr.it=FALSE)
 {
 
     call<-match.call()
@@ -30,10 +30,20 @@ pattR.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="ranking",
    } else {
         stop("first argument must be either datafilename or dataframe")
    }
+
+   formel.names<-attr(terms(as.formula(formel)),"term.labels")
+   elim.names<-attr(terms(as.formula(elim)),"term.labels")
+   covnames<-unique(c(formel.names,elim.names))
+
    varnames<-colnames(dat)
    if (ncol(dat)>nobj) {
-        covnames<-varnames[(nobj+1):ncol(dat)]
-        covs<-as.data.frame(dat[,(nobj+1):ncol(dat)])
+        #covnames<-varnames[(nobj+1):ncol(dat)]
+        #covs<-as.data.frame(dat[,(nobj+1):ncol(dat)])
+        ## instead of the above rh 2011-05-13
+        formel.names<-attr(terms(as.formula(formel)),"term.labels")
+        elim.names<-attr(terms(as.formula(elim)),"term.labels")
+        covnames<-unique(c(formel.names,elim.names))
+        covs<-as.data.frame(dat[,covnames])
    } else {
         covs<-NULL
    }
@@ -54,7 +64,8 @@ pattR.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="ranking",
    }
 
    # transform into PCs
-   dat<-ifelse(is.na(dat),as.integer(99999),dat)
+   dat<-ifelse(is.na(dat),as.integer(99999),dat) # if removed only comparisons between chosem
+                                                 # then reverse results in -lambda
    pc.dat<-NULL
    for (j in 2:nobj){
      for (i in 1:(j-1)){
@@ -89,7 +100,12 @@ pattR.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="ranking",
 
 #######################################
 
-    ENV$obj.names<-varnames[1:nobj]
+    ## option for obj.names added
+    if (is.null(obj.names))
+      ENV$obj.names<-varnames[1:nobj]
+    else
+      ENV$obj.names<-obj.names[1:nobj]
+
     if(NItest)
       if(!any(is.na(dat)))
          stop("Test for ignorable missing cannot be performed - no NA values!")

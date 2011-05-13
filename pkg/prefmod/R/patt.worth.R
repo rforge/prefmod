@@ -106,7 +106,6 @@ if (pattdesignmodel){
          ocovs<-diag(nobj)
          colnames(ocovs)<-objs
          objcovs<-cbind(ocovs,objcovs)
-
          # extract those obj covs which are in model formula
          vars<-attr(attr(fitobj$terms,"factors"),"dimnames")[[1]]
          vars2<-colnames(objcovs)
@@ -123,6 +122,16 @@ if (pattdesignmodel){
       elim<-as.factor(1:(nobj*nrep))
       frml<-eval(fitobj$call$formula) # if formula is a symbol first eval it
       frml<-update.formula(frml, .~.-pos)     # remove position variable 2011-01-03
+      ia<-names(coef(fitobj))[grep("I[0-9]+[.][0-9]+",names(coef(fitobj)))] ## remove ia variables 2011-03-30
+      if (length(ia)>0) {
+        remia<-paste(".~.-",paste(ia,sep="",collapse="-"),collapse="")
+        frml<-update.formula(frml, remia)
+      }
+      u<-names(coef(fitobj))[grep("^u[0-9]+$",names(coef(fitobj)))] ## remove undec variables 2011-03-30
+      if (length(u)>0) {
+        remu<-paste(".~.-",paste(u,sep="",collapse="-"),collapse="")
+        frml<-update.formula(frml, remu)
+      }
 
       y<-rnorm(nrow(S)) # random y - y required for pseudo fit
       S<-data.frame(y,S,elim)
@@ -149,6 +158,12 @@ if (pattdesignmodel){
       coefs<-coef(fitobj)
       if (any(names(coefs)=="pos"))
             coefs<-coefs[-which(names(coefs)=="pos")] ## remove pos variable 2011-01-03
+      iapos <- grep("I[0-9]+[.][0-9]+",names(coefs))  ## remove ia variables 2011-03-30
+      if (length(iapos)>0) coefs <- coefs[-iapos]
+      upos <- grep("^u[0-9]+$",names(coefs))          ## remove undecided variables 2011-03-30
+      if (length(upos)>0) coefs <- coefs[-upos]
+      if (any(names(coefs)=="(Intercept)"))
+            coefs<-coefs[-1]                          ## remove 2011-03-30
 
       # remove NA estimates from coefficients
       notna<-!is.na(coefs)
@@ -159,7 +174,7 @@ if (pattdesignmodel){
 
       # remove unnecessary terms from estimates and from coefficients
       if (length(diffs)>0){
-        dc<-which(names(coefs)==diffs)
+        dc<-which(names(coefs) %in% diffs)
         if (length(dc)>0){    # ignore variables which are not coefficients, eg., if y is renamed 2011-01-03
           sumMat<-sumMat[,-dc, drop=FALSE]
           coefs<-coefs[-dc]

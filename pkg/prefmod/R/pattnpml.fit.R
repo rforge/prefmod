@@ -9,7 +9,7 @@
                     pr.it = FALSE
                     )
 {
-
+     call<-match.call()
      dat<-design
      pluginz<-NULL
      N<-nrow(dat)
@@ -46,5 +46,6 @@
                     startp = startp,
                     pr.it = prit
      )
+     RET$call <- call # rh 2010-24-04 obj$call should contain call to pattnpml.fit
      RET
 }

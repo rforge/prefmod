@@ -6,7 +6,7 @@
        allowing for missing values using a CL approach.}
 \usage{
 pattR.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "ranking",
-    ia = FALSE, NItest = FALSE, pr.it = FALSE)
+    obj.names=NULL, ia = FALSE, NItest = FALSE, pr.it = FALSE)
 }
 \arguments{
   \item{obj}{either a dataframe or the path/name of the datafile to be read.
@@ -21,6 +21,8 @@ pattR.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "ranking",
         must be separated by the \code{*} operator.}
   \item{resptype}{is \code{"ranking"} by default and is reserved for future usage.
         Any other specification will not change the behaviour of \code{pattR.fit}
+        }
+  \item{obj.names}{character vector with names for objects.
         }
   \item{ia}{interaction parameters between comparisons that have one object
         in common if \code{ia = TRUE}.

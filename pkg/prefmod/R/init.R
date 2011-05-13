@@ -67,7 +67,7 @@ function(dfr){
        if (toupper(cov.sel[1]) == "ALL"){   # all covariates included
           cov.sel <- inpcovnames
        } else if(length(setdiff(cov.sel,inpcovnames))>0) {
-           stop("\ncovariate name(s) in cov.sel incorrectly specified\n")
+           stop("\nsubject covariate name(s) incorrectly specified\n")
        }
        cov.case<-as.matrix(dat[,c(cov.sel)])
        colnames(cov.case)<-cov.sel

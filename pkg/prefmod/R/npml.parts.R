@@ -109,7 +109,7 @@ function(object,digits=max(3,getOption('digits')-3), ...){
   if (np > 0){
       m <- seq(1,np)[substr(attr(object$coefficients,'names'),1,4)=='MASS']
       mass.points <- object$coefficients[m]
-      cat('\nCall: ',deparse(object$call),'\n\n')
+      cat('\nCall: ',deparse(object$call),'\n', fill=TRUE)
       cat('Coefficients')
       cat(":\n")
       df.r <- object$lastglm$df.residual
@@ -124,7 +124,7 @@ function(object,digits=max(3,getOption('digits')-3), ...){
       fitcoef     <- matrix(lastglmsumm$coeff[,1:3], ncol=3,dimnames= list(dimnames(lastglmsumm$coef)[[1]], c(dimnames(lastglmsumm$coeff)[[2]][1:2], "t value") ))  #03-08-06
       print(fitcoef)
   } else {
-      cat('\nCall: ',deparse(object$call),'\n\n')
+      cat('\nCall: ',deparse(object$call),'\n', fill=TRUE)
       cat("No coefficients. \n")
   }
 
@@ -151,7 +151,7 @@ function(object,digits=max(3,getOption('digits')-3), ...){
   } else cat('\n')
 
 ###  cat('Random effect distribution - standard deviation:\t  ', format(object$rsdev),'\n\n') # 03/09/07
-cat('\n')
+##cat('\n')
 
   cat('Deviance:\t   ',format(round(object$deviance,digits=2)),"\n")
   cat('-2 log L:\t   ',format(round(object$disparity,digits=2)))
@@ -176,12 +176,12 @@ function(x,digits=max(3,getOption('digits')-3), ...){
   if (np > 0){
     m <- seq(1,np)[substr(attr(x$coefficients,'names'),1,4)=='MASS']
     mass.points <- x$coefficients[m]
-    cat('\nCall: ',deparse(x$call),'\n\n')
+    cat('\nCall: ',deparse(x$call),'\n', fill=TRUE)
     cat('Coefficients')
     cat(":\n")
-    print.default(format(x$coefficients[1:np],digits = digits), print.gap = 2,quote = FALSE);cat('\n')
+    print.default(format(x$coefficients[1:np],digits = digits), print.gap = 2,quote = FALSE)#;cat('\n')
   } else {
-    cat('\nCall: ',deparse(x$call),'\n\n')
+    cat('\nCall: ',deparse(x$call),'\n', fill=TRUE)
     cat("No coefficients. \n")
   }
 

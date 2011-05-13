@@ -50,7 +50,7 @@ patt.design(obj, nitems = NULL, objnames = "", objcovs = NULL,
            (5)  \emph{I strongly disagree}) then \code{blnRevert}
            should be specified to be \code{FALSE}, the default. Otherwise
            set \code{reverse = TRUE}. The only exception is paired comparison responses
-           that are coded 1/-1. Then 1 is treated as preferred and -1 as not preferred.
+           that are coded -1/1, -1/0/1, -2/-1/0/1/2, etc. Then negative numbers are treated as not preferred.
            (See Input Data below)
        }
   \item{ia}{generates covariates for interactions between comparisons if
@@ -74,7 +74,7 @@ patt.design(obj, nitems = NULL, objnames = "", objcovs = NULL,
              \itemize{
                  \item \strong{\emph{paired comparison data.}} Responses can be either simply
                     \emph{preferred} -- \emph{not preferred} or ordinal
-                    (\emph{strongly preferred} -- \dots -- \\emph{not at all preferred}).
+                    (\emph{strongly preferred} -- \dots -- \emph{not at all preferred}).
                     In both cases an undecided category may or may not occur. If there are more
                     than three categories a they are reduced to two or three response categories.
                     The set of paired
@@ -97,7 +97,7 @@ patt.design(obj, nitems = NULL, objnames = "", objcovs = NULL,
                     between each pair of the ranks. Again a category reduction (as described above) is
                     automatically performed.
              }
-       \item \strong{item covariates.} The design matrix for the basic model has columns
+       \item \strong{comparison covariates.} The design matrix for the basic model has columns
              for the items (objects) and (depending on the type of responses)
              for undecided comparisons. For ratings (Likert type) undecided comparisons occur
              if any subject has responded to two items in the same category. For paired comparisons
@@ -105,9 +105,13 @@ patt.design(obj, nitems = NULL, objnames = "", objcovs = NULL,
              If undecided categories occur
              there is one dummy variable for each comparison.
              Additionally, covariates for two way interaction between comparisons
-             (i.e., for effects resulting from the dependency between two
+             (i.e., for effects resulting from the dependence between two
              comparisons that have one item in common) can be obtained by setting
-             \code{blnIntcovs = TRUE}.
+             \code{ia = TRUE}.
+       \item \strong{object specific covariates.} For modelling certain characteristics
+             of objects a reparameterisation can be included in the design. This is sometimes
+             called conjoint analysis. The object specific covariates can be continuous or
+             dummy variables. For the specification see Argument \code{objcovs} above.
        \item \strong{subject covariates.} For modelling different preference
              scales for the items according to characteristics of the respondents
              categorical subject covariates can be included in the design.
@@ -115,22 +119,19 @@ patt.design(obj, nitems = NULL, objnames = "", objcovs = NULL,
              the levels are specified with consecutive integers starting with 1.
              This format must be used in the input data file and is also used in
              all outputs.
-       \item \strong{GLIM output}. If the user specifies \code{blnGLIMcmds = TRUE}
-             two files are generated one of which contains all GLIM commands to fit
-             a basic loglinear paired comparisons pattern model. The other contains
-             the design matrix optionally including subject covariates. If
-             dependency covariates are requested they are written to a third file.
-             (Please note that the corresponding part of design matrix is transposed
-             in the interactions output file to allow GLIM for using the \code{$array}
-             facility in case of a large number of parameters to be estimated)
    }
 }
 
 \section{Input Data}{
         Responses have to be coded as consecutive integers (e.g.,
-        (0,1), or (1,2,3,\dots). For paired comparison without undecided category
-        (1,-1), or (1,0,-1) for paired comparison with an undecided category, can also be used
-        ('-1' is the not preferred category).
+        (0,1), or (1,2,3,\dots), where the smallest value corresponds to
+        (highest) preference for the first object in a comparison. 
+	
+        For (ordinal) paired comparison data (\code{resptype = "paircomp"}) the codings
+        (1,-1), (2,1,-1,-2), (1,0,-1), (2,1,0,-1,-2) etc. can also be used.
+        Then negative numbers correspond to not preferred, 0 to undecided.
+	Missing responses are not allowed (use functions
+        \code{\link{pattPC.fit}}, \code{\link{pattL.fit}}, or \code{\link{pattR.fit}} instead). 
 
         Input data (via the first argument \code{obj} in the function call)
         is specified either through a dataframe or
@@ -152,10 +153,9 @@ patt.design(obj, nitems = NULL, objnames = "", objcovs = NULL,
         \sQuote{endorsement} (agreement) according to the underlying scale. All items
         are assumed to have the same number of response cateory
 
-        The columns for responses are optionally followed  by columns for categorical
-        subject covariates. These have to be specified such that the categories are represented
-        by consecutive integers starting with 1. Missing values are not allowed (use functions
-        \code{\link{pattPC.fit}}, \code{\link{pattL.fit}}, or \code{\link{pattR.fit}} instead),
+        The columns for responses are optionally followed  by columns for 
+	subject covariates. If categorical, they have to be specified such that the categories are represented
+        by consecutive integers starting with 1. Missing values are not allowed 
         and treated such that
         rows with NAs are removed from the resulting design structure and a message is printed.
         For an example see \code{\link{xmpl}}.

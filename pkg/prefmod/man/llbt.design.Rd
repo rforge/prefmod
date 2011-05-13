@@ -53,6 +53,10 @@ frame.
          than three categories a they are reduced to two or three response categories.
       \item \strong{item covariates.} The design matrix for the basic model has columns
          for the items (objects) and for each response category.
+       \item \strong{object specific covariates.} For modelling certain characteristics
+             of objects a reparameterisation can be included in the design. This is sometimes
+             called conjoint analysis. The object specific covariates can be continuous or
+             dummy variables. For the specification see Argument \code{objcovs} above.
       \item \strong{subject covariates.} For modelling different preference
          scales for the items according to characteristics of the respondents
          categorical and/or continuous subject covariates can be included in the design.
@@ -70,10 +74,12 @@ frame.
 }
 \section{Input Data}{
         Responses have to be coded as consecutive integers (e.g.,
-        (0,1), or (1,2,3,\dots), where the lowest value corresponds to
-        (highest) preference for the first object in a comparison. For paired comparison without undecided category
-        (1,-1), or (1,0,-1) for paired comparison with an undecided category, can also be used
-        ('-1' is the not preferred category). Missing responses (for paired comparisons but not for subject covariates)
+        (0,1), or (1,2,3,\dots), where the smallest value corresponds to
+        (highest) preference for the first object in a comparison. 
+        For (ordinal) paired comparison data (\code{resptype = "paircomp"}) the codings
+        (1,-1), (2,1,-1,-2), (1,0,-1), (2,1,0,-1,-2) etc. can also be used.
+        Then negative numbers correspond to not preferred, 0 to undecided.
+	Missing responses (for paired comparisons but not for subject covariates)
         are allowed
         under a missing at random assumption and specified via \code{NA}.
 

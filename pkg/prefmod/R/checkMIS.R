@@ -1,4 +1,4 @@
-checkMIS<-function(obj,nitems,MISmodel="obj",verbose=FALSE){
+checkMIS<-function(obj,nitems,MISmodel="obj",obj.names=NULL, verbose=FALSE){
 
 
   nobj<-nitems
@@ -30,9 +30,16 @@ checkMIS<-function(obj,nitems,MISmodel="obj",verbose=FALSE){
    mism<-matrix(0,nobj,nobj)
    mism[upper.tri(mism,diag=FALSE)]<-misv
    mism<-mism+t(mism)
-   rownames(mism)<-colnames(mism)<-paste("o",1:nobj,sep="")
    objMis<-colSums(mism)
-   names(objMis)<-paste("o",1:nobj,sep="")
+
+   if (is.null(obj.names)){
+      rownames(mism)<-colnames(mism)<-paste("o",1:nobj,sep="")
+      names(objMis)<-paste("o",1:nobj,sep="")
+   } else {
+      rownames(mism)<-colnames(mism)<-obj.names
+      names(objMis)<-obj.names
+   }
+   objMis<-colSums(mism)
    if(verbose){
      cat("number of missing comparisons:\n")
      print(mism)

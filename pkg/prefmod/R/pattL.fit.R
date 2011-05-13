@@ -1,5 +1,5 @@
 pattL.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="rating",
-         undec=FALSE, ia=FALSE, NItest=FALSE, pr.it=FALSE)
+         obj.names=NULL, undec=FALSE, ia=FALSE, NItest=FALSE, pr.it=FALSE)
 {
 
     call<-match.call()
@@ -28,8 +28,13 @@ pattL.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="rating",
    }
    varnames<-colnames(dat)
    if (ncol(dat)>nobj) {
-        covnames<-varnames[(nobj+1):ncol(dat)]
-        covs<-as.data.frame(dat[,(nobj+1):ncol(dat)])
+        #covnames<-varnames[(nobj+1):ncol(dat)]
+        #covs<-as.data.frame(dat[,(nobj+1):ncol(dat)])
+        ## instead of the above rh 2011-05-13
+        formel.names<-attr(terms(as.formula(formel)),"term.labels")
+        elim.names<-attr(terms(as.formula(elim)),"term.labels")
+        covnames<-unique(c(formel.names,elim.names))
+        covs<-as.data.frame(dat[,covnames])
    } else {
         covs<-NULL
    }
@@ -54,7 +59,11 @@ pattL.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="rating",
 
 #######################################
 
-    ENV$obj.names<-varnames[1:nobj]
+    ## option for obj.names added
+    if (is.null(obj.names))
+      ENV$obj.names<-varnames[1:nobj]
+    else
+      ENV$obj.names<-obj.names[1:nobj]
 
     if(NItest)
       if(!any(is.na(dat)))
