@@ -106,7 +106,7 @@ btReg.fit <- function(y, weights = NULL,
   ## fit auxiliary model and extract information
   fm <- glm.fit(xaux, yaux, family = famaux, control = glm.control(...))
   par <- fm$coefficients[1:npar]
-  vc <- summary.glm(fm, corr = FALSE)$cov.unscaled[1:npar, 1:npar, drop = FALSE]
+  vc <- summary.glm(fm, correlation = FALSE)$cov.unscaled[1:npar, 1:npar, drop = FALSE]
   names(par) <- rownames(vc) <- colnames(vc) <- c(lab[-ref], if(undecided) "(undecided)" else NULL)
 
   ## log-probabilities and log-likelihood
