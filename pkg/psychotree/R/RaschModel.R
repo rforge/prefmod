@@ -1,5 +1,5 @@
 ## S4 StatModel object
-RaschModel <- function(gradtol = 1e-6, deriv = c("sum", "diff", "numeric")) {
+RaschModel <- function(gradtol = 1e-6, deriv = c("sum", "diff", "numeric"), hessian = TRUE) {
   new("StatModel",
     capabilities = new("StatModelCapabilities"),
     name = "Rasch model",
@@ -32,7 +32,7 @@ print.RaschModel <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 
 ## workhorse fitting function
 RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6, 
-  deriv = c("sum", "diff", "numeric"), ...)
+  deriv = c("sum", "diff", "numeric"), hessian = TRUE, ...)
 {
   ## argument matching
   deriv <- match.arg(deriv)
@@ -276,7 +276,7 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
   
   ## optimization
   opt <- nlm(cloglik, start, gradtol = gradtol, 
-    hessian = (deriv == "numeric"), check.analyticals = FALSE)
+    hessian = (deriv == "numeric") & hessian, check.analyticals = FALSE)
   
   ## collect and annotate results
   cf <- opt$estimate
@@ -285,7 +285,7 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
       wi <- as.integer(strsplit(z, "\r")[[1]])
       cfi <- if(length(wi) < 1) c(0, cf) else c(0, cf)[-wi]
       elementary_symmetric_functions(cfi,
-        order = 2 - (deriv == "numeric"), 
+        order = 2 - (deriv == "numeric" | !hessian), 
 	diff = deriv == "diff")
     })
   } else {
@@ -295,10 +295,14 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
   }
   if(any_y_na) names(esf) <- levels(na_patterns)
   
-  vc <- if(deriv == "numeric") opt$hessian else ahessian(cf, esf)
-  vc <- solve(vc)
+  if(hessian) {
+    vc <- if(deriv == "numeric") opt$hessian else ahessian(cf, esf)
+    vc <- solve(vc)
+  } else {
+    vc <- matrix(NA, nrow = length(cf), ncol = length(cf))
+  }
   names(cf) <- rownames(vc) <- colnames(vc) <- colnames(y)[-1]
-  
+
   ## collect, class, and return
   rval <- list(
     coefficients = cf,

@@ -1,3 +1,10 @@
+Changes in Version 0.11-2
+
+  o Added a hessian = TRUE option to RaschModel.fit(). This
+    saves some computation time when only the coefficients
+    and the maximized likelihood are of interest.
+
+
 Changes in Version 0.11-1
 
   o Enhanced raschtree() functionality, introduced in detail
