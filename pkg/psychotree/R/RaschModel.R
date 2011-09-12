@@ -291,7 +291,7 @@ RaschModel.fit <- function(y, weights = NULL, start = NULL, gradtol = 1e-6,
     })
   } else {
     elementary_symmetric_functions(c(0, cf),
-      order = 2 - (deriv == "numeric"),
+      order = 2 - (deriv == "numeric" | !hessian),
       diff = deriv == "diff")
   }
   if(any_y_na) names(esf) <- levels(na_patterns)
