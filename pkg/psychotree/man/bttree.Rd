@@ -44,7 +44,7 @@ bttree(formula, data, na.action = na.pass,
   paired comparison data (implemented in \code{\link{btReg}}).
   For all details about the underlying theory and further explanations
   of the illustrations from the example section can be found in
-  Strobl, Wickelmaier, Zeileis (2010).
+  Strobl, Wickelmaier, Zeileis (2011).
   
   Various methods are provided for \code{"bttree"} objects, most of them
   inherit their behavior from \code{"mob"} objects (e.g., \code{print}, \code{summary},
@@ -60,10 +60,10 @@ bttree(formula, data, na.action = na.pass,
 }
 
 \references{ 
-  Carolin Strobl, Florian Wickelmaier, Achim Zeileis (2010). 
+  Carolin Strobl, Florian Wickelmaier, Achim Zeileis (2011). 
   Accounting for Individual Differences in Bradley-Terry Models by Means of Recursive Partitioning.
-  Journal of Educational and Behavioral Statistics, Forthcoming.
-  Preprint at \url{http://statmath.wu.ac.at/~zeileis/papers/Strobl+Wickelmaier+Zeileis-2010.pdf}
+  Journal of Educational and Behavioral Statistics, 36(2), 135-153.
+  doi:10.3102/1076998609359791
 }
 
 \seealso{\code{\link[party]{mob}}, \code{\link{btReg}}}
