@@ -28,7 +28,7 @@ bttree(formula, data, na.action = na.pass,
 \arguments{
   \item{formula}{A symbolic description of the model to be fit. This
     should be of type \code{y ~ x1 + x2}
-    where \code{y} should be an object of class \code{\link[psychotree]{paircomp}}
+    where \code{y} should be an object of class \code{\link[psychotools]{paircomp}}
     and \code{x1} and \code{x2} are used as partitioning variables.}
   \item{data}{an optional data frame containing the variables in the model.}
   \item{na.action}{A function which indicates what should happen when the data

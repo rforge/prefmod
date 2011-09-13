@@ -1,11 +1,11 @@
 Package: psychotree
 Title: Recursive Partitioning Based on Psychometric Models
-Version: 0.11-1
-Date: 2010-12-01
+Version: 0.12-1
+Date: 2011-09-13
 Author: Achim Zeileis, Carolin Strobl, Florian Wickelmaier, Julia Kopf
 Maintainer: Achim Zeileis <Achim.Zeileis@R-project.org>
-Depends: R (>= 2.10.0), stats, party, strucchange, modeltools
-Imports: graphics, stats, sandwich
+Depends: R (>= 2.10.0), stats, psychotools, party, strucchange, modeltools
+Imports: graphics, stats, psychotools, sandwich
 Description: Recursive partitioning based on psychometric models,
   employing the general MOB algorithm (from package party) to obtain
   Bradley-Terry trees and Rasch trees.

@@ -1,8 +1,14 @@
-Changes in Version 0.11-2
+Changes in Version 0.12-1
 
-  o Added a hessian = TRUE option to RaschModel.fit(). This
-    saves some computation time when only the coefficients
-    and the maximized likelihood are of interest.
+  o Moved all base functionality to the new "psychotools" package
+    in order to provide common infrastructure for both
+    "psychotree" and "psychomix" as well as other packages.
+    This affects the "paircomp" class and associated methods as well
+    as the model fitters btReg.fit() and RaschModel.fit() and
+    associated methods.
+
+  o The data sets Firstnames, GermanParties2009, and Soundquality
+    have also been moved to psychotools.
 
 
 Changes in Version 0.11-1
