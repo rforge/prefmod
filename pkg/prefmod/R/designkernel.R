@@ -34,7 +34,7 @@ function(diffs,blnUndec,blnIntcovs,env2)
 
             depList<-dependencies(nobj,diffs)
             oneintdesign<-depList$d
-            colnames(oneintdesign)<-depList$label.intpars
+            colnames(oneintdesign)<-env2$labels.intpars<-depList$label.intpars   # added 2011-07-31 for attr in resukting dataframe
             env2$nintpars<-length(depList$label.intpars)     # number of dependence parameters
             onedesign <- cbind(onedesign,oneintdesign)
             # interaction names already defined in genintdesign()

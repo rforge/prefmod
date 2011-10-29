@@ -1,13 +1,15 @@
 \name{simPC}
 \alias{simPC}
-\title{Utility function simulate paired comparison data
+\alias{simR}
+\title{Utility function to simulate paired comparison or rankings data
 }
 \description{The function generates a random paired comparison
-            data matrix (two response categories, no undecided) optionally
-            based on user specified worth parameters.
+            data matrix (two response categories, no undecided) or a rankings data matrix
+            optionally based on user specified worth parameters.
 }
 \usage{
 simPC(nobj, nobs, worth = NULL, seed = NULL, pr = FALSE)
+simR(nobj, nobs, worth = NULL, seed = NULL, pr = FALSE)
 }
 \arguments{
   \item{nobj}{Number of objects.
@@ -23,7 +25,7 @@ simPC(nobj, nobs, worth = NULL, seed = NULL, pr = FALSE)
   \item{pr}{If \code{TRUE}, the used worth parameters are printed.
 }
 }
-\value{The random data matrix
+\value{The random data matrix as a data frame
 }
 \author{Reinhold Hatzinger
 }

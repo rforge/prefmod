@@ -8,10 +8,10 @@
    function only works if the design matrix had been generated using \code{patt.design}.
 }
 \usage{
-patt.worth(obj, obj.names = NULL, outmat = "worth")
+patt.worth(fitobj, obj.names = NULL, outmat = "worth")
 }
 \arguments{
-  \item{obj}{Object of class \code{pattMod} obtained from pattern model fit.}
+  \item{fitobj}{Object of class \code{pattMod} obtained from pattern model fit.}
 
   \item{obj.names}{names for the objects, for repeated measurement models just the names of
         objects for the first time point}
@@ -26,7 +26,7 @@ patt.worth(obj, obj.names = NULL, outmat = "worth")
   If the pattern model has been fitted including numerical subject covariates, they are
   ignored. However, estimates for the remaining predictors are calculated for convenience.
   Please note, that these cannot be interpreted as standard estimates but are intercepts
-  in the regression model where the objects (or reparameterized objects) are explained
+  of the regression model where the objects (or reparameterized objects) are explained
   by one or more numerical subject covariates.
 }
 \value{

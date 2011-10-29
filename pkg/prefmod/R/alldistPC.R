@@ -453,7 +453,6 @@ if (!is.null(startp)) p<-startp
             if (verbose){ cat("EM Trajectories plotted.\n")}
       }
 
-
       fit <- c( fit[1],
                 residuals = list(ebp.residuals),
                 fitted.values = list(ebp.fitted),
@@ -467,7 +466,8 @@ if (!is.null(startp)) p<-startp
                 call = call,
                 formula = formula,
                 random = rform,
-                data = list(subset(data,select=1:ddim[2])),
+              ##  data = list(subset(data,select=1:ddim[2])),
+                data = list(data),
                 model = list(XZ),
                 weights = list(w0),
                 offset = list(off0),

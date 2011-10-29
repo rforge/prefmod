@@ -80,7 +80,7 @@ for (i in 1:ngroups) {
   #plot(x,scoeff,type="o")
   xy <- xy.coords(x, scoeff)
 
-  lines(c(i,i), range(scoeff), col = "gray", lty = "dotted")
+  lines(c(i,i), range(scoeff), ...)#col = "gray", ...)#lty = "dotted")
   points(xy, pch=spsymb, cex=1.5, col=sfarbe)
   text(x+sadj*pm,scoeff,sobjnames)
 

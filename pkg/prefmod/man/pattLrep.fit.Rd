@@ -6,8 +6,8 @@
        allowing for missing values using a CL approach.}
 \usage{
 pattLrep.fit(obj, nitems, tpoints = 1, formel = ~1, elim = ~1,
-        resptype = "ratingT", undec = FALSE, ia = FALSE, iaT = FALSE,
-        NItest = FALSE, pr.it = FALSE)
+        resptype = "ratingT",  obj.names=NULL, undec = FALSE, ia = FALSE,
+        iaT = FALSE, NItest = FALSE, pr.it = FALSE)
 }
 \arguments{
   \item{obj}{either a dataframe or the path/name of the datafile to be read.}
@@ -20,15 +20,17 @@ pattLrep.fit(obj, nitems, tpoints = 1, formel = ~1, elim = ~1,
         \code{elim} will be set to the highest interaction between all terms
         contained in \code{formel}. If \code{elim} is specified, the terms
         must be separated by the \code{*} operator.}
-  \item{resptype}{is \code{"rating"} by default and is reserved for future usage.
-        Any other specification will not change the behaviour of \code{pattL.fit}
+  \item{resptype}{is \code{"ratingT"} by default and is reserved for future usage.
+        Any other specification will not change the behaviour of \code{pattLrep.fit}
+        }
+  \item{obj.names}{character vector with names for objects.
         }
   \item{undec}{for paired comparisons with a undecided/neutral category,
         a common parameter will be estimated if \code{undec = TRUE}.}
   \item{ia}{for each time point interaction parameters between comparisons that have one object
         in common if \code{ia = TRUE}.
         }
-  \item{iaT}{if \code{ia = TRUE}, dependence parameters for each item between
+  \item{iaT}{if \code{iaT = TRUE}, dependence parameters for each item between
         two successive time points.}
   \item{NItest}{separate estimation of object parameters for complete and
         incomplete patterns if \code{NItest = TRUE}. Currently,
@@ -79,8 +81,6 @@ pattLrep.fit(obj, nitems, tpoints = 1, formel = ~1, elim = ~1,
        data file if specified must be a plain text file with variable names in
        the first row as readable via the command \code{read.table(datafilename,
        header = TRUE)}.
-
-       For an example see \code{\link{issp2000}}.
        }
 \value{
   \code{pattLrep.fit} returns an object of class \code{pattMod}. The function
@@ -101,11 +101,12 @@ pattLrep.fit(obj, nitems, tpoints = 1, formel = ~1, elim = ~1,
      \item{partsList}{a list of the basic data structures for each subgroup
           defined by crossing all covariate levels and different missing value
           patterns. Each element of \code{partsList} is again a list containing
-          counts, missing value pattern, the CL matrix represented as a vector, and
+          counts, missing value pattern, the CL matrix represented as the vector \code{s}, and
           the specification of the covariates. Use \code{\link{str}} to inspect
           the elements and see example below.
           }
       }
+\note{The number of timepoints can also be regarded as different response dimensions.}
 %\references{}
 \author{Reinhold Hatzinger}
 %\note{}
@@ -114,20 +115,21 @@ pattLrep.fit(obj, nitems, tpoints = 1, formel = ~1, elim = ~1,
      paired comparison response categories is always three. For each time point the number of
      rows of the table to set up the design matrix is initially
      \eqn{(2 * number of categories - 1) ^ (number of items)}. After reducing to
-     three categories the number of patterns are 13, 75, 541 for 3 to 5 items.
+     three categories the number of patterns are 13, 75, 541 for 3 to 5 items, respectively.
      Generally, the number of rows in the design matrix is
-     \eqn{(number of patterns ^ (number of timepoints)) * number of (combined covariate levels}.
+     \eqn{(number of patterns) ^ (number of timepoints)}. The number of covariate levels and the number of missing
+     value patterns have effects only on the run time.
      A (reasobale) maximum number of items for two time points is 5, for three timepoints 4, and
      for four to five timepoints 3.
      }
-\seealso{\code{\link{pattL.fit}},\code{\link{patt.design}}, \code{\link{pattPC.fit}}, \code{\link{pattR.fit}}
+\seealso{\code{\link{pattL.fit}},\code{\link{patt.design}}, \code{\link{pattPC.fit}}, \code{\link{pattR.fit}}, \code{\link{pattRrep.fit}}
      }
 \examples{
 ## simulated data: 3 items, 2 timepoints
 dat<-as.data.frame(matrix(sample(1:5,300,replace=TRUE),nc=6))
 res<-pattLrep.fit(dat, nitems=3, tpoints=2, iaT=TRUE)
 res
-patt.worth(res,obj.names=LETTERS[1:2])
+patt.worth(res,obj.names=LETTERS[1:3])
 }
 \keyword{models}
 \keyword{multivariate}

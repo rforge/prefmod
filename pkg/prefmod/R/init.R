@@ -38,7 +38,6 @@ function(dfr){
     ncov<-ncolumns - nitems
     ncomp<-nobj*(nobj-1)/2                 #    number of comparisons
 
-    objnames<-colnames(dat)[1:nobj]
     ncatL<-diff(range(dat[,1:nobj])) + 1   # number of rating(Likert) categories
 
     if (resptype=="paircomp") {            # in case of PC
@@ -51,6 +50,8 @@ function(dfr){
           objnames<-paste("o",1:nobj,sep="")
 
     } else {                               # in case of  ratings/likert or rankings
+       if (length(objnames)!=nobj)         ### obj names from data if not defined in call rh 2011-08-24
+         objnames<-colnames(dat)[1:nobj]
        ncomp<-nobj*(nobj-1)/2              #    number of comparisons
        npatt<-ncatL**nobj                  #    for ratings/likert
        ncatPC<-ncatL*2-1                   #    number of categories for differences
@@ -66,6 +67,7 @@ function(dfr){
        }
        if (toupper(cov.sel[1]) == "ALL"){   # all covariates included
           cov.sel <- inpcovnames
+          if (cov.sel[1]=="") stop("\nno subject covariates in data\n") #rh 2001-08-12
        } else if(length(setdiff(cov.sel,inpcovnames))>0) {
            stop("\nsubject covariate name(s) incorrectly specified\n")
        }

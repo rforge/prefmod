@@ -31,9 +31,9 @@ pattR.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="ranking",
         stop("first argument must be either datafilename or dataframe")
    }
 
-   formel.names<-attr(terms(as.formula(formel)),"term.labels")
-   elim.names<-attr(terms(as.formula(elim)),"term.labels")
-   covnames<-unique(c(formel.names,elim.names))
+#####   formel.names<-attr(terms(as.formula(formel)),"term.labels")
+#####   elim.names<-attr(terms(as.formula(elim)),"term.labels")
+#####   covnames<-unique(c(formel.names,elim.names))
 
    varnames<-colnames(dat)
    if (ncol(dat)>nobj) {
@@ -41,7 +41,9 @@ pattR.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="ranking",
         #covs<-as.data.frame(dat[,(nobj+1):ncol(dat)])
         ## instead of the above rh 2011-05-13
         formel.names<-attr(terms(as.formula(formel)),"term.labels")
+        formel.names<-unique(unlist(strsplit(formel.names,":"))) # 2011-08-31 remove interaction terms
         elim.names<-attr(terms(as.formula(elim)),"term.labels")
+        elim.names<-unique(unlist(strsplit(elim.names,":")))     # 2011-08-31 remove interaction terms
         covnames<-unique(c(formel.names,elim.names))
         covs<-as.data.frame(dat[,covnames])
    } else {

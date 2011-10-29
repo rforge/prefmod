@@ -15,6 +15,10 @@ splitDataR<-function(dat,nobj,ENV){
     listX<-split(data.frame(dat),gmemb) # list with data, splitted into NA groups
 
     # generates aggregate information for each NA block in actual cov group
+     
+if(length(grep("T",ENV$resptype)))
+    listA<-lapply(listX,aggreg,ENV)          # list with counts, logical not NA pattern, CL vector s
+else    
     listA<-lapply(listX,aggregR,ENV)          # list with counts, logical not NA pattern, CL vector s
 
     listA  ###das RESULTAT

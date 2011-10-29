@@ -29,12 +29,22 @@ pattPC.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="paircomp",obj.names
         stop("first argument must be either datafilename or dataframe")
    }
    varnames<-colnames(dat)
-   if (ncol(dat)>ncomp) {
-        covnames<-varnames[(ncomp+1):ncol(dat)]
-        covs<-as.data.frame(dat[,(ncomp+1):ncol(dat)])
+   if (ncol(dat)>nobj) {                                         # from pattR.fit 2011-08-31
+        #covnames<-varnames[(nobj+1):ncol(dat)]
+        #covs<-as.data.frame(dat[,(nobj+1):ncol(dat)])
+        ## instead of the above rh 2011-05-13
+        formel.names<-attr(terms(as.formula(formel)),"term.labels")
+        formel.names<-unique(unlist(strsplit(formel.names,":"))) # 2011-08-31 remove interaction terms
+        elim.names<-attr(terms(as.formula(elim)),"term.labels")
+        elim.names<-unique(unlist(strsplit(elim.names,":")))     # 2011-08-31 remove interaction terms
+        covnames<-unique(c(formel.names,elim.names))
+        covs<-as.data.frame(dat[,covnames])
    } else {
         covs<-NULL
    }
+
+
+
    # for ratings: at least two items not NA (>1)
    idx<-apply(dat[,1:ncomp],1,function(x) sum(!is.na(x))>=1)
    dat<-dat[idx,]

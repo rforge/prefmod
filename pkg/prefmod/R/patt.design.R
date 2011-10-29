@@ -208,7 +208,7 @@ function(obj, nitems=NULL, objnames="", objcovs=NULL,
      ## possible patterns and observed patterns
      ##
      # removed 2011-01-20 cat("calculating response pattern frequencies...\n")
-     flush.console()
+     #                    flush.console()
 
      # count occurrence of patterns into y
      # (according to covariates if blnSubjcov==TRUE or casewise==TRUE)
@@ -292,9 +292,11 @@ function(obj, nitems=NULL, objnames="", objcovs=NULL,
 
      ### new: attributes in design data frame
      attr(dm, which="objnames")<-objnames
-     if(!is.null(cat.scovs)) attr(dm, which="cat.scovs")<-cat.scovs
+     #if(!is.null(cat.scovs)) attr(dm, which="cat.scovs")<-cat.scovs
+     if(length(cov.sel)>0 && cov.sel[1]!="") attr(dm, which="cat.scovs")<-covnames
      if(!is.null(num.scovs)) attr(dm, which="num.scovs")<-num.scovs
-
+     if(blnUndec) attr(dm, which="undec")<-compnames(nitems)
+     if(blnIntcovs) attr(dm, which="ia")<-env2$labels.intpars
 
      class(dm)<-c("data.frame","pattdes")
 

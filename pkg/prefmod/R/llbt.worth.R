@@ -1,6 +1,5 @@
 llbt.worth <- function(fitobj, outmat = "worth")
 {
-
 #### updated on 2010-12-21
 #### can now handle fitobjects from llbtPCfit and
 #### from gnm, provided llbt.design (also new version )was used
@@ -12,9 +11,8 @@ llbt.worth <- function(fitobj, outmat = "worth")
 llbtdesignmodel <- FALSE
 llbtPCfitmodel <- ("llbtMod" %in% class(fitobj))
 if (!llbtPCfitmodel){
-   dterm <- deparse(fitobj$call$data)            ## unten nocheinmal
-   x <- tryCatch(get(dterm),error = function(e) FALSE)
-   if("llbtdes" %in% class(x)) llbtdesignmodel <- TRUE
+   design <- fitobj$data                        ## unten nocheinmal
+   if("llbtdes" %in% class(design)) llbtdesignmodel <- TRUE
 }
 if (llbtdesignmodel == llbtPCfitmodel)
      stop("Model result must be either from llbtPC.fit or having used llbt.design")
@@ -23,199 +21,253 @@ if (llbtdesignmodel == llbtPCfitmodel)
 ## fitobj from llbtdesign, gnm
 if (llbtdesignmodel){
 
-      ## subject covariates
-      num.scovs<-attr(get(dterm),"num.scovs")
-      if(!is.null(num.scovs))
-          warning("Numerical subject covariates not (yet) implemented, they are ignored.\n
-          Result is a matrix of intercepts for regression on numerical subject covariates!!")
 
-      # extract subject covariates from design frame attribute
-      cat.scovs<-attr(get(dterm),"cat.scovs")
-      if(!is.null(cat.scovs))
-        eterms <- cat.scovs
-      else
-        eterms <- vector(,0)
 
-      ## extract subject covariates from eliminate
-      #eterm<-deparse(fitobj$call$eliminate)
-      #eterms<-unlist(strsplit(eterm,":"))
-      #if("mu" %in% eterms)
-      #   eterms<-eterms[-which(eterms=="mu")]
+     ## subject covariates
 
-      ### achtung laenge 0
-      if(length(eterms>0)) {
+     # extract object names from design frame attribute
+     objnames<-attr(design,"objnames")
+     objects<-objnames
 
-          # extract subject covariates from formula
-          fterm<-deparse(fitobj$call$formula)
-          fterms<-unique(unlist(strsplit(fterm,"[ ()+*:~]")))
-          subjcov.names<-intersect(eterms,fterms)
-          if(length(subjcov.names)>0) { ### achtung laenge 0
-            # set up subj cov design
-            levlist<-lapply(fitobj$model[subjcov.names],levels)
-            maxlev<-sapply(levlist,length)
-            subjdes<-gfac2(maxlev)
-            colnames(subjdes)<-names(maxlev)
-          } else {
-            maxlev <- 1
-            length(eterms)<-0
-          }
-      } else
+     objcovnames<-unlist(dimnames(attr(design,"objcovs"))[2])
+     objcovs<-attr(design,"objcovs")
+     objnames<-c(objnames,objcovnames)
+
+     if("gnm" %in% class(fitobj)){
+       fterm<-as.character(attr(fitobj$terms,"predictor"))
+     } else {
+       fterm<-attr(fitobj$terms,"term.labels")
+     }
+
+     fterms<-unique(unlist(strsplit(fterm,"[ ()+*:~`]")))
+     objnames<-intersect(objnames,fterms)
+
+     objcovmodel<-any(objcovnames %in% fterms)
+     used.objcovs<-intersect(objcovnames, fterms)
+
+     if (objcovmodel) {
+     objnum<-seq_along(objnames)
+     names(objnum)<-objnames
+     } else {
+     objnum<-seq_along(objects)
+     names(objnum)<-objects
+     }
+
+     # check if numeric subject covariates have been fitted
+     num.scovs<-attr(design,"num.scovs")
+     if(!is.null(num.scovs)){
+       num.fterms<-intersect(num.scovs, fterms)
+       if (length(num.fterms)>0){
+         txt<-paste(
+"Numerical subject covariates not (yet) implemented, they are ignored.",
+"\n  Result is a matrix of intercepts for regression on numerical subject covariates!!")
+         warning(txt)
+       }
+     }
+
+     # extract subject covariates from design frame attribute
+     cat.scovs<-attr(design,"cat.scovs")
+     if(!is.null(cat.scovs))
+       eterms <- cat.scovs
+     else
+       eterms <- vector(,0)
+
+     # subject variables in design matrix
+     if(length(eterms)>0) {
+         # extract subject covariates from formula
+         subjcov.names<-intersect(eterms,fterms)
+
+         # achtung laenge 0
+         if(length(subjcov.names)>0) { #subject variable in design matrix and in model
+           # set up subj cov design
+              levlist<-lapply(fitobj$model[subjcov.names],levels)
+           maxlev<-sapply(levlist,length)
+         }
+           if (!exists("maxlev")){                      #subject variables in design matrix but none in model
+                maxlev <- 1
+                length(eterms)<-0
+           }
+     # no subject variables in design matrix
+     } else
           maxlev<-1
 
-      ## objects
+     # set up array
+     array.dim<-c(OBJ=length(objects),maxlev)
+     array.dimnames<-lapply(array.dim, function(i) 1:i)
+     a<-array(0,dim=array.dim,dimnames=array.dimnames)
+     dimnames(a)$OBJ<-objects
+##}
 
-      # extract design data frame
-      dterm<-deparse(fitobj$call$data)
+  ### extract relevant estimates
+     est<-coef(fitobj)
+     estnamlist<-lapply(names(est),strsplit,":")
+     obj.in.est<-sapply(estnamlist,function(x) any(objnames %in% unlist(x)))
+     est<-est[obj.in.est]  # only model terms with obj
+     estnamlist<-estnamlist[obj.in.est]
 
-      objs<-attr(get(dterm),"objnames")  # object names
+     # extract category covariate names from design
+     # if user has specified interaction with objects
+     categ<-attr(design,"categories")
+     junk<-c(categ)
+     if(!is.null(junk)){
+         junk.in.est<-sapply(estnamlist,function(x) any(junk %in% unlist(x)))
+         est<-est[!junk.in.est]  # only model terms without junk
+         estnamlist<-estnamlist[!junk.in.est]
+     }
+
+     est<-ifelse(is.na(est),0,est)
+     o<-objnames
+     ee<-estnamlist
+     which.obj.in.est<-na.omit(unlist(lapply(ee, function(x) o[match(unlist(x),o)])))
 
 
-      ## set up summation matrix
+     if(objcovmodel){
 
-      nrep <- prod(maxlev)
+        # estnamlist without subject covariate terms
+        estnamlist.wosubj<-lapply(estnamlist, function(x) intersect(objnames,unlist(x)))
+        # estnamlist without object/objectcov terms
+        estnamlist.subj<-lapply(estnamlist, function(x) setdiff(unlist(x),objnames))
 
-      # objects
-      nobj<- length(objs)
-      omat <- diag(nobj)
+        newest<-NULL
+        newestnamlist<-NULL
+        for (i in 1:length(estnamlist.wosubj)){
+           if (any(objcovnames %in% estnamlist.wosubj[[i]])){
+               # new estnamlist elements
+               newenlel<-as.list(objects)
+               newenlel<-lapply(newenlel,function(x) c(x, estnamlist.subj[[i]]))
+               newestnamlist<-c(newestnamlist, newenlel)
 
-      o<-rep(1,nrep)%x%omat
-      colnames(o) <-  objs
+               # new est elements
+               idxterms<-unlist(estnamlist.wosubj[[i]])
+               newestdes<-cbind(objcovs[,idxterms],est[i])
+               newestel<-apply(newestdes,1,prod)
+               names(newestel)<-sapply(newenlel, paste, collapse=":")
+               newest<-c(newest, newestel)
 
-      # summation frame
-      S <- data.frame(o)
-
-      # subjects
-      if(length(eterms>0)){
-          s<-subjdes %x% rep(1,nobj)
-          s<-data.frame(s)
-          s<-as.data.frame(lapply(s,as.factor))
-          names(s)<-names(maxlev)
-
-          # summation frame
-          S <- data.frame(S,s)
-      }
-
-      # obj covs
-      objcovs<-attr(get(dterm),"objcovs")
-      if(!is.null(objcovs)){
-         # add items to objcovs (necessary to have single objects in objcovs if required from model formula)
-         ocovs<-diag(nobj)
-         colnames(ocovs)<-objs
-         objcovs<-cbind(ocovs,objcovs)
-
-         # extract those obj covs which are in model formula
-         vars<-attr(attr(fitobj$terms,"factors"),"dimnames")[[1]]
-         vars2<-colnames(objcovs)
-         diffs<-intersect(vars,vars2)
-         objcovs<-objcovs[,diffs,drop=FALSE]
-         oc<-rep(1,nrep)%x%objcovs
-         colnames(oc)<-diffs
-
-         # summation frame
-         S <- data.frame(S,oc)
-      }
-
-      # generate summation matrix from pseudo gnm
-      elim<-as.factor(1:(nobj*nrep))
-      frml<-eval(fitobj$call$formula) # if formula is a symbol first eval it
-      frml<-update.formula(frml, .~.-pos)     # remove position variable 2011-01-03
-
-      y<-rnorm(nrow(S)) # random y - y required for pseudo fit
-      S<-data.frame(y,S,elim)
-
-      # check which vars are unnecessary in frml
-      vars<-attr(attr(fitobj$terms,"factors"),"dimnames")[[1]]
-      if (any(vars=="mu")) vars<-vars[-which(vars=="mu")]
-      ###if (any(vars=="pos")) vars<-vars[-which(vars=="pos")]        ####### 2011-01-03
-      vars2<-colnames(S)
-      diffs<-setdiff(vars,vars2)
-      # add unnecessary variables to S
-      if (length(diffs)>0){
-         oldnc<-ncol(S)
-         for (i in 1:length(diffs)) S<-data.frame(S,rnorm(nrow(S)))
-         colnames(S)[(oldnc+1):(oldnc+length(diffs))]<-diffs
-      }
-
-      ## alternative: update.formula
-
-      oldopt<-options("warn"=-1)
-      sumMat<-as.matrix(model.matrix(gnm(formula=frml,eliminate=elim,data=S,iterStart = 1, iterMax = 1)))
-      options(oldopt)
-
-      coefs<-coef(fitobj)
-      if (any(names(coefs)=="pos"))
-            coefs<-coefs[-which(names(coefs)=="pos")] ## remove pos variable 2011-01-03
-
-      # remove NA estimates from coefficients
-      notna<-!is.na(coefs)
-      if (length(notna)>0){
-          sumMat<-sumMat[,notna,drop=FALSE]
-          coefs<-coefs[notna]
-      }
-
-      # remove unnecessary terms from estimates and from coefficients
-      if (length(diffs)>0){
-        dc<-which(names(coefs)==diffs)
-        if (length(dc)>0){    # ignore variables which are not coefficients, eg., if y is renamed 2011-01-03
-          sumMat<-sumMat[,-dc, drop=FALSE]
-          coefs<-coefs[-dc]
+            } else {
+               newestnamlist<-c(newestnamlist, estnamlist[[i]])
+               newest<-c(newest,est[i])
+            }
         }
-      }
 
-      sumvec<- sumMat %*% coefs
+        ##if (OBJCOVMODEL)
+        est<-newest
+        estnamlist<-lapply(newestnamlist, function(x) list(x))
 
-      ## lambda matrix
-      lambda.groups.mat<-matrix(sumvec, nrow=nobj)
+        objnum<-seq_along(objects)
+        names(objnum)<-objects
+
+        ee<-estnamlist
+        which.obj.in.est<-na.omit(unlist(lapply(ee, function(x) objects[match(unlist(x),objects)])))
+     }
 
 
-      if(length(eterms>0)) {
-                 x<-subjdes
+     ### matrix with subj.cov indices and estimates
+     subjcov.names<-names(maxlev)
+     ldima<-length(dim(a))
+     if(maxlev[1]==1)ldima<-1
+     estmat<-matrix(0,nrow=length(est),ncol=ldima+1)
+     rownames(estmat)<-names(est)
+     colnames(estmat)<-c("OBJ",subjcov.names,"Value")
+     estmat[,ncol(estmat)]<-est
+     estmat[,1]<-objnum[which.obj.in.est]
+
+     for (scovnam in subjcov.names){           # loop all subj covs
+       for (i in 1:length(estnamlist)){        # loop all estimate terms
+          trms<-estnamlist[[i]][[1]]           # extract single terms
+          idx<-grep(scovnam,trms)              # look which single term corresponds to current subj cov
+          lev<-0
+          if(length(idx)>0)                    # if current subj cov is in estimate term
+            lev<-as.numeric(sub(scovnam,"",trms[idx]))  # extract level of subj cov
+          estmat[i,scovnam]<-lev               # write level into estmat
+       }
+     }
 
 
-                 ## labels for cov groups
-                 xx<-mapply(function(x,y)paste(x,y,sep=""), colnames(x),data.frame(x))
-                 gr.labels <-apply(xx,1,paste,collapse=":")
-                 colnames(lambda.groups.mat) <- gr.labels
-      } else
-                 colnames(lambda.groups.mat) <- "estimate"
+     ## fill array
+     # expand estmat
+     estmat.exp<-estmat
 
-      ## obsolete since option obj.names removed 2011-01-03
-      #if(is.null(obj.names))
-      #   rownames(lambda.groups.mat)<-objs
-      #else
-      #   rownames(lambda.groups.mat)<-obj.names
-      rownames(lambda.groups.mat)<-objs
+     expand<-function(i){
+        row<-estmat.exp[i,,drop=FALSE]
+        if (row[,scov]==0) {
+          ##row<-expand.dfr(row,maxlev[scov])
+           row<-row[rep(seq_len(nrow(row)), maxlev[scov]), ]
+          row[,scov]<-1:maxlev[scov]
+        }
+        row
+     }
+     for (scov in subjcov.names){
+        estmat.exp<-do.call("rbind",lapply(1:nrow(estmat.exp), expand))
+     }
+     e<-estmat.exp
 
+     # array entries
+     for (i in 1:nrow(e)){
+        a[e[i,1:(length(subjcov.names)+1),drop=FALSE]]<-a[e[i,1:(length(subjcov.names)+1),drop=FALSE]]+e[i,"Value"]
+        #cat(a[e[i,1:(length(subjcov.names)+1),drop=FALSE]],e[i,1:(length(subjcov.names)+1),drop=FALSE],"\n")
+     }
+
+     ## array into lambda/worth matrix
+     estmat<-matrix(a,nrow=dim(a)[1])
+
+     # labelling
+     subjdes<-gfac2(maxlev)
+     colnames(subjdes)<-names(maxlev)
+     if(length(subjcov.names>1)) {
+        x<-subjdes
+        ## labels for cov groups
+        xx<-mapply(function(x,y)paste(x,y,sep=""), colnames(x),data.frame(x))
+        gr.labels <-apply(xx,1,paste,collapse=":")
+        colnames(estmat) <- gr.labels
+     } else
+        colnames(estmat) <- "estimate"
+
+     rownames(estmat)<-objects
 
       ## in case of objcovs the rows are collapsed according to obj covs
       if (!is.null(objcovs)) {
-          # collapse rownames of lambda.groups.mat
-          u<-1:nobj
-          names(u)<- as.numeric(factor(apply(lambda.groups.mat,1,paste,collapse="")))
-          nam<-aggregate(objs,list(u[names(u)]),paste)$x
+          # collapse rownames of estmat
+          u<-1:length(objects)
+          names(u)<- as.numeric(factor(apply(estmat,1,paste,collapse="")))
+          nam<-aggregate(objects,list(u[names(u)]),paste)$x
 
-          leg<-aggregate(rownames(lambda.groups.mat),as.data.frame(objcovs),paste)
-          lambda.groups.mat<-unique(lambda.groups.mat)
+          o<-as.data.frame(objcovs[,used.objcovs])
+          colnames(o)<-used.objcovs
+          leg<-aggregate(rownames(estmat),o,paste, simplify=FALSE)
+          ngr<-ncol(leg)- length(used.objcovs)+1
+
+          ##namleg<-paste("objgr",1:ngr,sep="")
+          namleg<-"objects in groups"
+          names(leg)[(length(used.objcovs)+1):ncol(leg)]<-namleg  # probably not neccessary (is only of length 1)
+          estmat<-unique(estmat)
 
           if(is.matrix(nam)){
             rnam<-apply(nam,1,paste,sep="", collapse=",")
-            if (nrow(lambda.groups.mat)==length(rnam))
-                rownames(lambda.groups.mat)<-rnam
+            if (nrow(estmat)==length(rnam))
+                rownames(estmat)<-rnam
           } else {
             rnam<-lapply(nam,paste,sep="", collapse=",")
-            if (nrow(lambda.groups.mat)==length(rnam))
-                rownames(lambda.groups.mat)<-rnam
+            if (nrow(estmat)==length(rnam))
+                rownames(estmat)<-rnam
           }
 
       }
 
-      if (exists("leg")) attr(lambda.groups.mat, which="objtable")<-leg
+      if (exists("leg")) attr(estmat, which="objtable")<-leg
 
-      ## worth matrix
-      worth.groups.mat <- apply(lambda.groups.mat, 2, function(x) exp(2*x)/sum(exp(2*x)))
-      attr(worth.groups.mat, which="objtable")<- attr(lambda.groups.mat, which="objtable")
 
-## fitobj from llbtPC.fit
+     worthmat<-apply(estmat,2,function(x) exp(2*x)/sum(exp(2*x)))
+     attr(worthmat, which="objtable")<- attr(estmat, which="objtable")
+     if(ncol(worthmat)==1)   colnames(worthmat) <- "worth"
+
+     switch(outmat,
+        "lambda" = return(estmat),
+        "worth" = return(worthmat),
+        stop("     outmat must be either 'worth' or 'lambda'\n")
+     )
+
+  ## end llbtdesignmodel
 } else {
 
       nobj <- fitobj$envList$nobj

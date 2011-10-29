@@ -22,6 +22,6 @@ simPC<-function(nobj,nobs,worth=NULL,seed=NULL,pr=FALSE)
    data<-NULL
    for (i in 1:ncomp)
      data<-cbind(data,sample(c(1,-1),nobs,replace=TRUE,prob=c(probs[i],1-probs[i])))
-   data
+   data.frame(data)
 }
 

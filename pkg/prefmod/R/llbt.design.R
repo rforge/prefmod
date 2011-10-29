@@ -161,9 +161,21 @@ if (is.null(nobj)) stop("number of items not defined")
            stop("\n subject covariates incorrectly specified\n")
        if (toupper(cov.sel[1]) == "ALL"){   # all covariates included
           cov.sel <- inpcovnames
+          cat.scovs <- cov.sel              # respecify cat.scovs for attribute in resulting data frame 2011-08-26
        } else if(length(setdiff(cov.sel,inpcovnames))>0) {
            stop("\n subject covariates incorrectly specified\n")
        }
+
+       if (toupper("all") %in% toupper(num.scovs))
+          stop("\n'all' is not allowed in num.scovs\n")
+       for (var in cov.sel){
+          if (var %in% num.scovs) next
+          if((min(dat[,var])!=1)||(any(dat[,var]!=as.integer(dat[,var]))))
+            stop("\ncategorical covariate '", var,"' incorrectly specified (perhaps numeric?)\n")
+          if(max(dat[,var])>10)
+            warning("\ncategorical covariate",var,"has > 10 categories (perhaps numeric?)\n")
+       }
+
        ## 2010-12-30 --- obsolete for time being
        # check if casewise is specified for continuous covs
        # distinguish factors and variates
@@ -367,11 +379,13 @@ if(!is.null(objcovs)){
    attr(dm, which="objcovs")<-as.matrix(objcovs, drop=FALSE)
 }
 
-### new: attributes in design data frame
+### new: attributes in design data frame, gamnames added 2011-08-13
 attr(dm, which="objnames")<-objnames
 names(dm)<-c("y",varnames)
-if(!is.null(cat.scovs)) attr(dm, which="cat.scovs")<-cat.scovs  # rh 2011-03-27
+if(!is.null(cat.scovs)) attr(dm, which="cat.scovs")<-cat.scovs  # rh 2011-03-27 wieder: 2011-08-26
+##if(!is.null(cat.scovs)) attr(dm, which="cat.scovs")<-covnames  # rh 2011-08-13
 if(!is.null(num.scovs)) attr(dm, which="num.scovs")<-num.scovs
+attr(dm, which="categories")<-gamnames
 
 # define factors according cat.scovs 2010-12-30
 if (length(cat.scovs)>0){
