@@ -5,6 +5,7 @@ llbtPC.fit<-function(obj, nitems, formel=~1, elim=~1, resptype="paircomp", obj.n
     ENV<-new.env()
 
     ENV$resptype<-"paircomp"
+    ENV$undec <- undec # added 2011-11-01
 
     nobj<-nitems
     ENV$nobj<-nobj
@@ -97,8 +98,8 @@ llbtPC.fit<-function(obj, nitems, formel=~1, elim=~1, resptype="paircomp", obj.n
 
     # undecided
     if(undec){
-        u <- rep(c(0,1,0),length(y)/3)
-        dfr<-cbind(dfr,u)
+        U <- rep(c(0,1,0),length(y)/3)
+        dfr<-cbind(dfr,U)
     }
 
     # objects design
@@ -140,7 +141,7 @@ llbtPC.fit<-function(obj, nitems, formel=~1, elim=~1, resptype="paircomp", obj.n
 
     # part for undecided
     if (undec) {
-       frm.u  <- "+ u"
+       frm.u  <- "+ U"
     } else {
        frm.u <- ""
     }

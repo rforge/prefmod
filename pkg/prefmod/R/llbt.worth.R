@@ -274,8 +274,10 @@ if (llbtdesignmodel){
 
       # remove category and undecided parameters from lambda
       lambda <- fitobj$coefficients[fitobj$ofInterest]
-      if(any(grep("^g[0-9]|g[0-9]$|^u$",names(lambda))))
-          lambda <- lambda[-(grep("^g[0-9]|^u$", names(lambda)))]
+###      if(any(grep("^g[0-9]|g[0-9]$|^u$",names(lambda))))            # g1, g2 etc. do not occur in llbtPC.fit
+###          lambda <- lambda[-(grep("^g[0-9]|^u$", names(lambda)))]   # undecided changed to U in llbtPC.fit
+      if(any(grep("^U$",names(lambda))))
+          lambda <- lambda[-(grep("^U$", names(lambda)))]
       lambda <- ifelse(is.na(lambda),0,lambda)
 
       # initialise lambda matrix
