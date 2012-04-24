@@ -18,8 +18,8 @@ expand.mat(mat, freq)
 \value{
   the expanded matrix
 }
-\note{This utility allows to generate input data for the for the design generating
-      and model fitting functions of the \code{prefteste} package
+\note{This utility allows to generate input data for the design generating
+      and model fitting functions of the \pkg{prefmod} package
       from aggregated data.
 }
 \examples{

@@ -261,12 +261,24 @@ if (llbtdesignmodel){
      attr(worthmat, which="objtable")<- attr(estmat, which="objtable")
      if(ncol(worthmat)==1)   colnames(worthmat) <- "worth"
 
-     switch(outmat,
-        "lambda" = return(estmat),
-        "worth" = return(worthmat),
-        stop("     outmat must be either 'worth' or 'lambda'\n")
-     )
+#    switch(outmat,
+#       "lambda" = return(estmat),
+#       "worth" = return(worthmat),
+#       stop("     outmat must be either 'worth' or 'lambda'\n")
+#     )
 
+
+     switch(outmat, lambda = {
+         class(estmat) <- c("wmat", class(estmat))
+         return(estmat)
+     }, worth = {
+         class(worthmat) <- c("wmat", class(worthmat))
+         return(worthmat)
+     }, est = {
+         class(estmat) <- c("wmat", class(estmat))
+         return(estmat)
+     }, stop("     outmat must be either 'worth' or 'lambda'\n")
+     )
   ## end llbtdesignmodel
 } else {
 
@@ -352,12 +364,11 @@ if (llbtdesignmodel){
       }
 }
 
-
 ## return
 switch(outmat,
-   "lambda" = return(lambda.groups.mat),
-   "worth" = return(worth.groups.mat),
-   "est" = return(lambda.groups.mat),
+   "lambda" = {class(lambda.groups.mat)<-c("wmat",class(lambda.groups.mat));return(lambda.groups.mat)},
+   "worth" = {class(worth.groups.mat)<-c("wmat",class(worth.groups.mat));return(worth.groups.mat)},
+   "est" = {class(lambda.groups.mat)<-c("wmat",class(lambda.groups.mat));return(lambda.groups.mat)},
    stop("     outmat must be either 'worth' or 'lambda'\n")
 )
 

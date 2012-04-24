@@ -39,7 +39,7 @@ llbt.fit(y, Xmodel, q, ncat, maxiter = 100)
 ## fit basic model casewise
 data(cemspc)
 mfr<-llbt.design(cemspc,nitems=6,objnames=c("lo","pa","mi","sg","ba","st"),
-       blnCasewise=TRUE)
+       casewise=TRUE)
 mm<-model.matrix(~lo+pa+mi+sg+ba+g1,data=mfr)
 X<-mm[,-1]
 p<-ncol(X)

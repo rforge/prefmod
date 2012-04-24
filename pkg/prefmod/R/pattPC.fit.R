@@ -1,5 +1,5 @@
 pattPC.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="paircomp",obj.names=NULL,
-         undec=FALSE, ia=FALSE, NItest=FALSE,NI=FALSE, MIScommon=FALSE,
+         undec=TRUE, ia=FALSE, NItest=FALSE,NI=FALSE, MIScommon=FALSE,
          MISmodel="obj", MISalpha=NULL,MISbeta=NULL,
          pr.it=FALSE)
 {

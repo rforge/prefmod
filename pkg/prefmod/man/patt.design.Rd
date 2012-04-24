@@ -47,7 +47,7 @@ patt.design(obj, nitems = NULL, objnames = "", objcovs = NULL,
   \item{reverse}{If the responses are such that
            low values correspond to high preference (or agreement or rank) and high values
            to low preference (or agreement or ranks) (e.g., (1) \emph{I strongly agree} \ldots
-           (5)  \emph{I strongly disagree}) then \code{blnRevert}
+           (5)  \emph{I strongly disagree}) then \code{reverse}
            should be specified to be \code{FALSE}, the default. Otherwise
            set \code{reverse = TRUE}. The only exception is paired comparison responses
            that are coded -1/1, -1/0/1, -2/-1/0/1/2, etc. Then negative numbers are treated as not preferred.
@@ -125,13 +125,13 @@ patt.design(obj, nitems = NULL, objnames = "", objcovs = NULL,
 \section{Input Data}{
         Responses have to be coded as consecutive integers (e.g.,
         (0,1), or (1,2,3,\dots), where the smallest value corresponds to
-        (highest) preference for the first object in a comparison. 
+        (highest) preference for the first object in a comparison.
 	
         For (ordinal) paired comparison data (\code{resptype = "paircomp"}) the codings
         (1,-1), (2,1,-1,-2), (1,0,-1), (2,1,0,-1,-2) etc. can also be used.
         Then negative numbers correspond to not preferred, 0 to undecided.
 	Missing responses are not allowed (use functions
-        \code{\link{pattPC.fit}}, \code{\link{pattL.fit}}, or \code{\link{pattR.fit}} instead). 
+        \code{\link{pattPC.fit}}, \code{\link{pattL.fit}}, or \code{\link{pattR.fit}} instead).
 
         Input data (via the first argument \code{obj} in the function call)
         is specified either through a dataframe or
@@ -153,9 +153,9 @@ patt.design(obj, nitems = NULL, objnames = "", objcovs = NULL,
         \sQuote{endorsement} (agreement) according to the underlying scale. All items
         are assumed to have the same number of response cateory
 
-        The columns for responses are optionally followed  by columns for 
+        The columns for responses are optionally followed  by columns for
 	subject covariates. If categorical, they have to be specified such that the categories are represented
-        by consecutive integers starting with 1. Missing values are not allowed 
+        by consecutive integers starting with 1. Missing values are not allowed
         and treated such that
         rows with NAs are removed from the resulting design structure and a message is printed.
         For an example see \code{\link{xmpl}}.
@@ -192,6 +192,8 @@ patt.design(obj, nitems = NULL, objnames = "", objcovs = NULL,
        no longer be used..
 \describe{
   \item{blnCasewise}{same as \code{casewise}.}
+  \item{blnIntcovs}{same as \code{ia}.}
+  \item{blnRevert}{same as \code{reverse}.}
   \item{cov.sel}{same as \code{cat.scovs}.}
 }
 Options for requesting GLIM commands and data structures are no longer supported.
@@ -211,8 +213,8 @@ A Paired Comparison Approach for the Analysis of Sets of Likert Scale Responses.
 ## and two subject covariates
 
 data(xmpl)   # example data in package
-dsgnmat <- patt.design(xmpl, nitems = 3, resptype="rating",
-    blnIntcovs = TRUE, cov.sel="ALL")
+dsgnmat <- patt.design(xmpl, nitems = 3, resptype = "rating",
+      ia = TRUE, cov.sel = "ALL")
 print(head(dsgnmat))
 
 

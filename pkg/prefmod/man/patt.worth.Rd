@@ -34,11 +34,11 @@ patt.worth(fitobj, obj.names = NULL, outmat = "worth")
   of worth or model parameters. If subject covariates have been specified, each column
   represents a groups defined by the crossclassification of the subject covariates.
 
-  The function \code{\link{plotworth}} gives a plot of the estimates.
+  The function \code{\link{plot}} gives a plot of the estimates.
 }
 \author{Reinhold Hatzinger}
 \seealso{\code{\link{pattPC.fit}}, \code{\link{pattR.fit}}, \code{\link{pattL.fit}}, and
-   \code{\link{pattLrep.fit}}, \code{\link{plotworth}}}
+   \code{\link{pattLrep.fit}}, \code{\link{plot}}}
 \examples{
     ## fit only first three objects with SEX effect
     data(cemspc)

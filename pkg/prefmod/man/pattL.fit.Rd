@@ -6,7 +6,7 @@
        allowing for missing values using a CL approach.}
 \usage{
 pattL.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "rating",
-    obj.names=NULL, undec = FALSE, ia = FALSE, NItest = FALSE, pr.it = FALSE)
+    obj.names=NULL, undec = TRUE, ia = FALSE, NItest = FALSE, pr.it = FALSE)
 }
 \arguments{
   \item{obj}{either a dataframe or the path/name of the datafile to be read.
@@ -124,6 +124,8 @@ pattL.fit(music4, nitems=4)
 ## fit additional undecided effect
 pattL.fit(music4, nitems=4, undec=TRUE)
 
+## fit dependence parameters
+pattL.fit(music4, nitems=4, undec=TRUE, ia=TRUE)
 
 ## check for ignorable missing
 pattL.fit(music4, nitems=4, undec=TRUE, NItest=TRUE)

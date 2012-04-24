@@ -1,5 +1,5 @@
 pattLrep.fit<-function(obj, nitems, tpoints=1, formel=~1,elim=~1,resptype="ratingT",
-         obj.names=NULL, undec=FALSE, ia=FALSE, iaT=FALSE, NItest=FALSE, pr.it=FALSE)
+         obj.names=NULL, undec=TRUE, ia=FALSE, iaT=FALSE, NItest=FALSE, pr.it=FALSE)
 {
     # nitems ... no of items at a given time point
     # tpoints ... no of timepoints

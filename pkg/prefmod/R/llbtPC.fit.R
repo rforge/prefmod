@@ -1,5 +1,5 @@
 ####### function for LLBT - from pattPC.fit   #############################################
-llbtPC.fit<-function(obj, nitems, formel=~1, elim=~1, resptype="paircomp", obj.names=NULL, undec=FALSE)
+llbtPC.fit<-function(obj, nitems, formel=~1, elim=~1, resptype="paircomp", obj.names=NULL, undec=TRUE)
 {
     call<-match.call()
     ENV<-new.env()

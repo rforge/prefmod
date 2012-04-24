@@ -40,6 +40,6 @@ pos<-c(rep(1:0, 21), rep(0:1,21) )
 # fit model and display results
 res5<-gnm(y~MIL+DET+TOR+NY+BOS+CLE+BAL + pos,eliminate = mu, data = des5, family = poisson)
 w5<- llbt.worth(res5)
-plotworth(w5)
+plot(w5)
 }
 \keyword{datasets}

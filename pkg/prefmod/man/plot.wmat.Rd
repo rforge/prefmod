@@ -1,25 +1,23 @@
-\name{plotworth}
-\alias{plotworth}
-\title{Deprecated function to plot worth or model parameters from LLBT or pattern models}
+\name{plot.wmat}
+\alias{plot.wmat}
+\title{Method to plot worth or model parameters from LLBT or pattern models}
 \description{
   A plot of the worth or model parameter matrix obtained from the fit of an LLBT or  pattern model is produced.
-This matrix is obtained from \code{llbt.worth} or \code{patt.worth}.
+This matrix is obtained from \code{llbt.worth} or \code{patt.worth} and is an object of class \code{wmat}.
 }
-\note{Better use \code{plot()} (i.e., the method \code{\link{plot.wmat}}) instead.}
 \usage{
-plotworth(worthmat, main = "Preferences", ylab = "Estimate",
-       psymb = NULL, pcol = NULL, ylim = range(worthmat),...)
+\method{plot}{wmat}(x, main = "Preferences", ylab = "Estimate",
+       psymb = NULL, pcol = NULL, ylim = range(worthmat),log="", ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{worthmat}{parameter matrix as generated from \code{\link{llbt.worth}}
-        or \code{\link{patt.worth}}.}
+  \item{x}{worth or parameter matrix as generated from \code{\link{llbt.worth}} or \code{\link{patt.worth}}.}
   \item{main}{main title of the plot.}
   \item{ylab}{y-axis label}
   \item{psymb}{plotsymbols for objects, see Details below}
   \item{pcol}{colours for objects, see Details below}
   \item{ylim}{limits for y-axis}
-  \item{...}{further graphical parameters, use e.g. \code{log = "y"} to obtain a logarithmic plot}
+  \item{log}{if specified as  \code{log = "y"}, the y-axis is to be logarithmic}
+  \item{...}{further graphical parameters, use e.g. \code{lty = "dashed"} to obtain dashed lines connecting the objects}
 }
 \details{
   Plotsymbols can be defined as an integer vector of length equal to the
@@ -47,8 +45,8 @@ m2 <- pattPC.fit(cemspc, nitems=3, formel=~SEX, elim=~SEX, undec=TRUE)
 
 ## calculate and plot worth parameters
 m2worth <- patt.worth(m2)
-plotworth(m2worth)
-plotworth(m2worth, pcol = "terrain")
+plot(m2worth)
+plot(m2worth, pcol = "terrain")
 
 ## display of some plotsymbols (pch)
 plot(0:25, rep(1,26), pch=0:25, cex=1.5)
@@ -58,6 +56,6 @@ text(0:25, rep(0.95,26), 0:25)
 \dontrun{
 library(RColorBrewer)
 mypalette <- brewer.pal(3, "Set1")
-plotworth(m2worth, pcol = mypalette)}
+plot(m2worth, pcol = mypalette)}
 }
 \keyword{models}

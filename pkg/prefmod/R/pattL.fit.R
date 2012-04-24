@@ -1,5 +1,5 @@
 pattL.fit<-function(obj, nitems,formel=~1,elim=~1,resptype="rating",
-         obj.names=NULL, undec=FALSE, ia=FALSE, NItest=FALSE, pr.it=FALSE)
+         obj.names=NULL, undec=TRUE, ia=FALSE, NItest=FALSE, pr.it=FALSE)
 {
 
     call<-match.call()

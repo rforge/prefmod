@@ -249,6 +249,11 @@ if (!is.null(startp)) p<-startp
 ############################################################
   tmp <-weightslogl.calc.w(p,matrix(f,ncol=k),pweights[1:N])
   w <- tmp$w
+#### new randow starts ############## 2011-11-11
+  w[,]<-runif(length(w))
+  w<-t(apply(w,1,function(x)x/sum(x)))
+#### new randow starts ############## 2011-11-11
+
  # Initialize for EM loop
   ML.dev <- ML.dev0
   iter <- ml<- 1

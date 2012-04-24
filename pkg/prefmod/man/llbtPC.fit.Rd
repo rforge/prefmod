@@ -5,7 +5,7 @@
        allowing subject covariates and undecided response categories.}
 \usage{
 llbtPC.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "paircomp",
-obj.names = NULL, undec = FALSE)
+obj.names = NULL, undec = TRUE)
 }
 \arguments{
   \item{obj}{either a dataframe or the path/name of the datafile to be read.
@@ -14,12 +14,12 @@ obj.names = NULL, undec = FALSE)
   \item{formel}{the formula for subject covariates to fit different
         preference scales for the objects (see below).}
   \item{elim}{the formula for the subject covariates that specify the table
-        to be analysed. If ommitted and \code{formel} is not \code{ ~1} then
+        to be analysed. If omitted and \code{formel} is not \code{ ~1} then
         \code{elim} will be set to the highest interaction between all terms
         contained in \code{formel}. If \code{elim} is specified, the terms
         must be separated by the \code{*} operator.}
   \item{resptype}{is \code{"paircomp"} by default and is reserved for future usage.
-        Any other specification will not change the behaviour of \code{pattPC.fit}
+        Any other specification will not change the behaviour of \code{llbtPC.fit}
         }
   \item{obj.names}{character vector with names for objects.
         }
@@ -41,7 +41,7 @@ obj.names = NULL, undec = FALSE)
         If, e.g., \code{elim=~SEX} but \code{formel=~1},
         then the table is set up as if \code{SEX} would be fitted but only one global
         preference scale is computed.  This feature
-        allows for the succesive fitting of nested models to enable the use of
+        allows for the successive fitting of nested models to enable the use of
         deviance differences for model selection (see example below).
 }
 \section{Input Data}{

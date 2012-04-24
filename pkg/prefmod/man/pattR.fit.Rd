@@ -78,7 +78,7 @@ pattR.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "ranking",
        the first row as readable via the command \code{read.table(datafilename,
        header = TRUE)}.
 
-       For an example without covariates and no mising values
+       For an example without covariates and no missing values
        see \code{\link{salad}}.
        }
 \value{
@@ -112,7 +112,7 @@ pattR.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "ranking",
      paired comparison response categories is always two. The number of
      rows of the table used to set up the design matrix is \code{factorial(number of items)}.
      For instance, for nine objects this is 362880.
-     A reasonale maximum number of items is 8.
+     A reasonable maximum number of items is 8.
 
      The option \code{NItest = TRUE} has to be used with care. The meaning of missing
      responses is not obvious with partial rankings. Are the corresponding values

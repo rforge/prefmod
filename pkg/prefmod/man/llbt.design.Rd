@@ -41,7 +41,7 @@ frame.
        for each subject in the data. This is required when fitting continuous
        subject covariates. However, the design can become very large in the case of many subjects
        and/or comparisons. See Details below.}
-  \item{...}{deprecated options to allow for backwars compatibility (see Deprecated below)}
+  \item{...}{deprecated options to allow for backwards compatibility (see Deprecated below)}
 }
 \details{
    The function \code{llbt.design} allows for different scenarios mainly concerning
@@ -75,11 +75,11 @@ frame.
 \section{Input Data}{
         Responses have to be coded as consecutive integers (e.g.,
         (0,1), or (1,2,3,\dots), where the smallest value corresponds to
-        (highest) preference for the first object in a comparison. 
+        (highest) preference for the first object in a comparison.
         For (ordinal) paired comparison data (\code{resptype = "paircomp"}) the codings
         (1,-1), (2,1,-1,-2), (1,0,-1), (2,1,0,-1,-2) etc. can also be used.
         Then negative numbers correspond to not preferred, 0 to undecided.
-	Missing responses (for paired comparisons but not for subject covariates)
+        Missing responses (for paired comparisons but not for subject covariates)
         are allowed
         under a missing at random assumption and specified via \code{NA}.
 
@@ -108,13 +108,15 @@ frame.
        three rows in the design matrix.
        If subject covariates are specified, the design matrix is duplicated as many times as there
        are combinations of the levels of each categorical covariate or, if
-       \code{blnCasewise = TRUE}, as there are subjects in the data. Each individual
+       \code{casewise = TRUE}, as there are subjects in the data. Each individual
        design matrix consists of rows for all comparisons.
 
        The first column contains the counts for the paired
        comparison response patterns and is labelled with \code{y}. The next columns
-       are the covariates for the categories (labelled as \code{g0},\code{g1}, etc.)
-       and for the items. If specified, subject covariates and then object specific covariates follow.
+       are the covariates for the categories (labelled as \code{g0},\code{g1}, etc.).
+       In case of an odd number of categories, \code{g1} can be used to model an undecided
+       effect. The subsequent columns are covariates for the items.
+       If specified, subject covariates and then object specific covariates follow.
 
 }
 \section{Deprecated }{The following options are for backwards compatibility and should
@@ -141,13 +143,18 @@ Applied Statististics (1998), 47, Part 4,  pp. 511-525
 data(cemspc)
 des<-llbt.design(cemspc, nitems=6, cat.scovs="ENG")
 
+res0<-gnm(y~o1+o2+o3+o4+o5+o6+ENG:(o1+o2+o3+o4+o5+o6),
+      eliminate=mu:ENG, family=poisson, data=des)
+summary(res0)
+
+# inclusion of g1 allows for an undecided effect
 res<-gnm(y~o1+o2+o3+o4+o5+o6+ENG:(o1+o2+o3+o4+o5+o6)+g1,
       eliminate=mu:ENG, family=poisson, data=des)
 summary(res)
 
 ## calculating and plotting worth parameters
 wmat<-llbt.worth(res)
-plotworth(wmat)
+plot(wmat)
 
 ## object specific covariates
 LAT <- c(0,1,1,0,1,0)        # latin cities
@@ -160,7 +167,7 @@ res2<-gnm(y~LAT+EC+LAT:ENG+g1,
 ## calculating and plotting worth parameters
 wmat2<-llbt.worth(res2)
 wmat2
-plotworth(wmat2)
+plot(wmat2)
 }
 \keyword{models}
 \keyword{regression}

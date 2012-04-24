@@ -320,10 +320,17 @@ patt.worth<-function(fitobj, obj.names=NULL, outmat="worth"){
      if(ncol(worthmat)==1)   colnames(worthmat) <- "worth"
 
      switch(outmat,
-        "lambda" = return(estmat),
-        "worth" = return(worthmat),
+         "lambda" = {class(estmat)<-c("wmat",class(estmat));return(estmat)},
+         "worth" = {class(worthmat)<-c("wmat",class(worthmat));return(worthmat)},
+        # "est" = return(lambda.mat),
         stop("     outmat must be either 'worth' or 'lambda'\n")
      )
+
+#     switch(outmat,
+#        "lambda" = return(estmat),
+#        "worth" = return(worthmat),
+#        stop("     outmat must be either 'worth' or 'lambda'\n")
+#     )
 
   ## end pattdesignmodel
 
@@ -424,8 +431,8 @@ patt.worth<-function(fitobj, obj.names=NULL, outmat="worth"){
      #worthmatrix
 
      switch(outmat,
-        "lambda" = return(est),
-        "worth" = return(worthmatrix),
+         "lambda" = {class(est)<-c("wmat",class(est));return(est)},
+         "worth" = {class(worthmatrix)<-c("wmat",class(worthmatrix));return(worthmatrix)},
         # "est" = return(lambda.mat),
         stop("     outmat must be either 'worth' or 'lambda'\n")
      )

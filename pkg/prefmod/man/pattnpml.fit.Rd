@@ -30,7 +30,7 @@ pattnpml.fit(formula,
 \details{
   The function \code{pattnpml.fit} is a wrapper function for \code{alldistPC} which
   in turn is a modified version of the function \code{alldist} from the
-  \code{npmlreg} package.
+  \pkg{npmlreg} package.
 
   The nonparametric maximum likelihood (NPML) approach was introduced in Aitkin (1996)
   as a tool to fit overdispersed generalized linear models. The idea is to approximate
@@ -70,13 +70,13 @@ pattnpml.fit(formula,
 
 }
 \value{
-The function alldist produces an object of class \code{pattNPML}
+The function produces an object of class \code{pattNPML}
 The object contains the following 29 components:
 
   \item{coefficients}{a named vector of coefficients (including the mass points).
     In case of Gaussian quadrature, the coefficient given at \code{z}
     corresponds to the standard deviation of the mixing distribution. }
-  \item{residuals}{the difference between the true response and the emprical Bayes predictions.}
+  \item{residuals}{the difference between the true response and the empirical Bayes predictions.}
   \item{fitted.values}{the empirical Bayes predictions (Aitkin, 1996b) on the scale of the responses.}
   \item{family}{the `family' object used.}
   \item{linear.predictors}{the extended linear predictors \eqn{\hat{\eta}_{ik}}{eta_ik}. }
@@ -114,7 +114,7 @@ The object contains the following 29 components:
   \item{Misc}{contains additional information relevant for the summary and plot functions,
    in particular the disparity trend and the EM trajectories. }
 
-For further details see the help file for function \code{alldist} in package \code{npmlreg}.
+For further details see the help file for function \code{alldist} in package \pkg{npmlreg}.
 }
 
 
@@ -165,7 +165,7 @@ data(euro55.2.des)
 model2cl <- pattnpml.fit(formula = y ~ -1 + SEX:AGE4 + (SEX + AGE4):
                (TV + RAD + NEWSP + SCIMAG + WWW + EDINST),
                random = ~ TV + RAD + NEWSP + SCIMAG + WWW + EDINST,
-               k = 2, design = euro55.2.des, pr.it = T)
+               k = 2, design = euro55.2.des, pr.it = TRUE)
 summary(model2cl)
 }
 }
