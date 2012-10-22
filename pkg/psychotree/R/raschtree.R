@@ -130,7 +130,7 @@ node_raschplot <- function(mobobj, id = TRUE, difficulty = TRUE,
     col <- rep(col, length.out = ncf)
     cex <- rep(cex, length.out = ncf)
     pch2 <- rep(pch2, length.out = ncf)
-    col2 <- rep(col2, length.out = ncf)
+    if(!is.null(col2)) col2 <- rep(col2, length.out = ncf)
   
     
     if(index) {
