@@ -290,8 +290,7 @@ worth(my_first_raschtree, node = 4)
 
 where the parameters sum to zero (the call is termed \code{worth}, because that is the name of the call extracting the worth parameters from Bradley-Terry-trees generated with the \code{bttree} function, that also sum to zero). 
 
-Here the item parameters have been displayed only for the subjects in node number 4 (representing female students who access the online magazine up to once
-per week and are up to 21~years of age) to save space. The item parameters for all groups can be displayed by omitting the \code{node} argument.
+Here the item parameters have been displayed only for the subjects in node number 4 (representing female students who access the online magazine more than once per week) to save space. The item parameters for all groups can be displayed by omitting the \code{node} argument.
 
 
 \section{Interpretation}
