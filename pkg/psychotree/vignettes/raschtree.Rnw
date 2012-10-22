@@ -36,7 +36,7 @@
 \title{Using the \code{raschtree} function for detecting differential item functioning in the Rasch model}
 \Plaintitle{Using the raschtree function for detecting differential item functioning in the Rasch model}
 \Shorttitle{Using \texttt{raschtree} for detecting DIF in the Rasch model}
-\author{Carolin Strobl\\Ludwig-Maximilians-\\Universit\"at M\"unchen
+\author{Carolin Strobl\\Universit\"at Z\"urich
 \And Julia Kopf\\Ludwig-Maximilians-\\Universit\"at M\"unchen
 \And Achim Zeileis\\Universit\"at Innsbruck}
 \Plainauthor{Carolin Strobl, Julia Kopf, Achim Zeileis}
@@ -53,18 +53,27 @@ In this vignette, the practical usage of \code{raschtree} is illustrated.
 \Keywords{Item response theory, IRT, \rm, differential item functioning, DIF, structural change, multidimensionality}
 
 \Address{
-  Carolin Strobl, Julia Kopf\\
+  Carolin Strobl\\
+  Department of Psychology\\
+  Universit\"at Z\"urich\\
+  Binzm\"uhlestr.~14\\
+  8050 Z\"urich, Switzerland\\
+  E-mail: \email{Carolin.Strobl@psychologie.uzh.ch}\\
+  URL: \url{http://www.psychologie.uzh.ch/fachrichtungen/methoden.html}\\
+
+  Julia Kopf\\
   Department of Statistics\\
   Ludwig-Maximilians-Universit\"at M\"unchen\\
   Ludwigstra{\ss}e 33\\
-  DE-80539 M\"unchen, Germany\\
-  E-mail: \email{Carolin.Strobl@stat.uni-muenchen.de}, \email{Julia.Kopf@stat.uni-muenchen.de}\\
+  80539 M\"unchen, Germany\\
+  E-mail: \email{Julia.Kopf@stat.uni-muenchen.de}\\
 
   Achim Zeileis\\
   Department of Statistics\\
+  Faculty of Economics and Statistics\\
   Universit\"at Innsbruck\\
   Universit\"atsstr.~15\\
-  AT-6020 Innsbruck, Austria\\
+  6020 Innsbruck, Austria\\
   E-mail: \email{Achim.Zeileis@R-project.org}\\
 }
 

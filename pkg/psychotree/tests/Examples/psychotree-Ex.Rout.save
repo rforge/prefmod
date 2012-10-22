@@ -1,0 +1,377 @@
+
+R version 2.14.1 (2011-12-22)
+Copyright (C) 2011 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "psychotree"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('psychotree')
+Loading required package: psychotools
+Loading required package: party
+Loading required package: survival
+Loading required package: splines
+Loading required package: grid
+Loading required package: modeltools
+Loading required package: stats4
+Loading required package: coin
+Loading required package: mvtnorm
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: sandwich
+Loading required package: strucchange
+Loading required package: vcd
+Loading required package: MASS
+Loading required package: colorspace
+> 
+> assign(".oldSearch", search(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("CEMSChoice")
+> ### * CEMSChoice
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: CEMSChoice
+> ### Title: CEMS University Choice Data
+> ### Aliases: CEMSChoice
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> data("CEMSChoice", package = "psychotree")
+> summary(CEMSChoice$preference)
+                        >  =   < NA's
+London    : Paris     186 26  91    0
+London    : Milano    221 26  56    0
+Paris     : Milano    121 32  59   91
+London    : StGallen  208 22  73    0
+Paris     : StGallen  165 19 119    0
+Milano    : StGallen  135 28 140    0
+London    : Barcelona 217 19  67    0
+Paris     : Barcelona 157 37 109    0
+Milano    : Barcelona 104 67 132    0
+StGallen  : Barcelona 144 25 134    0
+London    : Stockholm 250 19  34    0
+Paris     : Stockholm 203 30  70    0
+Milano    : Stockholm 157 46 100    0
+StGallen  : Stockholm 155 50  98    0
+Barcelona : Stockholm 172 41  90    0
+> covariates(CEMSChoice$preference)
+              specialization location
+London             economics    other
+Paris     management science    latin
+Milano             economics    latin
+StGallen             finance    other
+Barcelona management science    latin
+Stockholm            finance    other
+> 
+> 
+> 
+> cleanEx()
+> nameEx("DIFSim")
+> ### * DIFSim
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: DIFSim
+> ### Title: Artificial Data with Differential Item Functioning
+> ### Aliases: DIFSim
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> ## data
+> data("DIFSim", package = "psychotree")
+> 
+> ## summary of covariates
+> summary(DIFSim[,-1])
+      age           gender    motivation
+ Min.   :16.00   male  :109   1:23      
+ 1st Qu.:31.00   female: 91   2:41      
+ Median :45.00                3:45      
+ Mean   :45.84                4:35      
+ 3rd Qu.:60.00                5:41      
+ Max.   :74.00                6:15      
+> 
+> ## histogram of raw scores
+> hist(rowSums(DIFSim$resp), breaks = 0:19 + 0.5)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("EuropeanValuesStudy")
+> ### * EuropeanValuesStudy
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: EuropeanValuesStudy
+> ### Title: European Values Study
+> ### Aliases: EuropeanValuesStudy
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> ## data
+> data("EuropeanValuesStudy", package = "psychotree")
+> summary(EuropeanValuesStudy$paircomp)
+                         >    < NA's
+order     : decisions 2136 1293  155
+order     : prices    2178  949  457
+decisions : prices    1694 1335  555
+order     : freedom   2358  761  465
+decisions : freedom   1732  860  992
+prices    : freedom   1558 1066  960
+> 
+> ## Bradley-Terry tree resulting in similar results compared to
+> ## the (different) tree approach of Lee and Lee (2010)
+> evs <- na.omit(EuropeanValuesStudy)
+> bt <- bttree(paircomp ~ gender + eduage + birthyear + marital + employment + income + country2,
++   data = evs, alpha = 0.01)
+> plot(bt, abbreviate = 2)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("SPISA")
+> ### * SPISA
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: SPISA
+> ### Title: SPIEGEL Studentenpisa Data (Subsample)
+> ### Aliases: SPISA
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> ## data
+> data("SPISA", package = "psychotree")
+> 
+> ## summary of covariates
+> summary(SPISA[,-1])
+    gender         age          semester   elite            spon    
+ female:417   Min.   :18.0   2      :173   no :836   never    :303  
+ male  :658   1st Qu.:21.0   4      :123   yes:239   <1/month :127  
+              Median :23.0   6      :116             1-3/month:107  
+              Mean   :23.1   1      :105             1/week   : 79  
+              3rd Qu.:25.0   5      : 99             2-3/week : 73  
+              Max.   :40.0   3      : 98             4-5/week : 60  
+                             (Other):361             daily    :326  
+> 
+> ## histogram of raw scores
+> hist(rowSums(SPISA$spisa), breaks = 0:45 + 0.5)
+> 
+> ## Not run: 
+> ##D ## See the following vignette for a tree-based DIF analysis
+> ##D vignette("raschtree", package = "psychotree")
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("Topmodel2007")
+> ### * Topmodel2007
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: Topmodel2007
+> ### Title: Attractiveness of Germany's Next Topmodels 2007
+> ### Aliases: Topmodel2007
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> data("Topmodel2007", package = "psychotree")
+> summary(Topmodel2007$preference)
+                  >   <
+Barbara : Anni  121  71
+Barbara : Hana   98  94
+Anni    : Hana   75 117
+Barbara : Fiona 101  91
+Anni    : Fiona  81 111
+Hana    : Fiona 113  79
+Barbara : Mandy 130  62
+Anni    : Mandy 114  78
+Hana    : Mandy 130  62
+Fiona   : Mandy 131  61
+Barbara : Anja  123  69
+Anni    : Anja  112  80
+Hana    : Anja  130  62
+Fiona   : Anja  119  73
+Mandy   : Anja   92 100
+> xtabs(~ gender + I(age < 30), data = Topmodel2007)
+        I(age < 30)
+gender   FALSE TRUE
+  male      48   48
+  female    48   48
+> 
+> 
+> 
+> cleanEx()
+> nameEx("bttree")
+> ### * bttree
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: bttree
+> ### Title: Bradley-Terry Tree Models
+> ### Aliases: bttree plot.bttree print.bttree summary.bttree sctest.bttree
+> ###   deviance.bttree logLik.bttree coef.bttree worth.bttree weights.bttree
+> ### Keywords: tree
+> 
+> ### ** Examples
+> 
+> ## package
+> library("psychotree")
+> 
+> ## Germany's Next Topmodel 2007 data
+> data("Topmodel2007", package = "psychotree")
+> ## BT tree
+> tm_tree <- bttree(preference ~ ., data = Topmodel2007, minsplit = 5, ref = "Barbara")
+> plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
+> ## parameter instability tests in root node
+> sctest(tm_tree, node = 1)
+               gender          age         q1           q2        q3
+statistic 17.08798000 3.235655e+01 12.6319505 19.839221850 6.7585592
+p.value    0.02167964 7.915466e-04  0.1282764  0.006697916 0.7451515
+> ## worth parameters in terminal nodes
+> worth(tm_tree)
+    Barbara       Anni      Hana     Fiona      Mandy       Anja
+3 0.1889324 0.16993451 0.3850798 0.1141502 0.09232354 0.04957957
+5 0.1745924 0.12304683 0.2624556 0.2254343 0.10187663 0.11259425
+6 0.2659190 0.21277737 0.1609186 0.1945416 0.06274756 0.10309595
+7 0.2585021 0.05572946 0.1531208 0.1604636 0.16426634 0.20791763
+> 
+> ## CEMS university choice data
+> data("CEMSChoice", package = "psychotree")
+> summary(CEMSChoice$preference)
+                        >  =   < NA's
+London    : Paris     186 26  91    0
+London    : Milano    221 26  56    0
+Paris     : Milano    121 32  59   91
+London    : StGallen  208 22  73    0
+Paris     : StGallen  165 19 119    0
+Milano    : StGallen  135 28 140    0
+London    : Barcelona 217 19  67    0
+Paris     : Barcelona 157 37 109    0
+Milano    : Barcelona 104 67 132    0
+StGallen  : Barcelona 144 25 134    0
+London    : Stockholm 250 19  34    0
+Paris     : Stockholm 203 30  70    0
+Milano    : Stockholm 157 46 100    0
+StGallen  : Stockholm 155 50  98    0
+Barcelona : Stockholm 172 41  90    0
+> ## BT tree
+> cems_tree <- bttree(preference ~ french + spanish + italian + study + work + gender + intdegree,
++   data = CEMSChoice, minsplit = 5, ref = "London")
+> plot(cems_tree, abbreviate = 1, yscale = c(0, 0.5))
+> worth(cems_tree)
+     London      Paris     Milano   StGallen  Barcelona  Stockholm
+3 0.2083439 0.12682140 0.15936388 0.06905174 0.42506488 0.01135419
+4 0.4315060 0.08629580 0.34016535 0.05204565 0.06059623 0.02939091
+7 0.3325497 0.42214899 0.05477658 0.06144424 0.09252110 0.03655937
+8 0.3988834 0.22586032 0.08578186 0.13479789 0.09107518 0.06360135
+9 0.4103637 0.09623863 0.07697455 0.15767414 0.16423847 0.09451053
+> 
+> 
+> 
+> cleanEx()
+> nameEx("raschtree")
+> ### * raschtree
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: raschtree
+> ### Title: Rasch Tree Models
+> ### Aliases: raschtree plot.raschtree print.raschtree summary.raschtree
+> ###   sctest.raschtree deviance.raschtree logLik.raschtree coef.raschtree
+> ###   worth.raschtree weights.raschtree
+> ### Keywords: tree
+> 
+> ### ** Examples
+> 
+> ## artificial data
+> data("DIFSim", package = "psychotree")
+> 
+> ## fit Rasch tree model
+> rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
+> plot(rt)
+> 
+> ## extract item parameters
+> coef(rt)
+     resp.2    resp.3     resp.4     resp.5    resp.6     resp.7     resp.8
+3 1.3280450 3.6397103 -0.1434890 -0.7130521 -1.650355 -0.5697469 -0.2857554
+4 0.6718556 0.9678223  0.8167532  0.1959073 -1.233368 -1.0810676 -0.1297977
+5 0.1705701 2.3845895  0.1705701 -0.8671794 -1.686112 -1.0882154 -0.3826248
+     resp.9    resp.10    resp.11   resp.12   resp.13       resp.14    resp.15
+3 -2.244113 -1.0063733 -0.2857554 -2.244113 -1.478664 -2.485475e+00 -1.6503553
+4 -1.477176  0.1303181 -1.0073461 -1.393525 -1.233368  5.317888e-01  0.9678223
+5 -1.818344  0.2288027  0.2878535 -2.178575 -1.559085 -2.031322e-05  0.5988655
+    resp.16  resp.17       resp.18   resp.19       resp.20
+3 1.5474253 1.547425 -0.5697469428 -1.006373  1.064193e-05
+4 1.2956577 2.020217 -0.0000180488 -1.007346 -1.946859e-01
+5 0.3478131 1.274854 -0.3826248022 -1.032328 -7.586527e-01
+> worth(rt)
+      resp.1    resp.2   resp.3    resp.4     resp.5    resp.6     resp.7
+3 0.41353761 1.7415826 4.053248 0.2700486 -0.2995145 -1.236818 -0.1562093
+4 0.05797778 0.7298334 1.025800 0.8747310  0.2538850 -1.175390 -1.0230898
+5 0.31449218 0.4850623 2.699082 0.4850623 -0.5526872 -1.371620 -0.7737232
+       resp.8    resp.9    resp.10    resp.11   resp.12   resp.13    resp.14
+3  0.12778223 -1.830576 -0.5928357  0.1277822 -1.830576 -1.065126 -2.0719376
+4 -0.07181989 -1.419198  0.1882959 -0.9493683 -1.335547 -1.175390  0.5897666
+5 -0.06813262 -1.503852  0.5432948  0.6023457 -1.864083 -1.244593  0.3144719
+     resp.15   resp.16  resp.17     resp.18    resp.19    resp.20
+3 -1.2368177 1.9609629 1.960963 -0.15620934 -0.5928357  0.4135482
+4  1.0258001 1.3536354 2.078195  0.05795974 -0.9493683 -0.1367081
+5  0.9133577 0.6623052 1.589346 -0.06813262 -0.7178360 -0.4441605
+> 
+> ## inspect parameter stability tests in all splitting nodes
+> sctest(rt, node = 1)
+                 age      gender motivation
+statistic 43.1090020 41.48637536 82.0382545
+p.value    0.1103282  0.00623408  0.9947188
+> sctest(rt, node = 2)
+                   age gender motivation
+statistic 6.125682e+01      0 86.2517031
+p.value   3.613946e-04     NA  0.9259659
+> 
+> ## highlight items 3 and 14 with DIF
+> ix <- rep(1, 20)
+> ix[c(3, 14)] <- 2
+> plot(rt, ylines = 2.5,  cex = c(0.4, 0.8)[ix], 
++   pch = c(19, 19)[ix], col = gray(c(0.5, 0))[ix])
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  52.271 0.392 53.4 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

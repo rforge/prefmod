@@ -3,7 +3,11 @@ Changes in Version 0.12-2
   o Adjusted vignette 'raschtree' according to the slightly 
     different results due to the new approximation 
     formulae for p values in the supLM test used in 
-    party::mob() (>=1.0.3).
+    party::mob() (>= 1.0.3).
+
+  o Improved the package's tests by adding reference output for
+    the examples and vignette for comparison checks.
+
 
 Changes in Version 0.12-1
 
