@@ -322,7 +322,7 @@ We are currently working on functionality for facilitating the interpretation of
 \dif\ with respect to which groups, and on generalizations of the method to, e.g., the partial credit model for items with more than two response categories. 
 
 \section*{Acknowledgements}
-Carolin Strobl is supported by grant STR1142/1-1 (``Methods to Account for Subject-Co\-vari\-ates
+The work of Carolin Strobl was supported by grant STR1142/1-1 (``Methods to Account for Subject-Co\-vari\-ates
 in IRT-Models'') from the German Research Foundation (Deutsche Forschungsgemeinschaft). The authors would like to thank Reinhold Hatzinger for important
 insights stimulated by conversations and the \proglang{R}~package \pkg{eRm} 
 \citep{MaiHat:2007,eRm:pkg}. 
