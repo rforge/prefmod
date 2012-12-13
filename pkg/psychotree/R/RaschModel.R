@@ -21,7 +21,8 @@ RaschModel <- function(gradtol = 1e-6, deriv = c("sum", "diff", "numeric"), hess
 
 ## methods needed for mob()
 reweight.RaschModel <- function(object, weights, ...) {
-     fit <- RaschModel(gradtol = object$gradtol)@fit
+     deriv <- if(is.null(object$deriv)) "sum" else object$deriv
+     fit <- RaschModel(gradtol = object$gradtol, deriv = deriv)@fit
      do.call("fit", c(list(object = object$ModelEnv, weights = weights), object$addargs))
 }
 
