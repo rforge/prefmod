@@ -49,6 +49,16 @@ S3method("summary", "bttree")
 S3method("weights", "bttree")
 S3method("worth", "bttree")
 
+## methods for mpttree objects
+S3method("coef", "mpttree")
+S3method("deviance", "mpttree")
+S3method("logLik", "mpttree")
+S3method("plot", "mpttree")
+S3method("print", "mpttree")
+S3method("sctest", "mpttree")
+S3method("summary", "mpttree")
+S3method("weights", "mpttree")
+
 ## methods for RaschModel objects
 S3method("bread", "RaschModel")
 S3method("estfun", "RaschModel")
