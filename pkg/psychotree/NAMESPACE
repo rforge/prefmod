@@ -23,9 +23,9 @@ export(
   "node_btplot",
 
   ## MPT tree tools
-  # "bttree",
-  "mptModel"
-  # "node_btplot"
+  "bttree",
+  "mptModel",
+  "node_btplot"
 )
 
 ## methods for raschtree objects

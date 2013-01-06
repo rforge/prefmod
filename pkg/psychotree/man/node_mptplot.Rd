@@ -42,6 +42,6 @@ node_mptplot(mobobj, id = TRUE,
   \code{"mob"} objects.
 }
 
-\seealso{\code{\link{mptree}}}
+\seealso{\code{\link{mpttree}}}
 
 \keyword{hplot}
