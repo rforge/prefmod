@@ -54,7 +54,6 @@ mpttree(formula, data, treeid = NULL, na.action = na.pass, minsplit = 5,
 % \references{
 %   Strobl, C., Kopf, J., and Zeileis, A. (2010). A New Method for Detecting
 %   Differential Item Functioning in the Rasch Model. Technical Report 92.
-%   Department of Statistics, Ludwig-Maximilians-Universität München.
 %   \url{http://epub.ub.uni-muenchen.de/11915/}
 % }
 
