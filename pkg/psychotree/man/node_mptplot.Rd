@@ -1,5 +1,5 @@
-\name{node_mptblot}
-\alias{node_mptblot}
+\name{node_mptplot}
+\alias{node_mptplot}
 
 \title{Panel-Generating Function for Visualizing MPT Tree Models}
 
@@ -9,7 +9,7 @@
 }
 
 \usage{
-node_mptblot(mobobj, id = TRUE,
+node_mptplot(mobobj, id = TRUE,
   names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
   col = "black", linecol = "lightgray", cex = 0.5, pch = 19,
   xscale = NULL, yscale = NULL, ylines = 1.5)
@@ -32,7 +32,7 @@ node_mptblot(mobobj, id = TRUE,
 }
 
 \details{
-  The panel-generating function \code{node_mptblot} is called by the \code{plot}
+  The panel-generating function \code{node_mptplot} is called by the \code{plot}
   method for \code{"mpttree"} objects and does not have to be called by the
   user directly.
 }
