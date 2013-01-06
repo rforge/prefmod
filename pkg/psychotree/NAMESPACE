@@ -20,7 +20,12 @@ export(
   ## Bradley-Terry tree tools
   "bttree",
   "btReg",
-  "node_btplot"
+  "node_btplot",
+
+  ## MPT tree tools
+  # "bttree",
+  "mptModel"
+  # "node_btplot"
 )
 
 ## methods for raschtree objects
@@ -53,3 +58,8 @@ S3method("reweight", "RaschModel")
 S3method("bread", "btReg")
 S3method("estfun", "btReg")
 S3method("reweight", "btReg")
+
+## methods for mptModel objects
+S3method("bread", "mptModel")
+S3method("estfun", "mptModel")
+S3method("reweight", "mptModel")
