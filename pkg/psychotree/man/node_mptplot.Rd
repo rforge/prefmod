@@ -17,11 +17,11 @@ node_mptplot(mobobj, id = TRUE,
 }
 
 \arguments{
-  \item{mobobj}{an object of class \code{"mob"} based on Bradley-Terry models
-    fitted by \code{\link{btReg}}.}
+  \item{mobobj}{an object of class \code{"mob"} based on MPT models
+    fitted by \code{\link{mptModel}}.}
   \item{id}{logical. Should the node ID be displayed?}
-  \item{names}{logical. Should the names for the objects be displayed?}
-  \item{abbreviate}{logical or numeric. Should object names be abbreviated?
+  \item{names}{logical. Should the names for the parameters be displayed?}
+  \item{abbreviate}{logical or numeric. Should parameter names be abbreviated?
     If numeric this controls the length of the abbreviation.}
   \item{index}{logical. Should different indexes for different stimuli be used?}
   \item{ref}{logical. Should a horizontal line for the reference level be drawn?}
