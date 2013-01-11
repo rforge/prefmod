@@ -66,27 +66,30 @@ mpttree(formula, data, treeid = NULL, na.action = na.pass, minsplit = 5,
 \seealso{\code{\link[party]{mob}}, \code{\link{mptModel}}, \code{\link{bttree}}}
 
 \examples{
-## TODO
-# ## artificial data
-# data("DIFSim", package = "psychotree")
-# 
-# ## fit Rasch tree model
-# rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
-# plot(rt)
-# 
-# ## extract item parameters
-# coef(rt)
-# worth(rt)
-# 
-# ## inspect parameter stability tests in all splitting nodes
-# sctest(rt, node = 1)
-# sctest(rt, node = 2)
-# 
-# ## highlight items 3 and 14 with DIF
-# ix <- rep(1, 20)
-# ix[c(3, 14)] <- 2
-# plot(rt, ylines = 2.5,  cex = c(0.4, 0.8)[ix], 
-#   pch = c(19, 19)[ix], col = gray(c(0.5, 0))[ix])
+## source monitoring performance for different sources
+data("SourceMonitoring", package = "psychotree")
+
+## MPT tree
+sm_tree <- mpttree(cbind(aa, ab, an, ba, bb, bn, na, nb, nn) ~
+  list(
+    D1*d + D1*(1 - d)*g + (1 - D1)*b*g,
+    D1*(1 - d)*(1 - g) + (1 - D1)*b*(1 - g),
+    (1 - D1)*(1 - b),
+    D2*(1 - d)*g + (1 - D2)*b*g,
+    D2*d + D2*(1 - d)*(1 - g) + (1 - D2)*b*(1 - g),
+    (1 - D2)*(1 - b),
+    b*g,
+    b*(1 - g),
+    1 - b
+) | sources + age + gender, SourceMonitoring)
+plot(sm_tree)
+
+## extract parameter estimates
+coef(sm_tree)
+
+## inspect parameter stability tests in all splitting nodes
+sctest(sm_tree, node = 1)
+sctest(sm_tree, node = 2)
 }
 
 \keyword{tree}
