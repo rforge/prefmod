@@ -100,7 +100,7 @@ coef.mpttree <- function (object, node = NULL, ...)
 node_mptplot <- function(mobobj, id = TRUE,
   names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
   col = "black", linecol = "lightgray", cex = 0.5, pch = 19, xscale = NULL,
-  yscale = NULL, ylines = 1.5)
+  yscale = c(0, 1), ylines = 1.5)
 {
     ## extract parameter of interest
     node <- 1:max(party:::terminal_nodeIDs(mobobj@tree))
@@ -119,12 +119,9 @@ node_mptplot <- function(mobobj, id = TRUE,
   #     cf <- cf - cf[,reflab]
   #   }
 
-  #   ## reference
-  #   if(worth) {
-  #     cf_ref <- 1/ncol(cf)
-  #   } else {
-  #     cf_ref <- 0
-  #   }
+    ## reference
+    if(ref)
+      cf_ref <- 1/2
 
     ## labeling
     if(is.character(names)) {
@@ -178,7 +175,7 @@ node_mptplot <- function(mobobj, id = TRUE,
             name = paste("node_mptplot", node$nodeID, "plot", sep = ""))
         pushViewport(plot_vpi)
 
-        # grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = linecol), default.units = "native")
+        grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = linecol), default.units = "native")
         if(index) {
           grid.lines(x, cfi, gp = gpar(col = col, lty = 2), default.units = "native")
           grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")

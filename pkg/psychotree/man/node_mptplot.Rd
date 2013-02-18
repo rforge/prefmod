@@ -12,7 +12,7 @@
 node_mptplot(mobobj, id = TRUE,
   names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
   col = "black", linecol = "lightgray", cex = 0.5, pch = 19,
-  xscale = NULL, yscale = NULL, ylines = 1.5)
+  xscale = NULL, yscale = c(0, 1), ylines = 1.5)
 
 }
 
