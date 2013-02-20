@@ -51,11 +51,12 @@ mpttree(formula, data, treeid = NULL, na.action = na.pass, minsplit = 5,
 % employing artificial data is replicated below.
 }
 
-% \references{
-%   Strobl, C., Kopf, J., and Zeileis, A. (2010). A New Method for Detecting
-%   Differential Item Functioning in the Rasch Model. Technical Report 92.
-%   \url{http://epub.ub.uni-muenchen.de/11915/}
-% }
+\references{
+  Wickelmaier, F., and Zeileis, A. (2013). A first implementation of
+  recursive partitioning for multinomial processing tree models. Presented
+  at the Psychoco 2013 International Workshop on Psychometric Computing,
+  February 14-15, Zurich, Switzerland. 
+}
 
 \value{
   An object of S3 class \code{"mpttree"} which is a list containing only
