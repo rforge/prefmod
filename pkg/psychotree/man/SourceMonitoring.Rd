@@ -1,6 +1,5 @@
 \name{SourceMonitoring}
 \alias{SourceMonitoring}
-\encoding{latin1}
 
 \title{Performance in a Source-Monitoring Experiment}
 
@@ -9,7 +8,7 @@
   source-monitoring experiment with two sources.
 }
 
-\usage{data("Topmodel2007")}
+\usage{data("SourceMonitoring")}
 
 \format{
 A data frame containing 128 observations on 15 variables.
@@ -35,10 +34,17 @@ A data frame containing 128 observations on 15 variables.
   of A and B items along with new distractor items, N. Participants are
   required to classify each item as A, B, or N.
 
-  In an experiment at the Department of Psychology, University of Tübingen,
+  In an experiment at the Department of Psychology, University of Tuebingen,
   two source conditions were used in the study phase: In the first one,
   subjects had to read items either quietly (think) or aloud (say). In the
   second, they wrote them down (write) or read them aloud (say).
+}
+
+\source{
+  Wickelmaier, F., and Zeileis, A. (2013). A first implementation of
+  recursive partitioning for multinomial processing tree models. Presented
+  at the Psychoco 2013 International Workshop on Psychometric Computing,
+  February 14-15, Zurich, Switzerland. 
 }
 
 \references{
