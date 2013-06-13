@@ -4,6 +4,7 @@
 
 \alias{plot.bttree}
 \alias{print.bttree}
+\alias{predict.bttree}
 \alias{summary.bttree}
 \alias{sctest.bttree}
 
@@ -23,6 +24,9 @@
 bttree(formula, data, na.action = na.pass,
   type = "loglin", ref = NULL, undecided = NULL, position = NULL,
   minsplit = 10, \dots)
+
+\method{predict}{bttree}(object, newdata = NULL,
+  type = c("worth", "rank", "node"), \dots)
 }
 
 \arguments{
@@ -36,6 +40,12 @@ bttree(formula, data, na.action = na.pass,
   \item{type, ref, undecided, position}{arguments for the Bradley-Terry
     model passed on to \code{\link{btReg}}.}
   \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
+  \item{object}{fitted model object of class \code{"bttree"}.}
+  \item{newdata}{optionally, a data frame in which to look for variables with
+    which to predict. If omitted, the original observations are used.}
+  \item{type}{character indicating type of predictions: fitted \code{"worth"} for each
+    alternative, the corresponding \code{"rank"}, or the predicted \code{"node"}
+    number.}
 }
 
 \details{
