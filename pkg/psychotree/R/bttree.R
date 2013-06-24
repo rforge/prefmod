@@ -71,7 +71,7 @@ predict.bttree <- function(object, newdata = NULL,
 
   ## get worth
   w <- worth(object)
-  w <- w[as.character(nodes), ]
+  w <- w[as.character(nodes), , drop = FALSE]
   rownames(w) <- NULL
   if(type == "worth") return(w)
 
