@@ -64,17 +64,17 @@ predict.bttree <- function(object, newdata = NULL,
   type = c("worth", "rank", "node"), ...)
 {
   type <- match.arg(type)
-
+  
   ## get nodes
-  nodes <- predict(object$mob, newdata = newdata, type = "node", ...)
-  if(type == "node") return(nodes)
-
+  nodes <- predict(object$mob, newdata = newdata, type = "node", ...)
+  if(type == "node") return(nodes)
+  
   ## get worth
-  w <- worth(object)
+  w <- worth(object)
   w <- w[as.character(nodes), , drop = FALSE]
   rownames(w) <- NULL
-  if(type == "worth") return(w)
-
+  if(type == "worth") return(w)
+  
   ## get order
   o <- t(apply(-w, 1, rank))
   return(o)
