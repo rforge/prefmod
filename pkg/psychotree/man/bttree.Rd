@@ -37,15 +37,17 @@ bttree(formula, data, na.action = na.pass,
   \item{data}{an optional data frame containing the variables in the model.}
   \item{na.action}{A function which indicates what should happen when the data
     contain \code{NA}s, defaulting to \code{\link[stats]{na.pass}}.}
-  \item{type, ref, undecided, position}{arguments for the Bradley-Terry
+  \item{type}{character indicating the type of auxiliary model in \code{bttree} and the
+    type of predictions in the \code{predict} method, respectively. For the auxiliary
+    model see \code{\link{btReg}}. For the \code{predict} method, three options are
+    available: the fitted \code{"worth"} for each alternative, the corresponding
+    \code{"rank"}, or the predicted \code{"node"} number.}
+  \item{ref, undecided, position}{arguments for the Bradley-Terry
     model passed on to \code{\link{btReg}}.}
   \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
   \item{object}{fitted model object of class \code{"bttree"}.}
   \item{newdata}{optionally, a data frame in which to look for variables with
     which to predict. If omitted, the original observations are used.}
-  \item{type}{character indicating type of predictions: fitted \code{"worth"} for each
-    alternative, the corresponding \code{"rank"}, or the predicted \code{"node"}
-    number.}
 }
 
 \details{
