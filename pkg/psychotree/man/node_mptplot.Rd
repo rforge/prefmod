@@ -13,18 +13,21 @@ node_mptplot(mobobj, id = TRUE,
   names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
   col = "black", linecol = "lightgray", cex = 0.5, pch = 19,
   xscale = NULL, yscale = c(0, 1), ylines = 1.5)
-
 }
 
 \arguments{
   \item{mobobj}{an object of class \code{"mob"} based on MPT models
     fitted by \code{\link{mptModel}}.}
   \item{id}{logical. Should the node ID be displayed?}
-  \item{names}{logical. Should the names for the parameters be displayed?}
+  \item{names}{logical or character. Should the names for the parameters be
+    displayed? If character this sets the names.}
   \item{abbreviate}{logical or numeric. Should parameter names be abbreviated?
     If numeric this controls the length of the abbreviation.}
-  \item{index}{logical. Should different indexes for different stimuli be used?}
-  \item{ref}{logical. Should a horizontal line for the reference level be drawn?}
+  \item{index}{logical or character. Should different indexes for different
+    parameters be used? If character this controls the order of labels given
+    in \code{names}.}
+  \item{ref}{logical. Should a horizontal line for the reference level be
+    drawn?}
   \item{col, cex, pch}{graphical appearance of plotting symbols.}
   \item{linecol}{line color for reference line (if \code{ref}).}
   \item{xscale, yscale}{x and y axis limits.}

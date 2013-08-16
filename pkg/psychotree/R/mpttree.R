@@ -108,17 +108,6 @@ node_mptplot <- function(mobobj, id = TRUE,
       function(z) coef(z$model, all = FALSE, ref = TRUE)))
     rownames(cf) <- node
 
-  #   if(!worth) {
-  #     if(is.character(ref) | is.numeric(ref)) {
-  #       reflab <- ref
-  #       ref <- TRUE
-  #     } else {
-  #       reflab <- mobobj@tree$model$ref
-  #     }
-  #     if(is.character(reflab)) reflab <- match(reflab, mobobj@tree$model$labels)
-  #     cf <- cf - cf[,reflab]
-  #   }
-
     ## reference
     if(ref)
       cf_ref <- 1/2
@@ -127,6 +116,10 @@ node_mptplot <- function(mobobj, id = TRUE,
     if(is.character(names)) {
       colnames(cf) <- names
       names <- TRUE
+    }
+    if(is.character(index)) {
+      cf <- cf[, index]  # reorder labels
+      index <- TRUE
     }
 
     ## abbreviation
