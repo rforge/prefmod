@@ -54,7 +54,7 @@ print.raschtree <- function(x, ...) {
 coef.raschtree <- function (object, node = NULL, ...) 
 {
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   nam <- names(object@tree$model$coefficients)
   rval <- sapply(nodes(object, node), function(z) coef(z$model, ...)[nam])
   if (!is.null(dim(rval))) {
@@ -68,7 +68,7 @@ coef.raschtree <- function (object, node = NULL, ...)
 worth.raschtree <- function (object, node = NULL, ...) 
 {
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   rval <- sapply(nodes(object, node), function(z) worth(z$model, ...))
   if (!is.null(dim(rval))) {
     rval <- t(rval)
@@ -85,7 +85,7 @@ node_raschplot <- function(mobobj, id = TRUE, difficulty = TRUE,
   xaxis = TRUE, yaxis = TRUE, ylines = 1.5)
 {
     ## extract parameter of interest
-    node <- 1:max(party:::terminal_nodeIDs(mobobj@tree))
+    node <- 1:max(terminal_nodeIDs(mobobj@tree))
     cf <- t(sapply(nodes(mobobj, node), function(z) if(center) {
         worth(z$model, difficulty = difficulty)
       } else {

@@ -1,3 +1,11 @@
+## infrastructure (copied from party)
+terminal_nodeIDs <- function(node) {
+  if(node$terminal) return(node$nodeID)
+  ll <- terminal_nodeIDs(node$left)
+  rr <- terminal_nodeIDs(node$right)
+  return(c(ll, rr))
+}
+
 ## high-level convenience interface
 bttree <- function(formula, data, na.action = na.pass,
   type = "loglin", ref = NULL, undecided = NULL, position = NULL, minsplit = 10, ...)
@@ -39,7 +47,7 @@ print.bttree <- function(x, ...) {
 coef.bttree <- function (object, node = NULL, ...) 
 {
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   rval <- sapply(nodes(object, node), function(z) coef(z$model, ...))
   if (!is.null(dim(rval))) {
     rval <- t(rval)
@@ -51,7 +59,7 @@ coef.bttree <- function (object, node = NULL, ...)
 worth.bttree <- function (object, node = NULL, ...) 
 {
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   rval <- sapply(nodes(object, node), function(z) worth(z$model, ...))
   if (!is.null(dim(rval))) {
     rval <- t(rval)
@@ -87,7 +95,7 @@ node_btplot <- function(mobobj, id = TRUE,
   col = "black", linecol = "lightgray", cex = 0.5, pch = 19, xscale = NULL, yscale = NULL, ylines = 1.5)
 {
     ## extract parameter of interest
-    node <- 1:max(party:::terminal_nodeIDs(mobobj@tree))
+    node <- 1:max(terminal_nodeIDs(mobobj@tree))
     cf <- t(sapply(nodes(mobobj, node), function(z)
       if(worth) worth(z$model) else coef(z$model, all = FALSE, ref = TRUE)))
     rownames(cf) <- node

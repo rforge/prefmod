@@ -86,7 +86,7 @@ print.mpttree <- function(x, ...) {
 coef.mpttree <- function (object, node = NULL, ...)
 {
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   rval <- sapply(nodes(object, node), function(z) coef(z$model, ...))
   if (!is.null(dim(rval))) {
     rval <- t(rval)
@@ -103,7 +103,7 @@ node_mptplot <- function(mobobj, id = TRUE,
   yscale = c(0, 1), ylines = 1.5)
 {
     ## extract parameter of interest
-    node <- 1:max(party:::terminal_nodeIDs(mobobj@tree))
+    node <- 1:max(terminal_nodeIDs(mobobj@tree))
     cf <- t(sapply(nodes(mobobj, node),
       function(z) coef(z$model, all = FALSE, ref = TRUE)))
     rownames(cf) <- node
