@@ -10,6 +10,8 @@ import(
 
 importFrom("modeltools", "fit")
 importFrom("modeltools", "dpp")
+importFrom("modeltools", "ParseFormula")
+importFrom("modeltools", "ModelEnvFormula")
 
 export(
   ## Rasch tree tools
