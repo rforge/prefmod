@@ -5,7 +5,7 @@
 \SweaveOpts{engine = R, keep.source=TRUE, eps = FALSE, echo = TRUE}
 
 %\VignetteIndexEntry{Using the raschtree Function for Detecting Differential Item Functioning in the Rasch Model}
-%\VignetteDepends{psychotree}
+%\VignetteDepends{psychotree, colorspace}
 %\VignetteKeywords{item response theory, IRT, Rasch model, differential item functioning, DIF, structural change, multidimensionality}
 %\VignettePackage{psychotree}
 
@@ -271,11 +271,12 @@ plot(my_first_raschtree)
 \end{center}
 
 The plot function also accepts many options for standard plot functions, including coloring. Here, a set of ``rainbow''
-colors \citep[see][]{Zeietal:2009} is employed to indicate the blocks of nine items
+colors \citep[from package \pkg{colorspace}, see][]{Zeietal:2009} is employed to indicate the blocks of nine items
 from each of the five different topics covered in the quiz: politics, history, economy, culture and natural sciences:
 %
 \begin{center}
 <<plot_raschtree_col, eval=TRUE, eps=FALSE, fig=TRUE, height=6, width=14>>=
+library("colorspace")
 plot(my_first_raschtree, 
       col = rep(rainbow_hcl(5, c = 65, l = 65), each = 9))
 @
