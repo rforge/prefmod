@@ -82,12 +82,14 @@ A data frame containing 3584 observations on 10 variables.
 data("EuropeanValuesStudy", package = "psychotree")
 summary(EuropeanValuesStudy$paircomp)
 
+\dontrun{
 ## Bradley-Terry tree resulting in similar results compared to
 ## the (different) tree approach of Lee and Lee (2010)
 evs <- na.omit(EuropeanValuesStudy)
 bt <- bttree(paircomp ~ gender + eduage + birthyear + marital + employment + income + country2,
   data = evs, alpha = 0.01)
 plot(bt, abbreviate = 2)
+}
 }
 
 \keyword{datasets}
