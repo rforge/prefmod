@@ -1,3 +1,9 @@
+Changes in Version 0.12-3
+
+  o Improved Depends/Imports/Suggests declarations in
+    DESCRIPTION.
+
+
 Changes in Version 0.12-2
 
   o Adjusted vignette 'raschtree' according to the slightly 
