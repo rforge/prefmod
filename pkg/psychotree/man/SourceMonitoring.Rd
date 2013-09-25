@@ -38,6 +38,9 @@ A data frame containing 128 observations on 15 variables.
   two source conditions were used in the study phase: In the first one,
   subjects had to read items either quietly (think) or aloud (say). In the
   second, they wrote them down (write) or read them aloud (say).
+
+  The data were analyzed using the multinomial processing tree models of
+  source monitoring (Batchelder & Riefer, 1990).
 }
 
 \source{
