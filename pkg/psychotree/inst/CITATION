@@ -1,4 +1,4 @@
-citHeader("To cite psychotree in publications use:")
+citHeader("To cite psychotree in publications use to following references:")
 
 citEntry(entry = "Article",
   title        = "Accounting for Individual Differences in {B}radley-{T}erry Models by Means of Recursive Partitioning",
@@ -9,6 +9,7 @@ citEntry(entry = "Article",
   year         = "2011",
   volume       = "36",
   number       = "2",
+  pages        = "135-153",
   doi          = "10.3102/1076998609359791",
 
   textVersion  =
@@ -57,3 +58,25 @@ citEntry(entry = "Book",
 	
   header       = "If you use the SPIEGEL Studentenpisa data subsample, SPISA, please cite:"
 )
+
+citEntry(entry = "Article",
+  title        = "Cognitive psychometrics: {A}ssessing storage and retrieval deficits in special populations with multinomial processing tree models",
+  author       = personList(as.person("D. M. Riefer"), 
+		   as.person("B. R. Knapp"),
+		   as.person("W. H. Batchelder"),
+		   as.person("D. Bamber"),
+		   as.person("V. Manifold")),
+  journal      = "Psychological Assessing",
+  year         = "2002",
+  volume       = "14",
+  number       = "2",
+  pages        = "184-201",
+  
+  textVersion  = 
+  paste("Riefer, D.M., Knapp, B.R., Batchelder, W.H., Bamber, D., Manifold, V. (2002).", 
+	"Cognitive psychometrics: Assessing storage and retrieval deficits in special populations with multinomial processing tree models.",
+ 	"Psychological Assessment, 14(2), 184-201."),
+	
+  header       = "If you use the data on memory deficits in psychiatric patients, MemoryDeficits, please cite:"
+)
+
