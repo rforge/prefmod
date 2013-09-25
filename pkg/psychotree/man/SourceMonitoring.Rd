@@ -39,7 +39,7 @@ A data frame containing 128 observations on 15 variables.
   subjects had to read items either quietly (think) or aloud (say). In the
   second, they wrote them down (write) or read them aloud (say).
 
-  The data were analyzed using the multinomial processing tree models of
+  The data were analyzed using the multinomial processing tree model of
   source monitoring (Batchelder & Riefer, 1990).
 }
 
