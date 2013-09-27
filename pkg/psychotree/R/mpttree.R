@@ -7,7 +7,7 @@
 
 ## High-level convenience interface
 mpttree <- function(formula, data, treeid = NULL, na.action = na.pass,
-                    minsplit = 5, ...)
+                    minsplit = 5, maxit = 1000, ...)
 {
   ## Transform formula
   stopifnot(length(formula) > 2)
@@ -55,7 +55,8 @@ mpttree <- function(formula, data, treeid = NULL, na.action = na.pass,
   ## call mob()
   rval <- mob(ff, data = data,
               model = mptModel(treeid = treeid, mptform = mptform,
-                               mptstruc = list(a=aa, b=bb, c=cc)),
+                               mptstruc = list(a=aa, b=bb, c=cc),
+			       maxit = maxit),
     control = mob_control(minsplit = minsplit, ...), na.action = na.action)
 
   ## add class and return

@@ -1,5 +1,5 @@
 ## S4 StatModel object
-mptModel <- function(treeid = NULL, mptform = NULL, mptstruc = NULL) {
+mptModel <- function(treeid = NULL, mptform = NULL, mptstruc = NULL, maxit = 1000, ...) {
   new("StatModel",
     capabilities = new("StatModelCapabilities"),
     name = "Multinomial processing tree model",
@@ -11,7 +11,7 @@ mptModel <- function(treeid = NULL, mptform = NULL, mptstruc = NULL) {
 
       ## call btReg.fit()
       z <- mptModel.fit(y = y, weights = weights, # treeid = treeid,
-                        mptform = mptform, mptstruc = mptstruc)
+                        mptform = mptform, mptstruc = mptstruc, maxit = maxit)
       # z <- btReg.fit(y = y, weights = weights, type = type, ref = ref,
       #   undecided = undecided, position = position)
       z$ModelEnv <- object
