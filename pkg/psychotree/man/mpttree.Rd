@@ -18,8 +18,8 @@
 }
 
 \usage{
-mpttree(formula, data, treeid = NULL, na.action = na.pass, minsplit = 5,
-  \dots)
+mpttree(formula, data, na.action = na.pass, minsplit = 5, maxit = 1000,
+        \dots)
 }
 
 \arguments{
@@ -29,9 +29,10 @@ mpttree(formula, data, treeid = NULL, na.action = na.pass, minsplit = 5,
     a symbolic representaion of the probability of a response in category
     \code{X} and \code{x1} and \code{x2} are used as partitioning variables.}
   \item{data}{a data frame containing the variables in the model.}
-  \item{treeid}{currently not used.}
   \item{na.action}{currently not used.}
   \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
+  \item{maxit}{the maximum number of iterations, passed to
+    \code{\link[psychotools]{mptModel.fit}}.}
 }
 
 \details{

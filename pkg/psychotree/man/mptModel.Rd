@@ -11,19 +11,20 @@
 \description{
   \code{mptModel} is a wrapper function that creates a \code{"StatModel"}
   object with certain fitting parameters passed on to
-  \code{\link[psychotools]{mptModel.fit}} for fitting simple Rasch models.
+  \code{\link[psychotools]{mptModel.fit}} for fitting simple MPT models.
 }
 
 \usage{
-mptModel(treeid = NULL, mptform = NULL, mptstruc = NULL)
+mptModel(mptform = NULL, mptstruc = NULL, maxit = 1000)
 }
 
 \arguments{
-  \item{treeid}{vector of id's of processing trees. Currently not used.}
   \item{mptform}{formula representation of the MPT model structure, usually
     returned by \code{\link{mpttree}}.}
   \item{mptstruc}{list of structural constants, usually returned by
     \code{\link{mpttree}}.}
+  \item{maxit}{maximum number of iterations, passed to
+    \code{\link[psychotools]{mptModel.fit}}.}
 }
 
 \details{
