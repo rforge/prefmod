@@ -14,7 +14,7 @@
 A data frame containing 576 observations on 7 variables.
 \describe{
   \item{ID}{Participant ID.}
-  \item{group}{Factor with four levels specifying patient or control groups
+  \item{group}{Factor with four levels specifying patient or control group
     of participant.}
   \item{trial}{Trial number from 1 to 6.}
   \item{E1}{Number of pairs recalled adjacently.}
