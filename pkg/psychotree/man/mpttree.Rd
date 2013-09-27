@@ -94,7 +94,7 @@ sctest(sm_tree, node = 1)
 sctest(sm_tree, node = 2)
 
 ## storage and retrieval deficits in psychiatric patients
-data("MemoryDeficits", package="psychotree")
+data("MemoryDeficits", package = "psychotree")
 
 ## MPT tree
 sr_tree <- mpttree(cbind(E1, E2, E3, E4) ~
@@ -103,7 +103,7 @@ sr_tree <- mpttree(cbind(E1, E2, E3, E4) ~
     (1 - c)*u^2,
     2*(1 - c)*u*(1 - u),
     c*(1 - r) + (1 - c)*(1 - u)^2
-) | trial + group, MemoryDeficits, maxit=3000)
+) | trial + group, MemoryDeficits, maxit = 3000)
 
 ## extract parameter estimates
 coef(sr_tree)
