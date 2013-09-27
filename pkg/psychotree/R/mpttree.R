@@ -1,10 +1,3 @@
-# TODO:
-# - mpttree()
-#   * formula interface only here! DONE
-#   * a, b, c extraction DONE
-#   * treeid processing: necessary?
-
-
 ## High-level convenience interface
 mpttree <- function(formula, data, treeid = NULL, na.action = na.pass,
                     minsplit = 5, maxit = 1000, ...)
@@ -56,8 +49,9 @@ mpttree <- function(formula, data, treeid = NULL, na.action = na.pass,
   rval <- mob(ff, data = data,
               model = mptModel(treeid = treeid, mptform = mptform,
                                mptstruc = list(a=aa, b=bb, c=cc),
-			       maxit = maxit),
-    control = mob_control(minsplit = minsplit, ...), na.action = na.action)
+                               maxit = maxit),
+              control = mob_control(minsplit = minsplit, ...),
+              na.action = na.action)
 
   ## add class and return
   structure(list(mob = rval), class = "mpttree")
