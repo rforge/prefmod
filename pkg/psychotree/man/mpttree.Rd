@@ -84,7 +84,7 @@ sm_tree <- mpttree(cbind(aa, ab, an, ba, bb, bn, na, nb, nn) ~
     b*(1 - g),
     1 - b
 ) | sources + age + gender, SourceMonitoring)
-plot(sm_tree)
+plot(sm_tree, index=c("D1", "D2", "d", "b", "g"))
 
 ## extract parameter estimates
 coef(sm_tree)
