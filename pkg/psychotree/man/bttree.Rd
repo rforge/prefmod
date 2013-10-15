@@ -54,8 +54,8 @@ bttree(formula, data, na.action = na.pass,
   Bradley-Terry tree models are an application of model-based recursive partitioning
   (implemented in \code{\link[party]{mob}}) to Bradley-Terry models for
   paired comparison data (implemented in \code{\link{btReg}}).
-  For all details about the underlying theory and further explanations
-  of the illustrations from the example section can be found in
+  Details about the underlying theory and further explanations of the
+  illustrations in the example section can be found in
   Strobl, Wickelmaier, Zeileis (2011).
   
   Various methods are provided for \code{"bttree"} objects, most of them
