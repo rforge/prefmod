@@ -2,3 +2,6 @@ R/mptModel.R
 R/mpttree.R
 inst/bttree.R
 inst/raschtree.R
+man/mptModel.Rd
+man/mpttree.Rd
+man/node_mptplot.Rd
