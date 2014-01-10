@@ -34,7 +34,7 @@ node_effects(mobobj, names = NULL, type = c("mode", "median", "mean"),
   
   \item{type}{character, specifying which type of threshold parameters
     are to be used to mark the category regions per item in the plot
-    (see \code{\link[psychotools]{itempar.PCModel}} for details).}
+    (see \code{\link[psychotools]{plot.PCModel}} for details).}
   
   \item{ref}{a vector of labels or position indices of item parameters
     which should be used as restriction/for normalization. If
