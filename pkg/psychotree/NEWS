@@ -1,3 +1,9 @@
+Changes in Version 0.13-0
+
+  o New functionality for recursive partitioning of partial credit
+    and rating scale models.
+
+
 Changes in Version 0.12-3
 
   o Improved Depends/Imports/Suggests declarations in
