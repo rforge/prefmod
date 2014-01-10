@@ -1,6 +1,6 @@
 ### high-level convenience interface for creating pctrees
-pctree <- function (formula, data, minsplit = 30, diff = FALSE, nullcats = c("keep", "downcode", "ignore"),
-                    start = NULL, gradtol = 1e-6, iterlim = 100L, hessian = TRUE, ...)
+pctree <- function (formula, data, minsplit = 30, nullcats = c("keep", "downcode", "ignore"),
+                    gradtol = 1e-6, deriv = c("sum", "diff"), hessian = TRUE, iterlim = 100L, ...)
 {
   ## transform formula
   stopifnot(length(formula) > 2)
@@ -10,7 +10,7 @@ pctree <- function (formula, data, minsplit = 30, diff = FALSE, nullcats = c("ke
   ff[[3]][[3]] <- formula[[3]]
 
   ## formula/data/model pre-processing
-  pcmmod <- PCModel(diff = diff, nullcats = nullcats, start = start, gradtol = gradtol, iterlim = iterlim, hessian = hessian)
+  pcmmod <- PCModel(nullcats = nullcats, gradtol = gradtol, deriv = deriv, hessian = hessian, iterlim = iterlim)
   ff <- attr(modeltools:::ParseFormula(ff), "formula")
   ff$input[[3]] <- ff$input[[2]]
   ff$input[[2]] <- ff$response[[2]]
@@ -192,7 +192,7 @@ class(node_ccc) <- "grapcon_generator"
 ## terminal panel function for effect displays
 node_effects <- function(mobobj, names = NULL, type = c("mode", "median", "mean"),
                          ref = NULL, ylab = "Latent trait", ylim = NULL, off = 0.1, col_fun = gray.colors,
-                         uo_show = TRUE, uo_col = "red", uo_lty = 2, uo_lwd = 1.25, ...)
+                         uo_show = TRUE, uo_col = "red", uo_lty = 2, uo_lwd = 1.25)
 {
   ## check input
   stopifnot(!is.null(mobobj))
@@ -271,7 +271,7 @@ node_effects <- function(mobobj, names = NULL, type = c("mode", "median", "mean"
       
       ncat <- length(cf[[j]]) + 1
       grid.rect(x = rep.int(xi[j], ncat), y = c(ylim[1], cf[[j]]), width = rep.int(1, ncat), height = diff.default(c(ylim[1], cf[[j]], ylim[2])),
-                just = c("left", "bottom"), gp = gpar(fill = col_fun(ncat, ...)), default.units = "native",
+                just = c("left", "bottom"), gp = gpar(fill = col_fun(ncat)), default.units = "native",
                 name = paste(lab, "_item", j, "_rect", sep = ""))
 
     }

@@ -1,14 +1,14 @@
 ### S4 StatModel model
-PCModel <- function (diff = FALSE, nullcats = c("keep", "downcode", "ignore"),
-                     start = NULL, gradtol = 1e-6, iterlim = 100L, hessian = TRUE) {
+PCModel <- function (nullcats = c("keep", "downcode", "ignore"), gradtol = 1e-6,
+                     deriv = c("sum", "diff"), hessian = TRUE, iterlim = 100L) {
   new("StatModel",
       capabilities = new("StatModelCapabilities"),
       name = "PCM",
       dpp = ModelEnvFormula,
       fit = function (object, weights = NULL, ...){
         y <- object@get("response")
-        z <- PCModel.fit(y = y, weights = weights, diff = diff, nullcats = nullcats, start = start,
-                         gradtol = gradtol, iterlim = iterlim, hessian = hessian)
+        z <- PCModel.fit(y = y, weights = weights, nullcats = nullcats,
+                         gradtol = gradtol, deriv = deriv, hessian = hessian, iterlim = iterlim)
         z$ModelEnv <- object
         z$addargs <- list(...)
         z

@@ -19,25 +19,27 @@
 
 \usage{
 
-PCModel(diff = FALSE, nullcats = c("keep", "downcode", "ignore"),
-  start = NULL, gradtol = 1e-6, iterlim = 100L, hessian = TRUE)
+PCModel(nullcats = c("keep", "downcode", "ignore"),
+  gradtol = 1e-6, deriv = c("sum", "diff"),
+  hessian = TRUE, iterlim = 100L)
 
 }
 
 \arguments{
 
-  \item{diff}{logical. If \code{FALSE}, the first derivatives of the
-    elementary symmetric functions are calculated with the sum
-    algorithm. Otherwise (\code{TRUE}) the difference algorithm is used.}
-
   \item{nullcats}{character, specifying how items with null categories,
     i.e., categories not used, are treated (see details in \code{\link[psychotools]{PCModel.fit}}).}
+
+  \item{deriv}{character. If "sum" (the default), the first derivatives
+    of the elementary symmetric functions are calculated with the sum
+    algorithm. Otherwise ("diff") the difference algorithm (faster but
+    numerically unstable) is used.}
 
   \item{hessian}{logical. Should the Hessian of the final model be computed?
     If set to \code{FALSE}, the \code{vcov} method can only return \code{NA}s
     and consequently no standard errors or tests are available in the \code{summary}.}
 
-  \item{gradtol, start, iterlim, \dots}{further arguments passed to \code{\link[stats]{nlm}}.}
+  \item{gradtol, iterlim, \dots}{further arguments passed to \code{\link[stats]{nlm}}.}
 
 }
 

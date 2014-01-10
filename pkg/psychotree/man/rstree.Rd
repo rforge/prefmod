@@ -24,8 +24,8 @@
 
 \usage{
 
-rstree(formula, data, minsplit = 20, diff = FALSE,
-  start = NULL, gradtol = 1e-6, iterlim = 100L, hessian = TRUE, \dots)
+rstree(formula, data, minsplit = 20, gradtol = 1e-6,
+  deriv = c("sum", "diff"), hessian = TRUE, iterlim = 100L, \dots)
 
 }
 
@@ -42,16 +42,17 @@ rstree(formula, data, minsplit = 20, diff = FALSE,
 
   \item{data}{a data frame containing the variables in the model.}
 
-  \item{diff}{logical. If \code{FALSE}, the first derivatives of the
-    elementary symmetric functions are calculated with the sum
-    algorithm. Otherwise (\code{TRUE}) the difference algorithm is used.}
-  
-  \item{start, gradtol, iterlim}{arguments passed via \code{\link{RSModel}}
-    to \code{\link[stats]{nlm}}.}
+  \item{deriv}{character. If "sum" (the default), the first derivatives
+    of the elementary symmetric functions are calculated with the sum
+    algorithm. Otherwise ("diff") the difference algorithm (faster but
+    numerically unstable) is used.}
   
   \item{hessian}{logical. Should the Hessian of the final model be computed?
     If set to \code{FALSE}, the \code{vcov} method can only return \code{NA}s
     and consequently no standard errors or tests are available in the \code{summary}.}
+
+  \item{gradtol, iterlim}{arguments passed via \code{\link{RSModel}}
+    to \code{\link[stats]{nlm}}.}
 
   \item{minsplit, \dots}{arguments passed to
   \code{\link[party]{mob_control}}.}

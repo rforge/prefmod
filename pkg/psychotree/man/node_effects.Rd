@@ -18,7 +18,7 @@
 
 node_effects(mobobj, names = NULL, type = c("mode", "median", "mean"),
   ref = NULL, ylab = "Latent trait", ylim = NULL, off = 0.1, col_fun = gray.colors,
-  uo_show = TRUE, uo_col = "red", uo_lty = 2, uo_lwd = 1.25, ...)
+  uo_show = TRUE, uo_col = "red", uo_lty = 2, uo_lwd = 1.25)
 
 }
 
@@ -62,8 +62,6 @@ node_effects(mobobj, names = NULL, type = c("mode", "median", "mean"),
 
   \item{uo_lwd}{numeric, line width of indication lines (if
     \code{uo_show}).}
-
-  \item{...}{additional arguments passed to col_fun.}
 
 }
 

@@ -1,14 +1,14 @@
 ### S4 StatModel model
-RSModel <- function (diff = FALSE, gradtol = 1e-6,
-                     start = NULL, iterlim = 100L, hessian = TRUE) {
+RSModel <- function (gradtol = 1e-6, deriv = c("sum", "diff"),
+                     hessian = TRUE, iterlim = 100L) {
   new("StatModel",
       capabilities = new("StatModelCapabilities"),
       name = "RSM",
       dpp = ModelEnvFormula,
       fit = function (object, weights = NULL, ...){
         y <- object@get("response")
-        z <- RSModel.fit(y = y, weights = weights, diff = diff, start = start,
-                         gradtol = gradtol, iterlim = iterlim, hessian = hessian)
+        z <- RSModel.fit(y = y, weights = weights, gradtol = gradtol,
+                         deriv = deriv, hessian = hessian, iterlim = iterlim)
         z$ModelEnv <- object
         z$addargs <- list(...)
         z
