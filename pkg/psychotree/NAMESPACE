@@ -19,6 +19,17 @@ export(
   "RaschModel",
   "node_raschplot",
 
+  ## Rating-Scale tree tools
+  "rstree",
+  "RSModel",
+##  "node_rsmplot",
+
+  ## Partial-Credit (and Rating-Scale) tree tools
+  "pctree",
+  "PCModel",
+  "node_effects",
+##  "node_ccc",
+
   ## Bradley-Terry tree tools
   "bttree",
   "btReg",
@@ -32,13 +43,38 @@ export(
 
 ## methods for raschtree objects
 S3method("coef", "raschtree")
+## S3method("itempar", "raschtree")
 S3method("logLik", "raschtree")
 S3method("plot", "raschtree")
 S3method("print", "raschtree")
 S3method("sctest", "raschtree")
 S3method("summary", "raschtree")
+## S3method("threshold", "raschtree")
 S3method("weights", "raschtree")
 S3method("worth", "raschtree")
+
+## methods for rstree objects
+S3method("coef", "rstree")
+## S3method("itempar", "rstree")
+S3method("logLik", "rstree")
+S3method("plot", "rstree")
+S3method("print", "rstree")
+S3method("sctest", "rstree")
+S3method("summary", "rstree")
+## S3method("threshold", "rstree")
+S3method("weights", "rstree")
+
+## methods for pctree objects
+S3method("coef", "pctree")
+## S3method("itempar", "pctree")
+S3method("logLik", "pctree")
+S3method("plot", "pctree")
+## S3method("plotCCC", "pctree")
+S3method("print", "pctree")
+S3method("sctest", "pctree")
+S3method("summary", "pctree")
+## S3method("threshold", "pctree")
+S3method("weights", "pctree")
 
 ## methods for bttree objects
 S3method("coef", "bttree")
@@ -66,6 +102,14 @@ S3method("worth", "bttree")
 S3method("bread", "RaschModel")
 S3method("estfun", "RaschModel")
 S3method("reweight", "RaschModel")
+
+## methods for RSModel objects
+S3method("estfun", "RSModel")
+S3method("reweight", "RSModel")
+
+## methods for PCModel objects
+S3method("estfun", "PCModel")
+S3method("reweight", "PCModel")
 
 ## methods for btReg objects
 S3method("bread", "btReg")
