@@ -73,7 +73,8 @@ raschtree(formula, data, minsplit = 10, gradtol = 1e-6,
   exported from the party package).
 }
 
-\seealso{\code{\link[party]{mob}}, \code{\link{RaschModel}}, \code{\link{bttree}}}
+\seealso{\code{\link[party]{mob}}, \code{\link{RaschModel}},
+  \code{\link{rstree}}, \code{\link{pctree}}}
 
 \examples{
 ## artificial data
