@@ -202,15 +202,18 @@ node_effects <- function(mobobj, names = NULL, type = c("mode", "median", "mean"
   ## get number of terminal nodes, corresponding nodes and thresholds
   tnodes <- party:::terminal_nodeIDs(mobobj@tree)
   nodes_lst <- nodes(mobobj, tnodes)
-  delta_lst <- lapply(nodes_lst, function (node) threshold(node$model, type = type, ref = ref, simplify = FALSE))
+  fun <- if (inherits(nodes_lst[[1]]$model, "RaschModel")) psychotools:::threshold.RaschModel else if (inherits(nodes_lst[[1]]$model, "RSModel")) psychotools:::threshold.RSModel else psychotools:::threshold.PCModel
+  delta_lst <- lapply(nodes_lst, function (node) fun(node$model, type = type, ref = ref, simplify = FALSE))
 
   ## if requested and type = 'mode' check for unordered thresholds
   if (uo_show && type == "mode") {
     if (inherits(nodes_lst[[1]]$model, "RSModel")) {
-      ip_lst <- lapply(nodes_lst, function (node) itempar(node$model, ref = ref, vcov = FALSE, simplify = FALSE))
+      ip_lst <- lapply(nodes_lst, function (node) psychotools:::itempar.RSModel(node$model, ref = ref, vcov = FALSE, simplify = FALSE))
       ip_lst <- lapply(ip_lst, function (ip) lapply(as.list(ip[[1]]), function (beta) diff(0:length(ip[[2]]) * beta + c(0, ip[[2]]))))
+    } else if (inherits(nodes_lst[[1]]$model, "PCModel")) {
+      ip_lst <- lapply(nodes_lst, function (node) lapply(psychotools:::itempar.PCModel(node$model, ref = ref, vcov = FALSE, simplify = FALSE), function (j) diff.default(c(0, j))))
     } else {
-      ip_lst <- lapply(nodes_lst, function (node) lapply(itempar(node$model, ref = ref, vcov = FALSE, simplify = FALSE), function (j) diff.default(c(0, j))))
+      ip_lst <- lapply(nodes_lst, function (node) lapply(psychotools:::itempar.RaschModel(node$model, ref = ref, vcov = FALSE, simplify = FALSE), function (j) diff.default(c(0, j))))
     }
 
     names(ip_lst) <- tnodes
