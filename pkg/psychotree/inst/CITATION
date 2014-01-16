@@ -1,4 +1,4 @@
-citHeader("To cite psychotree in publications use to following references:")
+citHeader("To cite psychotree in publications use the references for the relevant functions/data sets:")
 
 citEntry(entry = "Article",
   title        = "Accounting for Individual Differences in {B}radley-{T}erry Models by Means of Recursive Partitioning",
@@ -21,26 +21,45 @@ citEntry(entry = "Article",
   header       = "If you use Bradley-Terry trees, bttree(), please cite:"
 )
 
-citEntry(entry = "TechReport",
+citEntry(entry = "Article",
   title        = "A New Method for Detecting Differential Item Functioning in the {R}asch Model",
   author       = personList(as.person("Carolin Strobl"), 
  		   as.person("Julia Kopf"),
 		   as.person("Achim Zeileis")),
-  institution  = "Department of Statistics, Ludwig-Maximilians-Universit\\\"at M\\\"unchen",
-  year         = "2010",
-  type         = "Technical Report",
-  number       = "92",
-  month        = "December",
-  url	       = "http://epub.ub.uni-muenchen.de/11915/",
+  journal      = "Psychometrika",
+  year         = "2014",
+  note         = "Forthcoming",
+  doi	       = "10.1007/s11336-013-9388-3",
   
   textVersion  = 
-  paste("Carolin Strobl, Julia Kopf, Achim Zeileis (2010).", 
+  paste("Carolin Strobl, Julia Kopf, Achim Zeileis (2014).", 
 	"A New Method for Detecting Differential Item Functioning in the Rasch Model.",
- 	"Technical Report 92.",
- 	"Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen.",
-	"URL http://epub.ub.uni-muenchen.de/11915/"),
+ 	"Psychometrika, forthcoming.",
+	"doi:10.1007/s11336-013-9388-3"),
 	
   header       = "If you use Rasch trees, raschtree(), please cite:"
+)
+
+citEntry(entry = "TechReport",
+  title        = "Detecting Differential Item and Step Functioning with Rating Scale and Partial Credit Trees",
+  author       = personList(person("Basil", "Abou El-Komboz"), 
+ 		   as.person("Achim Zeileis"),
+		   as.person("Carolin Strobl")),
+  institution  = "Department of Statistics, Ludwig-Maximilians-Universit\\\"at M\\\"unchen",
+  year         = "2014",
+  type         = "Technical Report",
+  number       = "XX",
+  month        = "January",
+  url	       = "http://epub.ub.uni-muenchen.de/YYYYY/",
+  
+  textVersion  = 
+  paste("Basil Abou El-Komboz, Achim Zeileis, Carolin Strobl (2014).", 
+	"Detecting Differential Item and Step Functioning with Rating Scale and Partial Credit Trees.",
+ 	"Technical Report XX.",
+ 	"Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen.",
+	"URL http://epub.ub.uni-muenchen.de/YYYYY/"),
+	
+  header       = "If you use rating scale or partial credit trees, rstree()/pctree(), please cite:"
 )
 
 citEntry(entry = "Book",
@@ -58,25 +77,3 @@ citEntry(entry = "Book",
 	
   header       = "If you use the SPIEGEL Studentenpisa data subsample, SPISA, please cite:"
 )
-
-citEntry(entry = "Article",
-  title        = "Cognitive psychometrics: {A}ssessing storage and retrieval deficits in special populations with multinomial processing tree models",
-  author       = personList(as.person("D. M. Riefer"), 
-		   as.person("B. R. Knapp"),
-		   as.person("W. H. Batchelder"),
-		   as.person("D. Bamber"),
-		   as.person("V. Manifold")),
-  journal      = "Psychological Assessing",
-  year         = "2002",
-  volume       = "14",
-  number       = "2",
-  pages        = "184-201",
-  
-  textVersion  = 
-  paste("Riefer, D.M., Knapp, B.R., Batchelder, W.H., Bamber, D., Manifold, V. (2002).", 
-	"Cognitive psychometrics: Assessing storage and retrieval deficits in special populations with multinomial processing tree models.",
- 	"Psychological Assessment, 14(2), 184-201."),
-	
-  header       = "If you use the data on memory deficits in psychiatric patients, MemoryDeficits, please cite:"
-)
-
