@@ -11,7 +11,7 @@ pctree <- function (formula, data, minsplit = 30, nullcats = c("keep", "downcode
 
   ## formula/data/model pre-processing
   pcmmod <- PCModel(nullcats = nullcats, gradtol = gradtol, deriv = deriv, hessian = hessian, iterlim = iterlim)
-  ff <- attr(modeltools:::ParseFormula(ff), "formula")
+  ff <- attr(ParseFormula(ff), "formula")
   ff$input[[3]] <- ff$input[[2]]
   ff$input[[2]] <- ff$response[[2]]
   ff <- dpp(pcmmod, as.formula(ff$input), other = list(part = as.formula(ff$blocks)), 

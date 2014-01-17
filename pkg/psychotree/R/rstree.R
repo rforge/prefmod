@@ -11,7 +11,7 @@ rstree <- function (formula, data, minsplit = 20, gradtol = 1e-6,
 
   ## formula/data/model pre-processing
   rsmod <- RSModel(gradtol = gradtol, deriv = deriv, hessian = hessian, iterlim = iterlim)
-  ff <- attr(modeltools:::ParseFormula(ff), "formula")
+  ff <- attr(ParseFormula(ff), "formula")
   ff$input[[3]] <- ff$input[[2]]
   ff$input[[2]] <- ff$response[[2]]
   ff <- dpp(rsmod, as.formula(ff$input), other=list(part=as.formula(ff$blocks)), 

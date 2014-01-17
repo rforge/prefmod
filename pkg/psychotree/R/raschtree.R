@@ -11,7 +11,7 @@ raschtree <- function(formula, data, minsplit = 10, gradtol = 1e-6,
 
   ## formula/data/model pre-processing
   raschmod <- RaschModel(gradtol = gradtol, deriv = deriv, hessian = hessian, iterlim = iterlim)
-  ff <- attr(modeltools::ParseFormula(ff), "formula")
+  ff <- attr(ParseFormula(ff), "formula")
   ff$input[[3]] <- ff$input[[2]]
   ff$input[[2]] <- ff$response[[2]]
   ff <- dpp(raschmod, as.formula(ff$input), other = list(part = as.formula(ff$blocks)), 
