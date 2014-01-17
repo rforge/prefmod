@@ -23,7 +23,7 @@
 
 \usage{
 raschtree(formula, data, minsplit = 10, gradtol = 1e-6,
-  deriv = c("sum", "diff", "numeric"), \dots)
+  deriv = c("sum", "diff", "numeric"), hessian = TRUE, iterlim = 100L, \dots)
 }
 
 \arguments{
@@ -36,8 +36,11 @@ raschtree(formula, data, minsplit = 10, gradtol = 1e-6,
     gradient and Hessian matrix? Analytical with sum algorithm (\code{"sum"}),
     analytical with difference algorithm (\code{"diff"}, faster but numerically unstable),
     or numerical. Passed to \code{\link{RaschModel}}.}
-  \item{gradtol}{numeric tolerance passed to \code{\link{RaschModel}}
-    and on to \code{\link[stats]{nlm}}.}
+  \item{hessian}{logical. Should the Hessian of the final model be computed?
+    If set to \code{FALSE}, the \code{vcov} method can only return \code{NA}s
+    and consequently no standard errors or tests are available in the \code{summary}.}
+  \item{gradtol, iterlim}{arguments passed via \code{\link{RaschModel}}
+    to \code{\link[stats]{nlm}}.}
   \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
 }
 

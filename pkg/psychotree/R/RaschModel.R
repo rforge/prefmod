@@ -1,5 +1,6 @@
 ## S4 StatModel object
-RaschModel <- function(gradtol = 1e-6, deriv = c("sum", "diff", "numeric"), hessian = TRUE) {
+RaschModel <- function(gradtol = 1e-6, deriv = c("sum", "diff", "numeric"),
+                       hessian = TRUE, iterlim = 100L) {
   new("StatModel",
     capabilities = new("StatModelCapabilities"),
     name = "Rasch model",
@@ -11,7 +12,7 @@ RaschModel <- function(gradtol = 1e-6, deriv = c("sum", "diff", "numeric"), hess
 
         ## call RaschModel.fit()
         z <- RaschModel.fit(y = y, weights = weights, gradtol = gradtol,
-	  deriv = deriv, hessian = hessian)
+	  deriv = deriv, hessian = hessian, iterlim = iterlim)
         z$ModelEnv <- object
         z$addargs <- list(...)
         z
