@@ -85,12 +85,12 @@ rstree(formula, data, minsplit = 20, gradtol = 1e-6,
 }
 
 
-% \references{
-%   Strobl, C., Kopf, J., and Zeileis, A. (2010). A New Method for Detecting
-%   Differential Item Functioning in the Rasch Model. Technical Report 92.
-%   Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen.
-%   \url{http://epub.ub.uni-muenchen.de/11915/}
-% }
+\references{
+  Abou El-Komboz, B., Zeileis, A., and Strobl, C. (2014). Detecting
+  Differential Item and Step Functioning with Rating Scale and Partial
+  Credit Trees. Technical Report 152. Department of Statistics, Ludwig-
+  Maximilians-Universitaet Muenchen. \url{http://epub.ub.uni-muenchen.de/17984/}
+}
 
 
 \value{

@@ -61,10 +61,9 @@ raschtree(formula, data, minsplit = 10, gradtol = 1e-6,
 }
 
 \references{
-  Strobl, C., Kopf, J., and Zeileis, A. (2010). A New Method for Detecting
-  Differential Item Functioning in the Rasch Model. Technical Report 92.
-  Department of Statistics, Ludwig-Maximilians-Universität München.
-  \url{http://epub.ub.uni-muenchen.de/11915/}
+  Strobl, C., Kopf, J., and Zeileis, A. (2010). Rasch Trees:
+  A New Method for Detecting Differential Item Functioning in the Rasch
+  Model. Psychometrika, forthcoming. doi:10.1007/s11336-013-9388-3
 }
 
 \value{

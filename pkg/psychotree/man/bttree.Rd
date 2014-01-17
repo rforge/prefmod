@@ -72,8 +72,8 @@ bttree(formula, data, na.action = na.pass,
 }
 
 \references{ 
-  Carolin Strobl, Florian Wickelmaier, Achim Zeileis (2011). 
-  Accounting for Individual Differences in Bradley-Terry Models by Means of Recursive Partitioning.
+  Strobl, C., Wickelmaier, F., and Zeileis, A. (2011). Accounting for
+  Individual Differences in Bradley-Terry Models by Means of Recursive Partitioning.
   Journal of Educational and Behavioral Statistics, 36(2), 135-153.
   doi:10.3102/1076998609359791
 }

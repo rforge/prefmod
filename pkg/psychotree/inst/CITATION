@@ -22,7 +22,7 @@ citEntry(entry = "Article",
 )
 
 citEntry(entry = "Article",
-  title        = "A New Method for Detecting Differential Item Functioning in the {R}asch Model",
+  title        = "Rasch Trees: A New Method for Detecting Differential Item Functioning in the {R}asch Model",
   author       = personList(as.person("Carolin Strobl"), 
  		   as.person("Julia Kopf"),
 		   as.person("Achim Zeileis")),
@@ -33,7 +33,7 @@ citEntry(entry = "Article",
   
   textVersion  = 
   paste("Carolin Strobl, Julia Kopf, Achim Zeileis (2014).", 
-	"A New Method for Detecting Differential Item Functioning in the Rasch Model.",
+	"Rasch Trees: A New Method for Detecting Differential Item Functioning in the Rasch Model.",
  	"Psychometrika, forthcoming.",
 	"doi:10.1007/s11336-013-9388-3"),
 	
@@ -48,16 +48,16 @@ citEntry(entry = "TechReport",
   institution  = "Department of Statistics, Ludwig-Maximilians-Universit\\\"at M\\\"unchen",
   year         = "2014",
   type         = "Technical Report",
-  number       = "XX",
+  number       = "152",
   month        = "January",
-  url	       = "http://epub.ub.uni-muenchen.de/YYYYY/",
+  url	       = "http://epub.ub.uni-muenchen.de/17984/",
   
   textVersion  = 
   paste("Basil Abou El-Komboz, Achim Zeileis, Carolin Strobl (2014).", 
 	"Detecting Differential Item and Step Functioning with Rating Scale and Partial Credit Trees.",
- 	"Technical Report XX.",
+ 	"Technical Report 152.",
  	"Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen.",
-	"URL http://epub.ub.uni-muenchen.de/YYYYY/"),
+	"URL http://epub.ub.uni-muenchen.de/17984/"),
 	
   header       = "If you use rating scale or partial credit trees, rstree()/pctree(), please cite:"
 )
