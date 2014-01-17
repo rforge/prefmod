@@ -69,7 +69,7 @@ coef.raschtree <- function (object, node = NULL, ...)
 itempar.raschtree <- function (object, node = NULL, ...) {
 
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   rval <- lapply(nodes(object, node), function(z) itempar(z$model, ...))
   names(rval) <- node
 
@@ -80,7 +80,7 @@ itempar.raschtree <- function (object, node = NULL, ...) {
 threshold.raschtree <- function (object, node = NULL, ...) {
 
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   rval <- lapply(nodes(object, node), function(z) threshold(z$model, ...))
   names(rval) <- node
 

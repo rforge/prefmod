@@ -53,7 +53,7 @@ plot.pctree <- function (x, terminal_panel = node_effects, tnex = 2, ...)
 coef.pctree <- function (object, node = NULL, ...) 
 {
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   nam <- names(object@tree$model$coefficients)
   rval <- sapply(nodes(object, node), function (z) coef(z$model, ...))
   if (!is.null(dim(rval))) {
@@ -67,7 +67,7 @@ coef.pctree <- function (object, node = NULL, ...)
 itempar.pctree <- function (object, node = NULL, ...) {
 
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   rval <- lapply(nodes(object, node), function(z) itempar(z$model, ...))
   names(rval) <- node
 
@@ -78,7 +78,7 @@ itempar.pctree <- function (object, node = NULL, ...) {
 threshold.pctree <- function (object, node = NULL, ...) {
 
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   rval <- lapply(nodes(object, node), function(z) threshold(z$model, ...))
   names(rval) <- node
 
@@ -94,7 +94,7 @@ node_ccc <- function(mobobj, names = NULL, ref = NULL, ylab = "Latent trait",
   stopifnot(!is.null(mobobj))
 
   ## get terminal nodes and thresholds
-  tnodes <- party:::terminal_nodeIDs(mobobj@tree)
+  tnodes <- terminal_nodeIDs(mobobj@tree)
   nodes_lst <- nodes(mobobj, tnodes)
   thresh_lst <- lapply(nodes_lst, function (node) threshold(node$model, ref = ref, type = "unmodified", simplify = FALSE))
   item_lst <- lapply(thresh_lst, length)
@@ -200,7 +200,7 @@ node_effects <- function(mobobj, names = NULL, type = c("mode", "median", "mean"
   type <- match.arg(type)
 
   ## get number of terminal nodes, corresponding nodes and thresholds
-  tnodes <- party:::terminal_nodeIDs(mobobj@tree)
+  tnodes <- terminal_nodeIDs(mobobj@tree)
   nodes_lst <- nodes(mobobj, tnodes)
   fun <- if (inherits(nodes_lst[[1]]$model, "RaschModel")) psychotools:::threshold.RaschModel else if (inherits(nodes_lst[[1]]$model, "RSModel")) psychotools:::threshold.RSModel else psychotools:::threshold.PCModel
   delta_lst <- lapply(nodes_lst, function (node) fun(node$model, type = type, ref = ref, simplify = FALSE))
@@ -314,7 +314,7 @@ plotCCC.pctree <- function (object, nodes = NULL, items = NULL, byrow = TRUE, su
                             col = NULL, n = 101, main = "Category Characteristic Curves",  xlab = "Latent Trait", ylab = "Probability", ...)
 {
   ## get available nodes if necessary, elsewise check input within nodes(...)
-  nodes <- if (is.null(nodes)) party:::terminal_nodeIDs(object$mob@tree) else nodes
+  nodes <- if (is.null(nodes)) terminal_nodeIDs(object$mob@tree) else nodes
   n_nodes <- length(nodes)
   nodes_lst <- nodes(object$mob, nodes)
   

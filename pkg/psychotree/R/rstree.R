@@ -53,7 +53,7 @@ plot.rstree <- function (x, terminal_panel = node_effects, tnex = 2, ...)
 coef.rstree <- function (object, node=NULL, ...) 
 {
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   nam <- names(object@tree$model$coefficients)
   rval <- sapply(nodes(object, node), function (z) coef(z$model, ...))
   if (!is.null(dim(rval))) {
@@ -67,7 +67,7 @@ coef.rstree <- function (object, node=NULL, ...)
 itempar.rstree <- function (object, node = NULL, ...) {
 
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   rval <- lapply(nodes(object, node), function(z) itempar(z$model, ...))
   names(rval) <- node
 
@@ -78,7 +78,7 @@ itempar.rstree <- function (object, node = NULL, ...) {
 threshold.rstree <- function (object, node = NULL, ...) {
 
   object <- object$mob
-  if(is.null(node)) node <- party:::terminal_nodeIDs(object@tree)
+  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
   rval <- lapply(nodes(object, node), function(z) threshold(z$model, ...))
   names(rval) <- node
 
@@ -98,7 +98,7 @@ node_rsmplot <- function(mobobj, names = NULL, ref = NULL,
   stopifnot(length(lty) == 2)
 
   ## setup item parameters from terminal nodes
-  tnodes <- party:::terminal_nodeIDs(mobobj@tree)
+  tnodes <- terminal_nodeIDs(mobobj@tree)
   node_lst <- nodes(mobobj, tnodes)
   cf_lst <- lapply(node_lst, function (node) itempar(node$model, ref = ref, simplify = FALSE, vcov = FALSE))
   ipar_lst <- lapply(cf_lst, "[[", 1)
