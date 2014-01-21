@@ -68,7 +68,7 @@ itempar.rstree <- function (object, node = NULL, ...) {
 
   object <- object$mob
   if(is.null(node)) node <- terminal_nodeIDs(object@tree)
-  rval <- lapply(nodes(object, node), function(z) itempar(z$model, ...))
+  rval <- lapply(nodes(object, node), function(z) itempar.RSModel(z$model, ...))
   names(rval) <- node
 
   return(rval)
@@ -79,7 +79,7 @@ threshold.rstree <- function (object, node = NULL, ...) {
 
   object <- object$mob
   if(is.null(node)) node <- terminal_nodeIDs(object@tree)
-  rval <- lapply(nodes(object, node), function(z) threshold(z$model, ...))
+  rval <- lapply(nodes(object, node), function(z) threshold.RSModel(z$model, ...))
   names(rval) <- node
 
   return(rval)
@@ -99,8 +99,9 @@ node_rsmplot <- function(mobobj, names = NULL, ref = NULL,
 
   ## setup item parameters from terminal nodes
   tnodes <- terminal_nodeIDs(mobobj@tree)
-  node_lst <- nodes(mobobj, tnodes)
-  cf_lst <- lapply(node_lst, function (node) itempar(node$model, ref = ref, simplify = FALSE, vcov = FALSE))
+  nodes_lst <- nodes(mobobj, tnodes)
+  fun <- if (inherits(nodes_lst[[1]]$model, "RaschModel")) threshold.RaschModel else if (inherits(nodes_lst[[1]]$model, "RSModel")) threshold.RSModel else threshold.PCModel
+  cf_lst <- lapply(nodes_lst, function (node) fun(node$model, ref = ref, simplify = FALSE, vcov = FALSE))
   ipar_lst <- lapply(cf_lst, "[[", 1)
   cpar_lst <- lapply(cf_lst, "[[", 2)
   names(ipar_lst) <- names(cpar_lst) <- tnodes
