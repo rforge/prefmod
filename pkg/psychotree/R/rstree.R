@@ -20,8 +20,8 @@ rstree <- function (formula, data, minsplit = 20, gradtol = 1e-6,
   ## data sanity checks
   y <- as.matrix(ff@get("response"))
   if(ncol(y) < 3) stop("need at least three items")
-  rmax <- sum(apply(y, 2, max))
-  if(any(apply(y, 1, function(x) (all(x == 0)) || (sum(x) == rmax))))
+  rmax <- sum(apply(y, 2, max, na.rm = TRUE))
+  if(any(apply(y, 1, function(x) sum(x, na.rm = TRUE)) %in% c(0, rmax)))
     stop("Please remove subjects who only scored zero or the highest category.")
 
   ## call mob()
