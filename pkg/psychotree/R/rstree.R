@@ -1,5 +1,5 @@
 ### high-level convenience interface for creating rstrees
-rstree <- function (formula, data, minsplit = 20, gradtol = 1e-6,
+rstree <- function (formula, data, minsplit = 20, reltol = 1e-10,
                     deriv = c("sum", "diff"), hessian = TRUE, iterlim = 100L, ...)
 {
   ## transform formula
@@ -10,7 +10,7 @@ rstree <- function (formula, data, minsplit = 20, gradtol = 1e-6,
   ff[[3]][[3]] <- formula[[3]]
 
   ## formula/data/model pre-processing
-  rsmod <- RSModel(gradtol = gradtol, deriv = deriv, hessian = hessian, iterlim = iterlim)
+  rsmod <- RSModel(reltol = reltol, deriv = deriv, hessian = hessian, iterlim = iterlim)
   ff <- attr(ParseFormula(ff), "formula")
   ff$input[[3]] <- ff$input[[2]]
   ff$input[[2]] <- ff$response[[2]]

@@ -22,7 +22,7 @@
 }
 
 \usage{
-raschtree(formula, data, minsplit = 10, gradtol = 1e-6,
+raschtree(formula, data, minsplit = 10, reltol = 1e-10,
   deriv = c("sum", "diff", "numeric"), hessian = TRUE, iterlim = 100L, \dots)
 }
 
@@ -39,8 +39,8 @@ raschtree(formula, data, minsplit = 10, gradtol = 1e-6,
   \item{hessian}{logical. Should the Hessian of the final model be computed?
     If set to \code{FALSE}, the \code{vcov} method can only return \code{NA}s
     and consequently no standard errors or tests are available in the \code{summary}.}
-  \item{gradtol, iterlim}{arguments passed via \code{\link{RaschModel}}
-    to \code{\link[stats]{nlm}}.}
+  \item{reltol, iterlim}{arguments passed via \code{\link{RaschModel}}
+    to \code{\link[stats]{optim}}.}
   \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
 }
 

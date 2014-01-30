@@ -1,6 +1,6 @@
 ### high-level convenience interface for creating pctrees
 pctree <- function (formula, data, minsplit = 30, nullcats = c("keep", "downcode", "ignore"),
-                    gradtol = 1e-6, deriv = c("sum", "diff"), hessian = TRUE, iterlim = 100L, ...)
+                    reltol = 1e-10, deriv = c("sum", "diff"), hessian = TRUE, iterlim = 100L, ...)
 {
   ## transform formula
   stopifnot(length(formula) > 2)
@@ -10,7 +10,7 @@ pctree <- function (formula, data, minsplit = 30, nullcats = c("keep", "downcode
   ff[[3]][[3]] <- formula[[3]]
 
   ## formula/data/model pre-processing
-  pcmmod <- PCModel(nullcats = nullcats, gradtol = gradtol, deriv = deriv, hessian = hessian, iterlim = iterlim)
+  pcmmod <- PCModel(nullcats = nullcats, reltol = reltol, deriv = deriv, hessian = hessian, iterlim = iterlim)
   ff <- attr(ParseFormula(ff), "formula")
   ff$input[[3]] <- ff$input[[2]]
   ff$input[[2]] <- ff$response[[2]]

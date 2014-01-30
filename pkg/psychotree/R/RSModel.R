@@ -1,5 +1,5 @@
 ### S4 StatModel model
-RSModel <- function (gradtol = 1e-6, deriv = c("sum", "diff"),
+RSModel <- function (reltol = 1e-10, deriv = c("sum", "diff"),
                      hessian = TRUE, iterlim = 100L) {
   new("StatModel",
       capabilities = new("StatModelCapabilities"),
@@ -7,7 +7,7 @@ RSModel <- function (gradtol = 1e-6, deriv = c("sum", "diff"),
       dpp = ModelEnvFormula,
       fit = function (object, weights = NULL, ...){
         y <- object@get("response")
-        z <- RSModel.fit(y = y, weights = weights, gradtol = gradtol,
+        z <- RSModel.fit(y = y, weights = weights, reltol = reltol,
                          deriv = deriv, hessian = hessian, iterlim = iterlim)
         z$ModelEnv <- object
         z$addargs <- list(...)
@@ -18,7 +18,7 @@ RSModel <- function (gradtol = 1e-6, deriv = c("sum", "diff"),
 
 ## methods needed for mob()
 reweight.RSModel <- function (object, weights, ...) {
-  fit <- RSModel(gradtol = object$gradtol)@fit
+  fit <- RSModel(reltol = object$reltol)@fit
   do.call("fit", c(list(object = object$ModelEnv, weights = weights), object$addargs))
 }
 

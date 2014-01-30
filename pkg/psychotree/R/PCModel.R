@@ -1,5 +1,5 @@
 ### S4 StatModel model
-PCModel <- function (nullcats = c("keep", "downcode", "ignore"), gradtol = 1e-6,
+PCModel <- function (nullcats = c("keep", "downcode", "ignore"), reltol = 1e-10,
                      deriv = c("sum", "diff"), hessian = TRUE, iterlim = 100L) {
   new("StatModel",
       capabilities = new("StatModelCapabilities"),
@@ -8,7 +8,7 @@ PCModel <- function (nullcats = c("keep", "downcode", "ignore"), gradtol = 1e-6,
       fit = function (object, weights = NULL, ...){
         y <- object@get("response")
         z <- PCModel.fit(y = y, weights = weights, nullcats = nullcats,
-                         gradtol = gradtol, deriv = deriv, hessian = hessian, iterlim = iterlim)
+                         reltol = reltol, deriv = deriv, hessian = hessian, iterlim = iterlim)
         z$ModelEnv <- object
         z$addargs <- list(...)
         z
@@ -18,7 +18,7 @@ PCModel <- function (nullcats = c("keep", "downcode", "ignore"), gradtol = 1e-6,
 
 ## methods needed for mob()
 reweight.PCModel <- function (object, weights, ...) {
-  fit <- PCModel(gradtol = object$gradtol)@fit
+  fit <- PCModel(reltol = object$reltol)@fit
   do.call("fit", c(list(object = object$ModelEnv, weights = weights), object$addargs))
 }
 

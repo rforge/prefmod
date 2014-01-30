@@ -20,7 +20,7 @@
 \usage{
 
 PCModel(nullcats = c("keep", "downcode", "ignore"),
-  gradtol = 1e-6, deriv = c("sum", "diff"),
+  reltol = 1e-10, deriv = c("sum", "diff"),
   hessian = TRUE, iterlim = 100L)
 
 }
@@ -39,7 +39,7 @@ PCModel(nullcats = c("keep", "downcode", "ignore"),
     If set to \code{FALSE}, the \code{vcov} method can only return \code{NA}s
     and consequently no standard errors or tests are available in the \code{summary}.}
 
-  \item{gradtol, iterlim, \dots}{further arguments passed to \code{\link[stats]{nlm}}.}
+  \item{reltol, iterlim, \dots}{further arguments passed to \code{\link[stats]{optim}}.}
 
 }
 

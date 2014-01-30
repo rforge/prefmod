@@ -24,7 +24,7 @@
 
 \usage{
 
-rstree(formula, data, minsplit = 20, gradtol = 1e-6,
+rstree(formula, data, minsplit = 20, reltol = 1e-10,
   deriv = c("sum", "diff"), hessian = TRUE, iterlim = 100L, \dots)
 
 }
@@ -51,8 +51,8 @@ rstree(formula, data, minsplit = 20, gradtol = 1e-6,
     If set to \code{FALSE}, the \code{vcov} method can only return \code{NA}s
     and consequently no standard errors or tests are available in the \code{summary}.}
 
-  \item{gradtol, iterlim}{arguments passed via \code{\link{RSModel}}
-    to \code{\link[stats]{nlm}}.}
+  \item{reltol, iterlim}{arguments passed via \code{\link{RSModel}}
+    to \code{\link[stats]{optim}}.}
 
   \item{minsplit, \dots}{arguments passed to
   \code{\link[party]{mob_control}}.}
