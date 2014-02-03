@@ -1,5 +1,4 @@
 \name{pctree}
-
 \alias{pctree}
 
 \alias{plot.pctree}
@@ -11,28 +10,19 @@
 \alias{coef.pctree}
 \alias{weights.pctree}
 
-
 \title{Partial Credit Tree Models}
 
-
 \description{
-
   Recursive partitioning based on partial credit models.
-
 }
 
-
 \usage{
-
 pctree(formula, data, minsplit = 30, nullcats = c("keep", "downcode",
   "ignore"), reltol = 1e-10,  deriv = c("sum", "diff"),
   hessian = TRUE, maxit = 100L, \dots)
-
 }
 
-
 \arguments{
-
   \item{formula}{A symbolic description of the model to be fit. This
     should be of type \code{y ~ x1 + x2} where \code{y} should be a
     matrix with items in the columns and observations in the rows and
@@ -57,12 +47,10 @@ pctree(formula, data, minsplit = 30, nullcats = c("keep", "downcode",
     to \code{\link[stats]{optim}}.}
   
   \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
-
 }
 
 
 \details{
-
   Partial credit tree models are an application of model-based recursive partitioning
   (implemented in \code{\link[party]{mob}}) to partial credit models
   (implemented in \code{\link{PCModel}}).
@@ -84,7 +72,6 @@ pctree(formula, data, minsplit = 30, nullcats = c("keep", "downcode",
   % employing artificial data is replicated below.
 }
 
-
 \references{
   Abou El-Komboz, B., Zeileis, A., and Strobl, C. (2014). Detecting
   Differential Item and Step Functioning with Rating Scale and Partial
@@ -92,32 +79,27 @@ pctree(formula, data, minsplit = 30, nullcats = c("keep", "downcode",
   Maximilians-Universitaet Muenchen. \url{http://epub.ub.uni-muenchen.de/17984/}
 }
 
-
 \value{
-
   An object of S3 class \code{"pctree"} which is a list containing only
   a single element of S4 class \code{"mob"} (because this is currently not
   exported from the party package).
-
 }
-
 
 \seealso{\code{\link[party]{mob}}, \code{\link{PCModel}},
   \code{\link{rstree}}, \code{\link{raschtree}}}
 
-
 \examples{
-
 ## verbal aggression data from package psychotools
 data("VerbalAggression", package = "psychotools")
 
-## exclude subjects who only scored in the highest or the lowest categories
-VerbalAggression <- subset(VerbalAggression,
-                            rowSums(resp[, 7:12]) > 0 & rowSums(resp[, 7:12]) < 12)
+## use response to the second other-to-blame situation (train)
+VerbalAggression$s2 <- VerbalAggression$resp[, 7:12]
 
-## fit partial credit tree model for the second other-to-blame situation
-pct <- pctree(resp[, 7:12, drop = FALSE] ~ anger + gender, data =
-VerbalAggression)
+## exclude subjects who only scored in the highest or the lowest categories
+VerbalAggression <- subset(VerbalAggression, rowSums(s2) > 0 & rowSums(s2) < 12)
+
+## fit partial credit tree model
+pct <- pctree(s2 ~ anger + gender, data = VerbalAggression)
 
 ## just print mob object
 print(pct)
@@ -133,8 +115,6 @@ coef(pct)
 
 ## inspect parameter stability tests in the splitting node
 sctest(pct, node = 1)
-
 }
-
 
 \keyword{tree}

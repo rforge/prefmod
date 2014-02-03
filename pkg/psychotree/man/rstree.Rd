@@ -1,5 +1,4 @@
 \name{rstree}
-
 \alias{rstree}
 
 \alias{plot.rstree}
@@ -11,27 +10,18 @@
 \alias{coef.rstree}
 \alias{weights.rstree}
 
-
 \title{Rating Scale Tree Models}
 
-
 \description{
-
   Recursive partitioning based on rating scale models.
-
 }
-
 
 \usage{
-
 rstree(formula, data, minsplit = 20, reltol = 1e-10,
   deriv = c("sum", "diff"), hessian = TRUE, maxit = 100L, \dots)
-
 }
 
-
 \arguments{
-
   \item{formula}{A symbolic description of the model to be fit. This
     should be of type \code{y ~ x1 + x2} where \code{y} should be a
     matrix with items in the columns and observations in the rows and
@@ -56,12 +46,10 @@ rstree(formula, data, minsplit = 20, reltol = 1e-10,
 
   \item{minsplit, \dots}{arguments passed to
   \code{\link[party]{mob_control}}.}
-
 }
 
 
 \details{
-
   Rating scale tree models are an application of model-based recursive partitioning
   (implemented in \code{\link[party]{mob}}) to rating scale models
   (implemented in \code{\link{RSModel}}).
@@ -84,7 +72,6 @@ rstree(formula, data, minsplit = 20, reltol = 1e-10,
   % employing artificial data is replicated below.
 }
 
-
 \references{
   Abou El-Komboz, B., Zeileis, A., and Strobl, C. (2014). Detecting
   Differential Item and Step Functioning with Rating Scale and Partial
@@ -92,32 +79,27 @@ rstree(formula, data, minsplit = 20, reltol = 1e-10,
   Maximilians-Universitaet Muenchen. \url{http://epub.ub.uni-muenchen.de/17984/}
 }
 
-
 \value{
-
   An object of S3 class \code{c("rstree", "pctree")} which is a list containing only
   a single element of S4 class \code{"mob"} (because this is currently not
   exported from the party package).
-
 }
-
 
 \seealso{\code{\link[party]{mob}}, \code{\link{RSModel}},
   \code{\link{pctree}}, \code{\link{raschtree}}}
 
-
 \examples{
-
 ## verbal aggression data from package psychotools
 data("VerbalAggression", package = "psychotools")
 
+## responses to the first other-to-blame situation (bus)
+VerbalAggression$s1 <- VerbalAggression$resp[, 1:6]
+
 ## exclude subjects who only scored in the highest or the lowest categories
-VerbalAggression <- subset(VerbalAggression,
-                             rowSums(resp[, 1:6]) > 0 & rowSums(resp[, 1:6]) < 12)
+VerbalAggression <- subset(VerbalAggression, rowSums(s1) > 0 & rowSums(s1) < 12)
 
 ## fit rating scale tree model for the first other-to-blame situation
-rst <- rstree(resp[, 1:6, drop = FALSE] ~ anger + gender, data =
-VerbalAggression)
+rst <- rstree(s1 ~ anger + gender, data = VerbalAggression)
 
 ## just print mob object
 print(rst)
@@ -134,8 +116,6 @@ coef(rst)
 ## inspect parameter stability tests in all splitting nodes
 sctest(rst, node = 1)
 sctest(rst, node = 2)
-
 }
-
 
 \keyword{tree}
