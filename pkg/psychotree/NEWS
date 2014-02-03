@@ -1,7 +1,9 @@
 Changes in Version 0.13-0
 
   o New functionality for recursive partitioning of partial credit
-    and rating scale models.
+    and rating scale models via functions pctree() and rstree(),
+    respectively. These require package "psychotools" >= 0.2-0
+    which provides the corresponding basic model fitting tools.
 
 
 Changes in Version 0.12-3

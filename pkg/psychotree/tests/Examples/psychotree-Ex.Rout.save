@@ -1,7 +1,6 @@
 
-R version 2.14.1 (2011-12-22)
-Copyright (C) 2011 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -20,30 +19,23 @@ Type 'q()' to quit R.
 > source(file.path(R.home("share"), "R", "examples-header.R"))
 > options(warn = 1)
 > library('psychotree')
-Loading required package: psychotools
 Loading required package: party
-Loading required package: survival
-Loading required package: splines
 Loading required package: grid
-Loading required package: modeltools
-Loading required package: stats4
-Loading required package: coin
-Loading required package: mvtnorm
 Loading required package: zoo
 
 Attaching package: 'zoo'
 
-The following object(s) are masked from 'package:base':
+The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
 Loading required package: strucchange
-Loading required package: vcd
-Loading required package: MASS
-Loading required package: colorspace
+Loading required package: modeltools
+Loading required package: stats4
+Loading required package: psychotools
 > 
-> assign(".oldSearch", search(), pos = 'CheckExEnv')
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 > cleanEx()
 > nameEx("CEMSChoice")
 > ### * CEMSChoice
@@ -141,12 +133,14 @@ order     : freedom   2358  761  465
 decisions : freedom   1732  860  992
 prices    : freedom   1558 1066  960
 > 
-> ## Bradley-Terry tree resulting in similar results compared to
-> ## the (different) tree approach of Lee and Lee (2010)
-> evs <- na.omit(EuropeanValuesStudy)
-> bt <- bttree(paircomp ~ gender + eduage + birthyear + marital + employment + income + country2,
-+   data = evs, alpha = 0.01)
-> plot(bt, abbreviate = 2)
+> ## Not run: 
+> ##D ## Bradley-Terry tree resulting in similar results compared to
+> ##D ## the (different) tree approach of Lee and Lee (2010)
+> ##D evs <- na.omit(EuropeanValuesStudy)
+> ##D bt <- bttree(paircomp ~ gender + eduage + birthyear + marital + employment + income + country2,
+> ##D   data = evs, alpha = 0.01)
+> ##D plot(bt, abbreviate = 2)
+> ## End(Not run)
 > 
 > 
 > 
@@ -234,8 +228,9 @@ gender   FALSE TRUE
 > 
 > ### Name: bttree
 > ### Title: Bradley-Terry Tree Models
-> ### Aliases: bttree plot.bttree print.bttree summary.bttree sctest.bttree
-> ###   deviance.bttree logLik.bttree coef.bttree worth.bttree weights.bttree
+> ### Aliases: bttree plot.bttree print.bttree predict.bttree summary.bttree
+> ###   sctest.bttree deviance.bttree logLik.bttree coef.bttree worth.bttree
+> ###   weights.bttree
 > ### Keywords: tree
 > 
 > ### ** Examples
@@ -295,6 +290,131 @@ Barcelona : Stockholm 172 41  90    0
 > 
 > 
 > cleanEx()
+> nameEx("pctree")
+> ### * pctree
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: pctree
+> ### Title: Partial Credit Tree Models
+> ### Aliases: pctree plot.pctree print.pctree summary.pctree sctest.pctree
+> ###   deviance.pctree logLik.pctree coef.pctree weights.pctree
+> ### Keywords: tree
+> 
+> ### ** Examples
+> 
+> ## verbal aggression data from package psychotools
+> data("VerbalAggression", package = "psychotools")
+> 
+> ## use response to the second other-to-blame situation (train)
+> VerbalAggression$s2 <- VerbalAggression$resp[, 7:12]
+> 
+> ## exclude subjects who only scored in the highest or the lowest categories
+> VerbalAggression <- subset(VerbalAggression, rowSums(s2) > 0 & rowSums(s2) < 12)
+> 
+> ## fit partial credit tree model
+> pct <- pctree(s2 ~ anger + gender, data = VerbalAggression)
+> 
+> ## just print mob object
+> print(pct)
+1) gender == {female}; criterion = 1, statistic = 43.544
+  2)*  weights = 220 
+Terminal node model
+PCM item category parameters:
+s2.S2WantCurse-C2   s2.S2DoCurse-C1   s2.S2DoCurse-C2 s2.S2WantScold-C1 
+            1.486             1.169             3.239             1.097 
+s2.S2WantScold-C2   s2.S2DoScold-C1   s2.S2DoScold-C2 s2.S2WantShout-C1 
+            2.903             2.006             4.791             1.618 
+s2.S2WantShout-C2   s2.S2DoShout-C1   s2.S2DoShout-C2 
+            3.768             3.198             6.705 
+
+1) gender == {male}
+  3)*  weights = 67 
+Terminal node model
+PCM item category parameters:
+s2.S2WantCurse-C2   s2.S2DoCurse-C1   s2.S2DoCurse-C2 s2.S2WantScold-C1 
+           0.5547           -0.2179           -0.1240            0.8065 
+s2.S2WantScold-C2   s2.S2DoScold-C1   s2.S2DoScold-C2 s2.S2WantShout-C1 
+           1.7020            0.2919            1.7719            1.5697 
+s2.S2WantShout-C2   s2.S2DoShout-C1   s2.S2DoShout-C2 
+           3.6675            2.1006            5.4388 
+
+> 
+> ## show summary for terminal panel nodes
+> summary(pct)
+$`2`
+
+Partial credit model
+
+Item category parameters:
+                  Estimate Std. Error z value Pr(>|z|)    
+s2.S2WantCurse-C2   1.4864     0.3034   4.900 9.58e-07 ***
+s2.S2DoCurse-C1     1.1691     0.2646   4.419 9.90e-06 ***
+s2.S2DoCurse-C2     3.2395     0.4781   6.776 1.23e-11 ***
+s2.S2WantScold-C1   1.0970     0.2664   4.118 3.82e-05 ***
+s2.S2WantScold-C2   2.9034     0.4733   6.135 8.54e-10 ***
+s2.S2DoScold-C1     2.0057     0.2698   7.435 1.04e-13 ***
+s2.S2DoScold-C2     4.7910     0.5076   9.439  < 2e-16 ***
+s2.S2WantShout-C1   1.6185     0.2680   6.039 1.55e-09 ***
+s2.S2WantShout-C2   3.7680     0.4860   7.753 8.97e-15 ***
+s2.S2DoShout-C1     3.1982     0.2962  10.799  < 2e-16 ***
+s2.S2DoShout-C2     6.7048     0.5753  11.655  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log-likelihood: -689.2 (df = 11) 
+Number of iterations in BFGS optimization: 17 
+
+
+$`3`
+
+Partial credit model
+
+Item category parameters:
+                  Estimate Std. Error z value Pr(>|z|)    
+s2.S2WantCurse-C2   0.5547     0.5479   1.012 0.311363    
+s2.S2DoCurse-C1    -0.2179     0.5066  -0.430 0.667088    
+s2.S2DoCurse-C2    -0.1240     0.7796  -0.159 0.873608    
+s2.S2WantScold-C1   0.8065     0.4637   1.739 0.081951 .  
+s2.S2WantScold-C2   1.7020     0.7893   2.156 0.031052 *  
+s2.S2DoScold-C1     0.2919     0.4527   0.645 0.519021    
+s2.S2DoScold-C2     1.7719     0.8002   2.214 0.026807 *  
+s2.S2WantShout-C1   1.5697     0.4651   3.375 0.000739 ***
+s2.S2WantShout-C2   3.6675     0.8782   4.176 2.96e-05 ***
+s2.S2DoShout-C1     2.1006     0.4855   4.327 1.51e-05 ***
+s2.S2DoShout-C2     5.4388     1.0376   5.242 1.59e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log-likelihood: -210.7 (df = 11) 
+Number of iterations in BFGS optimization: 18 
+
+
+> 
+> ## plot with default (and currently only) terminal panel function (node_effects)
+> plot(pct)
+> 
+> ## extract item and category parameters
+> coef(pct)
+  s2.S2WantCurse-C2 s2.S2DoCurse-C1 s2.S2DoCurse-C2 s2.S2WantScold-C1
+2         1.4864125       1.1691331       3.2394572         1.0970007
+3         0.5546748      -0.2179332      -0.1240234         0.8065186
+  s2.S2WantScold-C2 s2.S2DoScold-C1 s2.S2DoScold-C2 s2.S2WantShout-C1
+2          2.903416       2.0056831        4.790972          1.618454
+3          1.702041       0.2919044        1.771924          1.569742
+  s2.S2WantShout-C2 s2.S2DoShout-C1 s2.S2DoShout-C2
+2          3.768047        3.198196        6.704804
+3          3.667480        2.100605        5.438818
+> 
+> ## inspect parameter stability tests in the splitting node
+> sctest(pct, node = 1)
+              anger       gender
+statistic 16.233363 4.354433e+01
+p.value    0.955604 1.745895e-05
+> 
+> 
+> 
+> cleanEx()
 > nameEx("raschtree")
 > ### * raschtree
 > 
@@ -318,41 +438,41 @@ Barcelona : Stockholm 172 41  90    0
 > 
 > ## extract item parameters
 > coef(rt)
-     resp.2    resp.3     resp.4     resp.5    resp.6     resp.7     resp.8
-3 1.3280450 3.6397103 -0.1434890 -0.7130521 -1.650355 -0.5697469 -0.2857554
-4 0.6718556 0.9678223  0.8167532  0.1959073 -1.233368 -1.0810676 -0.1297977
-5 0.1705701 2.3845895  0.1705701 -0.8671794 -1.686112 -1.0882154 -0.3826248
+     resp.2    resp.3     resp.4     resp.5    resp.6    resp.7     resp.8
+3 1.3280416 3.6397106 -0.1434936 -0.7130513 -1.650363 -0.569757 -0.2857568
+4 0.6718733 0.9678199  0.8167709  0.1959556 -1.233363 -1.081086 -0.1297545
+5 0.1705976 2.3846344  0.1705976 -0.8671601 -1.686090 -1.088208 -0.3826143
      resp.9    resp.10    resp.11   resp.12   resp.13       resp.14    resp.15
-3 -2.244113 -1.0063733 -0.2857554 -2.244113 -1.478664 -2.485475e+00 -1.6503553
-4 -1.477176  0.1303181 -1.0073461 -1.393525 -1.233368  5.317888e-01  0.9678223
-5 -1.818344  0.2288027  0.2878535 -2.178575 -1.559085 -2.031322e-05  0.5988655
+3 -2.244121 -1.0063777 -0.2857568 -2.244121 -1.478676 -2.485482e+00 -1.6503629
+4 -1.477172  0.1303662 -1.0073090 -1.393512 -1.233363  5.317753e-01  0.9678199
+5 -1.818323  0.2288078  0.2878821 -2.178554 -1.559069  7.939549e-07  0.5988901
     resp.16  resp.17       resp.18   resp.19       resp.20
-3 1.5474253 1.547425 -0.5697469428 -1.006373  1.064193e-05
-4 1.2956577 2.020217 -0.0000180488 -1.007346 -1.946859e-01
-5 0.3478131 1.274854 -0.3826248022 -1.032328 -7.586527e-01
+3 1.5474221 1.547422 -5.697570e-01 -1.006378 -2.649220e-07
+4 1.2956655 2.020236  1.840607e-05 -1.007309 -1.946499e-01
+5 0.3478274 1.274875 -3.826143e-01 -1.032298 -7.586265e-01
 > worth(rt)
       resp.1    resp.2   resp.3    resp.4     resp.5    resp.6     resp.7
-3 0.41353761 1.7415826 4.053248 0.2700486 -0.2995145 -1.236818 -0.1562093
-4 0.05797778 0.7298334 1.025800 0.8747310  0.2538850 -1.175390 -1.0230898
-5 0.31449218 0.4850623 2.699082 0.4850623 -0.5526872 -1.371620 -0.7737232
+3 0.41354287 1.7415845 4.053253 0.2700493 -0.2995084 -1.236820 -0.1562142
+4 0.05796085 0.7298341 1.025781 0.8747317  0.2539165 -1.175402 -1.0231250
+5 0.31447222 0.4850698 2.699107 0.4850698 -0.5526879 -1.371617 -0.7737354
        resp.8    resp.9    resp.10    resp.11   resp.12   resp.13    resp.14
-3  0.12778223 -1.830576 -0.5928357  0.1277822 -1.830576 -1.065126 -2.0719376
-4 -0.07181989 -1.419198  0.1882959 -0.9493683 -1.335547 -1.175390  0.5897666
-5 -0.06813262 -1.503852  0.5432948  0.6023457 -1.864083 -1.244593  0.3144719
+3  0.12778604 -1.830578 -0.5928348  0.1277860 -1.830578 -1.065133 -2.0719390
+4 -0.07179365 -1.419211  0.1883271 -0.9493481 -1.335551 -1.175402  0.5897361
+5 -0.06814205 -1.503851  0.5432800  0.6023543 -1.864082 -1.244597  0.3144730
      resp.15   resp.16  resp.17     resp.18    resp.19    resp.20
-3 -1.2368177 1.9609629 1.960963 -0.15620934 -0.5928357  0.4135482
-4  1.0258001 1.3536354 2.078195  0.05795974 -0.9493683 -0.1367081
-5  0.9133577 0.6623052 1.589346 -0.06813262 -0.7178360 -0.4441605
+3 -1.2368201 1.9609649 1.960965 -0.15621418 -0.5928348  0.4135426
+4  1.0257807 1.3536263 2.078197  0.05797926 -0.9493481 -0.1366891
+5  0.9133623 0.6622996 1.589347 -0.06814205 -0.7178253 -0.4441543
 > 
 > ## inspect parameter stability tests in all splitting nodes
 > sctest(rt, node = 1)
-                 age      gender motivation
-statistic 43.1090020 41.48637536 82.0382545
-p.value    0.1103282  0.00623408  0.9947188
+                 age       gender motivation
+statistic 43.1085690 41.486403280 82.0383078
+p.value    0.1103398  0.006234027  0.9947187
 > sctest(rt, node = 2)
                    age gender motivation
-statistic 6.125682e+01      0 86.2517031
-p.value   3.613946e-04     NA  0.9259659
+statistic 6.125740e+01      0 86.2516724
+p.value   3.613254e-04     NA  0.9259663
 > 
 > ## highlight items 3 and 14 with DIF
 > ix <- rep(1, 20)
@@ -362,10 +482,154 @@ p.value   3.613946e-04     NA  0.9259659
 > 
 > 
 > 
+> cleanEx()
+> nameEx("rstree")
+> ### * rstree
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: rstree
+> ### Title: Rating Scale Tree Models
+> ### Aliases: rstree plot.rstree print.rstree summary.rstree sctest.rstree
+> ###   deviance.rstree logLik.rstree coef.rstree weights.rstree
+> ### Keywords: tree
+> 
+> ### ** Examples
+> 
+> ## verbal aggression data from package psychotools
+> data("VerbalAggression", package = "psychotools")
+> 
+> ## responses to the first other-to-blame situation (bus)
+> VerbalAggression$s1 <- VerbalAggression$resp[, 1:6]
+> 
+> ## exclude subjects who only scored in the highest or the lowest categories
+> VerbalAggression <- subset(VerbalAggression, rowSums(s1) > 0 & rowSums(s1) < 12)
+> 
+> ## fit rating scale tree model for the first other-to-blame situation
+> rst <- rstree(s1 ~ anger + gender, data = VerbalAggression)
+> 
+> ## just print mob object
+> print(rst)
+1) gender == {female}; criterion = 0.987, statistic = 25.12
+  2) anger <= 23; criterion = 0.983, statistic = 23.612
+    3)*  weights = 173 
+Terminal node model
+RSM item and threshold parameters:
+  s1.S1DoCurse s1.S1WantScold   s1.S1DoScold s1.S1WantShout   s1.S1DoShout 
+        0.5054         0.5054         1.0954         1.0688         1.9563 
+            C2 
+        0.8887 
+
+  2) anger > 23
+    4)*  weights = 41 
+Terminal node model
+RSM item and threshold parameters:
+  s1.S1DoCurse s1.S1WantScold   s1.S1DoScold s1.S1WantShout   s1.S1DoShout 
+       -0.6582         0.3610         0.2247         0.5922         0.8799 
+            C2 
+       -0.7253 
+
+1) gender == {male}
+  5)*  weights = 68 
+Terminal node model
+RSM item and threshold parameters:
+  s1.S1DoCurse s1.S1WantScold   s1.S1DoScold s1.S1WantShout   s1.S1DoShout 
+      -0.48160        0.35253       -0.06342        1.01438        1.60990 
+            C2 
+       0.87640 
+
+> 
+> ## show summary for terminal panel nodes
+> summary(rst)
+$`3`
+
+Rating scale model
+
+Item location and threshold parameters:
+               Estimate Std. Error z value Pr(>|z|)    
+s1.S1DoCurse     0.5054     0.1573   3.213  0.00131 ** 
+s1.S1WantScold   0.5054     0.1573   3.213  0.00131 ** 
+s1.S1DoScold     1.0954     0.1664   6.582 4.65e-11 ***
+s1.S1WantShout   1.0688     0.1658   6.444 1.16e-10 ***
+s1.S1DoShout     1.9563     0.1941  10.076  < 2e-16 ***
+C2               0.8887     0.1574   5.646 1.64e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log-likelihood: -612.1 (df = 6) 
+Number of iterations in BFGS optimization: 11 
+
+
+$`4`
+
+Rating scale model
+
+Item location and threshold parameters:
+               Estimate Std. Error z value Pr(>|z|)   
+s1.S1DoCurse    -0.6582     0.3162  -2.082  0.03735 * 
+s1.S1WantScold   0.3610     0.3028   1.192  0.23314   
+s1.S1DoScold     0.2247     0.3007   0.747  0.45501   
+s1.S1WantShout   0.5922     0.3080   1.923  0.05452 . 
+s1.S1DoShout     0.8799     0.3179   2.768  0.00564 **
+C2              -0.7253     0.3471  -2.090  0.03665 * 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log-likelihood: -131.9 (df = 6) 
+Number of iterations in BFGS optimization: 12 
+
+
+$`5`
+
+Rating scale model
+
+Item location and threshold parameters:
+               Estimate Std. Error z value Pr(>|z|)    
+s1.S1DoCurse   -0.48160    0.25664  -1.877 0.060583 .  
+s1.S1WantScold  0.35253    0.25480   1.384 0.166498    
+s1.S1DoScold   -0.06342    0.25189  -0.252 0.801209    
+s1.S1WantShout  1.01438    0.27313   3.714 0.000204 ***
+s1.S1DoShout    1.60990    0.30336   5.307 1.11e-07 ***
+C2              0.87640    0.25683   3.412 0.000644 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log-likelihood: -231.9 (df = 6) 
+Number of iterations in BFGS optimization: 12 
+
+
+> 
+> ## plot with default (and currently only) terminal panel function (node_effects)
+> plot(rst)
+> 
+> ## extract item and category parameters
+> coef(rst)
+  s1.S1DoCurse s1.S1WantScold s1.S1DoScold s1.S1WantShout s1.S1DoShout
+3    0.5054360      0.5054375   1.09540747      1.0687521    1.9562549
+4   -0.6582343      0.3610076   0.22465384      0.5921869    0.8799027
+5   -0.4815992      0.3525326  -0.06342232      1.0143779    1.6099031
+          C2
+3  0.8887416
+4 -0.7252541
+5  0.8763964
+> 
+> ## inspect parameter stability tests in all splitting nodes
+> sctest(rst, node = 1)
+                anger     gender
+statistic 25.11991731 17.9176589
+p.value    0.01879418  0.0128826
+> sctest(rst, node = 2)
+                anger gender
+statistic 23.61166832      0
+p.value    0.01672397     NA
+> 
+> 
+> 
 > ### * <FOOTER>
 > ###
-> cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  52.271 0.392 53.4 0 0 
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  32.508 0.136 37.58 0 0 
 > grDevices::dev.off()
 null device 
           1 
