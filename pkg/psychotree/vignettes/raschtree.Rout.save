@@ -1,27 +1,20 @@
 
 > library("psychotree")
-Loading required package: psychotools
 Loading required package: party
-Loading required package: survival
-Loading required package: splines
 Loading required package: grid
-Loading required package: modeltools
-Loading required package: stats4
-Loading required package: coin
-Loading required package: mvtnorm
 Loading required package: zoo
 
 Attaching package: 'zoo'
 
-The following object(s) are masked from 'package:base':
+The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
 Loading required package: strucchange
-Loading required package: vcd
-Loading required package: MASS
-Loading required package: colorspace
+Loading required package: modeltools
+Loading required package: stats4
+Loading required package: psychotools
 
 > data("SPISA", package = "psychotree")
 
@@ -34,42 +27,44 @@ Loading required package: colorspace
 
 > plot(my_first_raschtree)
 
+> library("colorspace")
+
 > plot(my_first_raschtree, col = rep(rainbow_hcl(5, 
 +     c = 65, l = 65), each = 9))
 
 > coef(my_first_raschtree, node = 4)
-     spisa.2   spisa.3   spisa.4  spisa.5   spisa.6   spisa.7    spisa.8
-4 -0.9187159 -1.287445 -2.680535 -1.83124 -1.902649 -2.495152 -0.4162749
-    spisa.9 spisa.10  spisa.11  spisa.12  spisa.13  spisa.14  spisa.15
-4 -0.258093 -2.72967 -1.154303 -4.176942 -1.053957 0.7916896 -2.324148
-   spisa.16   spisa.17  spisa.18 spisa.19   spisa.20  spisa.21  spisa.22
-4 -2.049516 -0.8845393 -1.454178 1.032163 -0.9187159 -1.220917 -2.242905
-   spisa.23 spisa.24  spisa.25  spisa.26  spisa.27  spisa.28  spisa.29
-4 -1.354008 -2.72967 -0.745837 -1.220917 -2.940369 -2.125384 -0.745837
-    spisa.30  spisa.31   spisa.32  spisa.33  spisa.34  spisa.35  spisa.36
-4 -0.9865959 -1.454178 -0.4922303 -3.823261 -2.164028 -3.246987 -2.940369
-   spisa.37  spisa.38   spisa.39  spisa.40  spisa.41 spisa.42  spisa.43
-4 -2.997242 -1.902649 -0.8845393 -3.823261 -1.053957 -2.72967 -3.246987
+     spisa.2   spisa.3   spisa.4   spisa.5   spisa.6   spisa.7    spisa.8
+4 -0.9187137 -1.287452 -2.680535 -1.831249 -1.902632 -2.495146 -0.4162699
+    spisa.9  spisa.10  spisa.11  spisa.12  spisa.13  spisa.14  spisa.15
+4 -0.258101 -2.729669 -1.154302 -4.176926 -1.053942 0.7916895 -2.324165
+   spisa.16   spisa.17  spisa.18 spisa.19   spisa.20 spisa.21  spisa.22
+4 -2.049527 -0.8845425 -1.454165  1.03215 -0.9187137  -1.2209 -2.242888
+   spisa.23  spisa.24   spisa.25 spisa.26  spisa.27  spisa.28   spisa.29
+4 -1.354009 -2.729669 -0.7458437  -1.2209 -2.940376 -2.125369 -0.7458437
+    spisa.30  spisa.31   spisa.32  spisa.33  spisa.34 spisa.35  spisa.36
+4 -0.9865644 -1.454165 -0.4922363 -3.823269 -2.164032   -3.247 -2.940376
+   spisa.37  spisa.38   spisa.39  spisa.40  spisa.41  spisa.42 spisa.43
+4 -2.997236 -1.902632 -0.8845425 -3.823269 -1.053942 -2.729669   -3.247
    spisa.44  spisa.45
-4 -1.521352 -3.632568
+4 -1.521358 -3.632489
 
 > worth(my_first_raschtree, node = 4)
-   spisa.1   spisa.2  spisa.3    spisa.4     spisa.5   spisa.6    spisa.7
-4 1.754176 0.8354606 0.466731 -0.9263586 -0.07706338 -0.148473 -0.7409755
-   spisa.8  spisa.9   spisa.10  spisa.11  spisa.12  spisa.13 spisa.14
-4 1.337902 1.496083 -0.9754938 0.5998735 -2.422765 0.7002199 2.545866
-    spisa.15   spisa.16  spisa.17  spisa.18 spisa.19  spisa.20  spisa.21
-4 -0.5699719 -0.2953393 0.8696371 0.2999986  2.78634 0.8354606 0.5332593
-    spisa.22  spisa.23   spisa.24 spisa.25  spisa.26  spisa.27   spisa.28
-4 -0.4887286 0.4001686 -0.9754938 1.008339 0.5332593 -1.186192 -0.3712073
-  spisa.29  spisa.30  spisa.31 spisa.32  spisa.33   spisa.34  spisa.35
-4 1.008339 0.7675806 0.2999986 1.261946 -2.069085 -0.4098519 -1.492811
-   spisa.36  spisa.37  spisa.38  spisa.39  spisa.40  spisa.41   spisa.42
-4 -1.186192 -1.243065 -0.148473 0.8696371 -2.069085 0.7002199 -0.9754938
-   spisa.43  spisa.44  spisa.45
-4 -1.492811 0.2328247 -1.878391
+   spisa.1   spisa.2   spisa.3    spisa.4     spisa.5    spisa.6   spisa.7
+4 1.754173 0.8354594 0.4667211 -0.9263622 -0.07707618 -0.1484589 -0.740973
+   spisa.8  spisa.9   spisa.10 spisa.11  spisa.12 spisa.13 spisa.14   spisa.15
+4 1.337903 1.496072 -0.9754961 0.599871 -2.422753 0.700231 2.545863 -0.5699916
+    spisa.16  spisa.17  spisa.18 spisa.19  spisa.20  spisa.21   spisa.22
+4 -0.2953541 0.8696307 0.3000079 2.786324 0.8354594 0.5332733 -0.4887149
+   spisa.23   spisa.24 spisa.25  spisa.26  spisa.27   spisa.28 spisa.29
+4 0.4001645 -0.9754961 1.008329 0.5332733 -1.186203 -0.3711957 1.008329
+   spisa.30  spisa.31 spisa.32  spisa.33   spisa.34  spisa.35  spisa.36
+4 0.7676087 0.3000079 1.261937 -2.069096 -0.4098587 -1.492827 -1.186203
+   spisa.37   spisa.38  spisa.39  spisa.40 spisa.41   spisa.42  spisa.43
+4 -1.243062 -0.1484589 0.8696307 -2.069096 0.700231 -0.9754961 -1.492827
+  spisa.44  spisa.45
+4 0.232815 -1.878316
 
  *** Run successfully completed ***
 > proc.time()
    user  system elapsed 
- 84.069   0.244  85.205 
+ 39.456   0.124  39.631 
