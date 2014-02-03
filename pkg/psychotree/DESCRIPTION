@@ -13,4 +13,4 @@ Imports: graphics, stats, modeltools (>= 0.2-21), sandwich, strucchange
 Description: Recursive partitioning based on psychometric models,
   employing the general MOB algorithm (from package party) to obtain
   Bradley-Terry trees, Rasch trees, Rating scale and partial credit trees.
-License: GPL-2
+License: GPL-2 | GPL-3
