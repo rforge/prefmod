@@ -433,7 +433,7 @@ p.value    0.955604 1.745895e-05
 > data("DIFSim", package = "psychotree")
 > 
 > ## fit Rasch tree model
-> rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
+> rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, minsplit = 30)
 > plot(rt)
 > 
 > ## extract item parameters
@@ -466,13 +466,13 @@ p.value    0.955604 1.745895e-05
 > 
 > ## inspect parameter stability tests in all splitting nodes
 > sctest(rt, node = 1)
-                 age       gender motivation
-statistic 43.1085690 41.486403280 82.0383078
-p.value    0.1103398  0.006234027  0.9947187
+                  age       gender motivation
+statistic 43.10856900 41.486403280 82.0383078
+p.value    0.08987335  0.006234027  0.9947187
 > sctest(rt, node = 2)
-                   age gender motivation
-statistic 6.125740e+01      0 86.2516724
-p.value   3.613254e-04     NA  0.9259663
+                  age gender motivation
+statistic 6.12574e+01      0 86.2516724
+p.value   1.89323e-04     NA  0.9259663
 > 
 > ## highlight items 3 and 14 with DIF
 > ix <- rep(1, 20)
@@ -629,7 +629,7 @@ p.value    0.01672397     NA
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  32.508 0.136 37.58 0 0 
+Time elapsed:  22.412 0.084 22.56 0 0 
 > grDevices::dev.off()
 null device 
           1 

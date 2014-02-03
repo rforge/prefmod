@@ -83,7 +83,7 @@ raschtree(formula, data, minsplit = 10, reltol = 1e-10,
 data("DIFSim", package = "psychotree")
 
 ## fit Rasch tree model
-rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
+rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, minsplit = 30)
 plot(rt)
 
 ## extract item parameters
