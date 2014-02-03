@@ -1,6 +1,6 @@
 ### S4 StatModel model
 PCModel <- function (nullcats = c("keep", "downcode", "ignore"), reltol = 1e-10,
-                     deriv = c("sum", "diff"), hessian = TRUE, iterlim = 100L) {
+                     deriv = c("sum", "diff"), hessian = TRUE, maxit = 100L) {
   new("StatModel",
       capabilities = new("StatModelCapabilities"),
       name = "PCM",
@@ -8,7 +8,7 @@ PCModel <- function (nullcats = c("keep", "downcode", "ignore"), reltol = 1e-10,
       fit = function (object, weights = NULL, ...){
         y <- object@get("response")
         z <- PCModel.fit(y = y, weights = weights, nullcats = nullcats,
-                         reltol = reltol, deriv = deriv, hessian = hessian, iterlim = iterlim)
+                         reltol = reltol, deriv = deriv, hessian = hessian, maxit = maxit)
         z$ModelEnv <- object
         z$addargs <- list(...)
         z

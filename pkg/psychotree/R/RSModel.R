@@ -1,6 +1,6 @@
 ### S4 StatModel model
 RSModel <- function (reltol = 1e-10, deriv = c("sum", "diff"),
-                     hessian = TRUE, iterlim = 100L) {
+                     hessian = TRUE, maxit = 100L) {
   new("StatModel",
       capabilities = new("StatModelCapabilities"),
       name = "RSM",
@@ -8,7 +8,7 @@ RSModel <- function (reltol = 1e-10, deriv = c("sum", "diff"),
       fit = function (object, weights = NULL, ...){
         y <- object@get("response")
         z <- RSModel.fit(y = y, weights = weights, reltol = reltol,
-                         deriv = deriv, hessian = hessian, iterlim = iterlim)
+                         deriv = deriv, hessian = hessian, maxit = maxit)
         z$ModelEnv <- object
         z$addargs <- list(...)
         z

@@ -16,7 +16,7 @@
 
 \usage{
 RaschModel(reltol = 1e-10, deriv = c("sum", "diff", "numeric"),
-  hessian = TRUE, iterlim = 100L)
+  hessian = TRUE, maxit = 100L)
 }
 
 \arguments{
@@ -27,7 +27,7 @@ RaschModel(reltol = 1e-10, deriv = c("sum", "diff", "numeric"),
   \item{hessian}{logical. Should the Hessian of the final model be computed?
     If set to \code{FALSE}, the \code{vcov} method can only return \code{NA}s
     and consequently no standard errors or tests are available in the \code{summary}.}
-  \item{reltol, iterlim, \dots}{further arguments passed to \code{\link[stats]{optim}}.}
+  \item{reltol, maxit, \dots}{further arguments passed to \code{\link[stats]{optim}}.}
 }
 
 \details{
