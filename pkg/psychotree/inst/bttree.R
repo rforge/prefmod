@@ -56,7 +56,7 @@ btfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, ...,
 print.bttree <- function(x,
   title = "Bradley-Terry tree", objfun = "negative log-likelihood", ...)
 {
-  partykit:::print.modelparty(x, title = title, objfun = objfun, ...)
+  partykit::print.modelparty(x, title = title, objfun = objfun, ...)
 }
 
 predict.bttree <- function(object, newdata = NULL,
@@ -66,7 +66,7 @@ predict.bttree <- function(object, newdata = NULL,
   type <- match.arg(type)
   
   ## nodes can be handled directly
-  if(type == "node") return(partykit:::predict.modelparty(object, newdata = newdata, type = "node", ...))
+  if(type == "node") return(partykit::predict.modelparty(object, newdata = newdata, type = "node", ...))
   
   ## get default newdata otherwise
   if(is.null(newdata)) newdata <- model.frame(object)
@@ -79,7 +79,20 @@ predict.bttree <- function(object, newdata = NULL,
       factor(names(wrth)[which.max(wrth)], levels = names(wrth))
     }
   )
-  partykit:::predict.modelparty(object, newdata = newdata, type = pred, ...)
+  partykit::predict.modelparty(object, newdata = newdata, type = pred, ...)
+}
+
+apply_to_models <- function(object, node = NULL, FUN = NULL, drop = FALSE, ...) {
+  if(is.null(node)) node <- nodeids(object, terminal = FALSE)
+  if(is.null(FUN)) FUN <- function(object, ...) object  
+  rval <- if("object" %in% object$info$control$terminal) {
+    nodeapply(object, node, function(n) FUN(info_node(n)$object))
+  } else {
+    lapply(refit.modelparty(object, node, drop = FALSE), FUN)
+  }
+  names(rval) <- node
+  if(drop & length(node) == 1L) rval <- rval[[1L]]
+  return(rval)
 }
 
 worth.bttree <- function(object, node = NULL, ...)
@@ -93,7 +106,7 @@ plot.bttree <- function(x, terminal_panel = node_btplot,
 {
   if(is.null(tnex)) tnex <- if(is.null(terminal_panel)) 1L else 2L
   if(is.null(drop_terminal)) drop_terminal <- !is.null(terminal_panel)
-  partykit:::plot.modelparty(x, terminal_panel = terminal_panel,
+  partykit::plot.modelparty(x, terminal_panel = terminal_panel,
     tp_args = tp_args, tnex = tnex, drop_terminal = drop_terminal, ...)
 }
 
@@ -104,16 +117,16 @@ node_btplot <- function(mobobj, id = TRUE,
   col = "black", linecol = "lightgray", cex = 0.5, pch = 19, xscale = NULL, yscale = NULL, ylines = 1.5)
 {
     ## node ids
-    node <- nodeids(mobobj@tree, terminal = FALSE)
+    node <- nodeids(mobobj, terminal = FALSE)
     
     ## get all coefficients 
     cf <- apply_to_models(mobobj, node, FUN = function(z)        
-      if(worth) worth(z$model) else coef(z$model, all = FALSE, ref = TRUE))
+      if(worth) worth(z) else coef(z, all = FALSE, ref = TRUE))
     cf <- do.call("rbind", cf)
     rownames(cf) <- node
 
     ## get one full model
-    mod <- apply_to_model(mobobj, node = 1L, FUN = NULL)
+    mod <- apply_to_models(mobobj, node = 1L, FUN = NULL)
 
     if(!worth) {
       if(is.character(ref) | is.numeric(ref)) {
