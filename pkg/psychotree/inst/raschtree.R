@@ -42,7 +42,7 @@ raschfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, .
   if(!(is.null(x) || NCOL(x) == 0L)) warning("x not used")
   if(!is.null(offset)) warning("offset not used")
   ## rval <- RaschModel.fit(y, weights = weights, start = start, ..., full = object | estfun)
-  rval <- RaschModel.fit(y, weights = weights, start = start, ..., hessian = object | estfun)
+  rval <- RaschModel.fit(y, weights = weights, start = NULL, ..., hessian = object | estfun)
   ## rval <- RaschModel.fit(y, weights = weights, start = NULL, ..., full = object | estfun)
   ## rval <- RaschModel.fit(y, weights = weights, start = start, ..., full = TRUE)
   rval <- list(

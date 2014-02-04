@@ -41,7 +41,7 @@ btfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, ...,
   if(!(is.null(x) || NCOL(x) == 0L)) warning("x not used")
   if(!is.null(offset)) warning("offset not used")
   vcov <- object
-  rval <- btReg.fit(y, weights = weights, start = start, ...,
+  rval <- btReg.fit(y, weights = weights, ...,
     estfun = estfun, vcov = object)
   rval <- list(
     coefficients = rval$coefficients,
