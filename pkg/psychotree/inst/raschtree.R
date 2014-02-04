@@ -84,10 +84,27 @@ predict.raschtree <- function(object, newdata = NULL,
   partykit::predict.modelparty(object, newdata = newdata, type = pred, ...)
 }
 
+apply_to_models <- function(object, node = NULL, FUN = NULL, drop = FALSE, ...) {
+  if(is.null(node)) node <- nodeids(object, terminal = FALSE)
+  if(is.null(FUN)) FUN <- function(object, ...) object  
+  rval <- if("object" %in% object$info$control$terminal) {
+    nodeapply(object, node, function(n) FUN(info_node(n)$object))
+  } else {
+    lapply(refit.modelparty(object, node, drop = FALSE), FUN)
+  }
+  names(rval) <- node
+  if(drop & length(node) == 1L) rval <- rval[[1L]]
+  return(rval)
+}
+
 worth.raschtree <- function(object, node = NULL, ...)
 {
   ids <- if(is.null(node)) nodeids(object, terminal = TRUE) else node
-  apply_to_models(object, node = ids, FUN = worth, drop = TRUE)
+  if(length(ids) == 1L) {
+    apply_to_models(object, node = ids, FUN = worth, drop = TRUE)
+  } else {
+    do.call("rbind", apply_to_models(object, node = ids, FUN = worth, drop = FALSE))
+  } 
 }
 
 plot.raschtree <- function(x, terminal_panel = node_raschplot,
@@ -106,16 +123,16 @@ node_raschplot <- function(mobobj, id = TRUE,
   col = "black", linecol = "lightgray", cex = 0.5, pch = 19, xscale = NULL, yscale = NULL, ylines = 1.5)
 {
     ## node ids
-    node <- nodeids(mobobj@tree, terminal = FALSE)
+    node <- nodeids(mobobj, terminal = FALSE)
     
     ## get all coefficients 
     cf <- apply_to_models(mobobj, node, FUN = function(z)        
-      if(worth) worth(z$model) else coef(z$model, all = FALSE, ref = TRUE))
+      if(worth) worth(z) else coef(z, all = FALSE, ref = TRUE))
     cf <- do.call("rbind", cf)
     rownames(cf) <- node
 
     ## get one full model
-    mod <- apply_to_model(mobobj, node = 1L, FUN = NULL)
+    mod <- apply_to_models(mobobj, node = 1L, FUN = NULL)
 
     if(!worth) {
       if(is.character(ref) | is.numeric(ref)) {

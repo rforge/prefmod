@@ -98,7 +98,11 @@ apply_to_models <- function(object, node = NULL, FUN = NULL, drop = FALSE, ...) 
 worth.bttree <- function(object, node = NULL, ...)
 {
   ids <- if(is.null(node)) nodeids(object, terminal = TRUE) else node
-  apply_to_models(object, node = ids, FUN = worth, drop = TRUE)
+  if(length(ids) == 1L) {
+    apply_to_models(object, node = ids, FUN = worth, drop = TRUE)
+  } else {
+    do.call("rbind", apply_to_models(object, node = ids, FUN = worth, drop = FALSE))
+  } 
 }
 
 plot.bttree <- function(x, terminal_panel = node_btplot,
