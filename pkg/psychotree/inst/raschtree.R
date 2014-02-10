@@ -8,7 +8,7 @@ rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
 
 ## high-level convenience interface to mob()
 raschtree <- function(formula, data, na.action = na.pass,
-  gradtol = 1e-6, deriv = c("sum", "diff", "numeric"), ...)
+  reltol = 1e-6, deriv = c("sum", "diff", "numeric"), ...)
 {
   ## keep call
   cl <- match.call(expand.dots = TRUE)
@@ -18,7 +18,7 @@ raschtree <- function(formula, data, na.action = na.pass,
   control$ytype <- "matrix"
 
   ## control options for raschfit
-  raschcontrol <- list(gradtol = gradtol, deriv = deriv)
+  raschcontrol <- list(reltol = reltol, deriv = deriv)
 
   ## call mob
   m <- match.call(expand.dots = FALSE)
