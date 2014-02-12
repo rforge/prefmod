@@ -9,7 +9,7 @@ pct <- pctree(resp ~ age + gender + motivation, data = DIFSim)
 
 ### high-level convenience interface to mob()
 pctree <- function (formula, data, na.action = na.pass, nullcats = c("keep", "downcode", "ignore"),
-                    reltol = 1e-10, deriv = c("sum", "diff"), ...)
+  reltol = 1e-10, deriv = c("sum", "diff"), maxit = 100L, ...)
 {
   ## keep call
   cl <- match.call(expand.dots = TRUE)
@@ -19,7 +19,7 @@ pctree <- function (formula, data, na.action = na.pass, nullcats = c("keep", "do
   control$ytype <- "matrix"
 
   ## control options for pcmfit
-  pcmcontrol <- list(nullcats = nullcats, reltol = reltol, deriv = deriv)
+  pcmcontrol <- list(nullcats = nullcats, reltol = reltol, deriv = deriv, maxit = maxit)
 
   ## call mob
   m <- match.call(expand.dots = FALSE)

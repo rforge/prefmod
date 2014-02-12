@@ -1,6 +1,7 @@
 if(FALSE) {
 library("partykit")
 library("psychotools")
+source("../R/pctree-psychotools.R")
 data("VerbalAggression", package = "psychotools")
 mb <-       mob(resp ~ anger + gender, data = VerbalAggression, fit = rsmfit, control = mob_control(ytype = "matrix"))
 rst <- rstree(resp ~ anger + gender, data = VerbalAggression)
@@ -8,7 +9,7 @@ rst <- rstree(resp ~ anger + gender, data = VerbalAggression)
 
 ## high-level convenience interface to mob()
 rstree <- function(formula, data, na.action = na.pass,
-  reltol = 1e-6, deriv = c("sum", "diff"), ...)
+  reltol = 1e-10, deriv = c("sum", "diff"), maxit = 100L, ...)
 {
   ## keep call
   cl <- match.call(expand.dots = TRUE)
@@ -18,7 +19,7 @@ rstree <- function(formula, data, na.action = na.pass,
   control$ytype <- "matrix"
 
   ## control options for rsmfit
-  rsmcontrol <- list(reltol = reltol, deriv = deriv)
+  rsmcontrol <- list(reltol = reltol, deriv = deriv, maxit = maxit)
 
   ## call mob
   m <- match.call(expand.dots = FALSE)
