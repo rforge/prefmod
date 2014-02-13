@@ -17,7 +17,7 @@
 }
 
 \usage{
-pctree(formula, data, minsplit = 30, nullcats = c("keep", "downcode",
+pctree(formula, data, minsize = 30, minsplit = minsize, nullcats = c("keep", "downcode",
   "ignore"), reltol = 1e-10,  deriv = c("sum", "diff"),
   hessian = TRUE, maxit = 100L, \dots)
 }
@@ -46,7 +46,9 @@ pctree(formula, data, minsplit = 30, nullcats = c("keep", "downcode",
   \item{reltol, maxit}{arguments passed via \code{\link{PCModel}}
     to \code{\link[stats]{optim}}.}
   
-  \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
+  \item{minsize, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
+
+  \item{minsplit}{FIXME}
 }
 
 
@@ -114,6 +116,7 @@ plot(pct)
 coef(pct)
 
 ## inspect parameter stability tests in the splitting node
+library("strucchange")
 sctest(pct, node = 1)
 }
 

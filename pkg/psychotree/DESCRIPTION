@@ -7,9 +7,9 @@ Authors@R: c(person(given = "Achim", family = "Zeileis", role = c("aut", "cre"),
              person(given = "Florian", family = "Wickelmaier", role = "aut", email = "Florian.Wickelmaier@uni-tuebingen.de"),
              person(given = "Julia", family = "Kopf", role = "aut", email = "Julia.Kopf@stat.uni-muenchen.de"),
 	     person(given = "Basil", family = "Abou El-Komboz", role = "aut", email = "Basil.Abou-El-Komboz@stat.uni-muenchen.de"))
-Depends: R (>= 2.10.0), party, psychotools (>= 0.2-0)
-Suggests: colorspace
-Imports: graphics, stats, modeltools (>= 0.2-21), sandwich, strucchange
+Depends: R (>= 2.15.0), partykit (>= 0.2-0), psychotools (>= 0.2-0)
+Suggests: colorspace, strucchange
+Imports: graphics, stats, Formula
 Description: Recursive partitioning based on psychometric models,
   employing the general MOB algorithm (from package party) to obtain
   Bradley-Terry trees, Rasch trees, Rating scale and partial credit trees.

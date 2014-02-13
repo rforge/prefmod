@@ -22,7 +22,7 @@
 }
 
 \usage{
-raschtree(formula, data, minsplit = 10, reltol = 1e-10,
+raschtree(formula, data, minsize = 10L, minsplit = minsize, reltol = 1e-10,
   deriv = c("sum", "diff", "numeric"), hessian = TRUE, maxit = 100L, \dots)
 }
 
@@ -41,7 +41,8 @@ raschtree(formula, data, minsplit = 10, reltol = 1e-10,
     and consequently no standard errors or tests are available in the \code{summary}.}
   \item{reltol, maxit}{arguments passed via \code{\link{RaschModel}}
     to \code{\link[stats]{optim}}.}
-  \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
+  \item{minsize, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
+  \item{minsplit}{FIXME}
 }
 
 \details{
@@ -83,7 +84,7 @@ raschtree(formula, data, minsplit = 10, reltol = 1e-10,
 data("DIFSim", package = "psychotree")
 
 ## fit Rasch tree model
-rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, minsplit = 30)
+rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
 plot(rt)
 
 ## extract item parameters
@@ -91,10 +92,12 @@ coef(rt)
 worth(rt)
 
 ## inspect parameter stability tests in all splitting nodes
+library("strucchange")
 sctest(rt, node = 1)
 sctest(rt, node = 2)
 
 ## highlight items 3 and 14 with DIF
+## FIXME: extend panel-generating function
 ix <- rep(1, 20)
 ix[c(3, 14)] <- 2
 plot(rt, ylines = 2.5,  cex = c(0.4, 0.8)[ix], 

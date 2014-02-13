@@ -17,7 +17,7 @@
 }
 
 \usage{
-rstree(formula, data, minsplit = 20, reltol = 1e-10,
+rstree(formula, data, minsize = 20, minsplit = minsize, reltol = 1e-10,
   deriv = c("sum", "diff"), hessian = TRUE, maxit = 100L, \dots)
 }
 
@@ -44,8 +44,10 @@ rstree(formula, data, minsplit = 20, reltol = 1e-10,
   \item{reltol, maxit}{arguments passed via \code{\link{RSModel}}
     to \code{\link[stats]{optim}}.}
 
-  \item{minsplit, \dots}{arguments passed to
+  \item{minsize, \dots}{arguments passed to
   \code{\link[party]{mob_control}}.}
+  
+  \item{minsplit}{FIXME}
 }
 
 
@@ -114,6 +116,7 @@ plot(rst)
 coef(rst)
 
 ## inspect parameter stability tests in all splitting nodes
+library("strucchange")
 sctest(rst, node = 1)
 sctest(rst, node = 2)
 }

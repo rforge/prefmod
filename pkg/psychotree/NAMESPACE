@@ -3,36 +3,26 @@ import(
   "stats",
   "graphics",
   "psychotools",
-  "party",
-  "sandwich", 
-  "strucchange"
+  "partykit",
+  "Formula"
 )
-
-importFrom("modeltools", "fit")
-importFrom("modeltools", "dpp")
-importFrom("modeltools", "ParseFormula")
-importFrom("modeltools", "ModelEnvFormula")
 
 export(
   ## Rasch tree tools
   "raschtree",
-  "RaschModel",
   "node_raschplot",
 
   ## Rating-Scale tree tools
   "rstree",
-  "RSModel",
 ##  "node_rsmplot",
 
   ## Partial-Credit (and Rating-Scale) tree tools
   "pctree",
-  "PCModel",
   "node_effects",
 ##  "node_ccc",
 
   ## Bradley-Terry tree tools
   "bttree",
-  "btReg",
   "node_btplot"
 
 #  ## MPT tree tools
@@ -41,80 +31,51 @@ export(
 #  "node_mptplot"
 )
 
+## FIXME check: coef, logLik, summary, weights // bread, estfun
+
 ## methods for raschtree objects
-S3method("coef", "raschtree")
 ## S3method("itempar", "raschtree")
-S3method("logLik", "raschtree")
 S3method("plot", "raschtree")
 S3method("print", "raschtree")
-S3method("sctest", "raschtree")
-S3method("summary", "raschtree")
 ## S3method("threshold", "raschtree")
-S3method("weights", "raschtree")
 S3method("worth", "raschtree")
 
 ## methods for rstree objects
-S3method("coef", "rstree")
 ## S3method("itempar", "rstree")
-S3method("logLik", "rstree")
 S3method("plot", "rstree")
 S3method("print", "rstree")
-S3method("sctest", "rstree")
-S3method("summary", "rstree")
 ## S3method("threshold", "rstree")
-S3method("weights", "rstree")
 
 ## methods for pctree objects
-S3method("coef", "pctree")
 ## S3method("itempar", "pctree")
-S3method("logLik", "pctree")
 S3method("plot", "pctree")
 ## S3method("plotCCC", "pctree")
 S3method("print", "pctree")
-S3method("sctest", "pctree")
-S3method("summary", "pctree")
 ## S3method("threshold", "pctree")
-S3method("weights", "pctree")
 
 ## methods for bttree objects
-S3method("coef", "bttree")
-S3method("deviance", "bttree")
-S3method("logLik", "bttree")
 S3method("plot", "bttree")
 S3method("predict", "bttree")
 S3method("print", "bttree")
-S3method("sctest", "bttree")
-S3method("summary", "bttree")
-S3method("weights", "bttree")
 S3method("worth", "bttree")
 
 # ## methods for mpttree objects
-# S3method("coef", "mpttree")
-# S3method("deviance", "mpttree")
-# S3method("logLik", "mpttree")
 # S3method("plot", "mpttree")
 # S3method("print", "mpttree")
-# S3method("sctest", "mpttree")
-# S3method("summary", "mpttree")
-# S3method("weights", "mpttree")
 
 ## methods for RaschModel objects
-S3method("bread", "RaschModel")
-S3method("estfun", "RaschModel")
-S3method("reweight", "RaschModel")
+# S3method("bread", "RaschModel")
+# S3method("estfun", "RaschModel")
 
 ## methods for RSModel objects
-S3method("estfun", "RSModel")
-S3method("reweight", "RSModel")
+# S3method("estfun", "RSModel")
 
 ## methods for PCModel objects
-S3method("estfun", "PCModel")
-S3method("reweight", "PCModel")
+# S3method("estfun", "PCModel")
 
 ## methods for btReg objects
-S3method("bread", "btReg")
-S3method("estfun", "btReg")
-S3method("reweight", "btReg")
+## S3method("bread", "btReg")
+## S3method("estfun", "btReg")
 
 # ## methods for mptModel objects
 # S3method("bread", "mptModel")

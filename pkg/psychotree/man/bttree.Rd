@@ -23,7 +23,7 @@
 \usage{
 bttree(formula, data, na.action = na.pass,
   type = "loglin", ref = NULL, undecided = NULL, position = NULL,
-  minsplit = 10, \dots)
+  minsize = 10, minsplit = minsize, \dots)
 
 \method{predict}{bttree}(object, newdata = NULL,
   type = c("worth", "rank", "node"), \dots)
@@ -44,10 +44,11 @@ bttree(formula, data, na.action = na.pass,
     \code{"rank"}, or the predicted \code{"node"} number.}
   \item{ref, undecided, position}{arguments for the Bradley-Terry
     model passed on to \code{\link{btReg}}.}
-  \item{minsplit, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
+  \item{minsize, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
   \item{object}{fitted model object of class \code{"bttree"}.}
   \item{newdata}{optionally, a data frame in which to look for variables with
     which to predict. If omitted, the original observations are used.}
+  \item{minsplit}{FIXME}
 }
 
 \details{
@@ -81,15 +82,13 @@ bttree(formula, data, na.action = na.pass,
 \seealso{\code{\link[party]{mob}}, \code{\link{btReg}}}
 
 \examples{
-## package
-library("psychotree")
-
 ## Germany's Next Topmodel 2007 data
 data("Topmodel2007", package = "psychotree")
 ## BT tree
-tm_tree <- bttree(preference ~ ., data = Topmodel2007, minsplit = 5, ref = "Barbara")
+tm_tree <- bttree(preference ~ ., data = Topmodel2007, minsize = 5, ref = "Barbara")
 plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
 ## parameter instability tests in root node
+library("strucchange")
 sctest(tm_tree, node = 1)
 ## worth parameters in terminal nodes
 worth(tm_tree)
@@ -99,7 +98,7 @@ data("CEMSChoice", package = "psychotree")
 summary(CEMSChoice$preference)
 ## BT tree
 cems_tree <- bttree(preference ~ french + spanish + italian + study + work + gender + intdegree,
-  data = CEMSChoice, minsplit = 5, ref = "London")
+  data = CEMSChoice, minsize = 5, ref = "London")
 plot(cems_tree, abbreviate = 1, yscale = c(0, 0.5))
 worth(cems_tree)
 }

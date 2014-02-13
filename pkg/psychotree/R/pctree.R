@@ -1,443 +1,333 @@
-### high-level convenience interface for creating pctrees
-pctree <- function (formula, data, minsplit = 30, nullcats = c("keep", "downcode", "ignore"),
-                    reltol = 1e-10, deriv = c("sum", "diff"), hessian = TRUE, maxit = 100L, ...)
+if(FALSE) {
+library("partykit")
+library("psychotools")
+source("../R/pctree-psychotools.R")
+data("DIFSim", package = "psychotree")
+mb <-  mob(resp ~ age + gender + motivation, data = DIFSim, fit = pcmfit, control = mob_control(ytype = "matrix"))
+pct <- pctree(resp ~ age + gender + motivation, data = DIFSim)
+}
+
+### high-level convenience interface to mob()
+pctree <- function (formula, data, na.action = na.pass, nullcats = c("keep", "downcode", "ignore"),
+  reltol = 1e-10, deriv = c("sum", "diff"), maxit = 100L, ...)
 {
-  ## transform formula
-  stopifnot(length(formula) > 2)
-  formula <-  formula(terms(formula, data = data))
-  ff <- y ~ 1 | x
-  ff[[2]] <- formula[[2]]
-  ff[[3]][[3]] <- formula[[3]]
+  ## keep call
+  cl <- match.call(expand.dots = TRUE)
 
-  ## formula/data/model pre-processing
-  pcmmod <- PCModel(nullcats = nullcats, reltol = reltol, deriv = deriv, hessian = hessian, maxit = maxit)
-  ff <- attr(ParseFormula(ff), "formula")
-  ff$input[[3]] <- ff$input[[2]]
-  ff$input[[2]] <- ff$response[[2]]
-  ff <- dpp(pcmmod, as.formula(ff$input), other = list(part = as.formula(ff$blocks)), 
-            data = data, na.action = na.pass)
+  ## use dots for setting up mob_control
+  control <- mob_control(...)
+  control$ytype <- "matrix"
 
-  ## data sanity checks
-  y <- as.matrix(ff@get("response"))
-  if(ncol(y) < 3) stop("need at least three items")
-  rmax <- sum(apply(y, 2, max, na.rm = TRUE))
-  if(any(apply(y, 1, function(x) sum(x, na.rm = TRUE)) %in% c(0, rmax)))
-    stop("Please remove subjects who only scored zero or the highest category.")
+  ## control options for pcmfit
+  pcmcontrol <- list(nullcats = nullcats, reltol = reltol, deriv = deriv, maxit = maxit)
 
-  ## call mob()
-  res <- mob(ff, model = pcmmod, control = mob_control(minsplit = minsplit,
-                                 objfun = function (object) -as.vector(logLik(object)), ...))
-
-  ## add class and return
-  structure(list(mob = res), class = "pctree")
-}
-
-logLik.pctree <- function (object, ...) logLik(object$mob, ...)
-
-sctest.pctree <- function (x, ...) sctest(x$mob, ...)
-
-weights.pctree <- function (object, ...) weights(object$mob, ...)
-
-summary.pctree <- function (object, node = NULL, ...) summary(object$mob, ...)
-
-print.pctree <- function (x, ...) {
-  print(x$mob, ...)
-  invisible(x)
-}
-
-plot.pctree <- function (x, terminal_panel = node_effects, tnex = 2, ...)
-{
-  plot(x$mob, terminal_panel = terminal_panel, tnex = tnex, tp_args = list(...))
-}
-
-coef.pctree <- function (object, node = NULL, ...) 
-{
-  object <- object$mob
-  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
-  nam <- names(object@tree$model$coefficients)
-  rval <- sapply(nodes(object, node), function (z) coef(z$model, ...))
-  if (!is.null(dim(rval))) {
-    rval <- t(rval)
-    rownames(rval) <- node
-    colnames(rval) <- nam
-  }
-  return (rval)
-}
-
-itempar.pctree <- function (object, node = NULL, ...) {
-
-  object <- object$mob
-  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
-  rval <- lapply(nodes(object, node), function(z) itempar.PCModel(z$model, ...))
-  names(rval) <- node
-
+  ## call mob
+  m <- match.call(expand.dots = FALSE)
+  m$fit <- pcmfit
+  m$control <- control
+  for(n in names(pcmcontrol)) if(!is.null(pcmcontrol[[n]])) m[[n]] <- pcmcontrol[[n]]
+  if("..." %in% names(m)) m[["..."]] <- NULL
+  m[[1L]] <- as.name("mob")
+  rval <- eval(m, parent.frame())
+  
+  ## extend class and keep original call
+  rval$info$call <- cl
+  class(rval) <- c("pctree", class(rval))
   return(rval)
-
 }
 
-threshold.pctree <- function (object, node = NULL, ...) {
-
-  object <- object$mob
-  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
-  rval <- lapply(nodes(object, node), function(z) threshold.PCModel(z$model, ...))
-  names(rval) <- node
-
-  return(rval)
-
-}
-
-## terminal panel function for category characteristic curves
-node_ccc <- function(mobobj, names = NULL, ref = NULL, ylab = "Latent trait",
-                     ylim = NULL, col = NULL, n = 101, ccc_lwd = 1.25)
+## glue code for calling PCModel.fit()
+pcmfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, ...,
+  estfun = FALSE, object = FALSE)
 {
-  ## check input
-  stopifnot(!is.null(mobobj))
-
-  ## get terminal nodes and thresholds
-  tnodes <- terminal_nodeIDs(mobobj@tree)
-  nodes_lst <- nodes(mobobj, tnodes)
-  fun <- if (inherits(nodes_lst[[1]]$model, "RaschModel")) threshold.RaschModel else if (inherits(nodes_lst[[1]]$model, "RSModel")) threshold.RSModel else threshold.PCModel
-  thresh_lst <- lapply(nodes_lst, function (node) fun(node$model, ref = ref, type = "unmodified", simplify = FALSE))
-  item_lst <- lapply(thresh_lst, length)
-  m_max <- max(unlist(item_lst))
-  o_lst <- lapply(thresh_lst, function (thresh) sapply(thresh, length))
-  o_max <- max(unlist(o_lst))
-    
-  ## setup plotting parameters
-  if (is.null(names)) names <- paste0("I", 1:m_max) else stopifnot(length(names) == m_max)
-  if (is.null(ylim)) ylim <- extendrange(unlist(thresh_lst, use.names = FALSE), f = 1)
-  if (is.null(col)) col <- rainbow(o_max + 1) else stopifnot(length(col) == o_max + 1)
-
-  ## setup theta and get probabilities for each node via psychotools:::ppcm()
-  theta <- seq(from = ylim[1], to = ylim[2], length.out = n)
-  probs_lst <- ppcm(theta = theta, delta = thresh_lst)
-
-  ## setup label for extraction
-  names(probs_lst) <- names(o_lst) <- names(item_lst) <- tnodes
-
-  ## finally, panel function.
-  panelfun <- function(node) {
-    
-    ## select node id, probabilities, identified items and number of categories of current node
-    nid <- as.character(node$nodeID)
-    probs <- probs_lst[[nid]]
-    m <- item_lst[[nid]]
-    o <- o_lst[[nid]] + 1
-
-    ## setup xi, xlim, label
-    xi <- 1:(m-1)
-    xlim <- c(0, m)
-    lab <- paste("node", nid, sep = "")
-
-    ## terminal panel viewport setup
-    top.vp <- viewport(layout = grid.layout(nrow = 2, ncol = 1, widths = unit(1, "null"), heights = unit(c(1, 1), c("lines", "null"))),
-                       width = unit(1, "npc"), height = unit(1, "npc") - unit(2, "lines"), name = paste(lab, "_ccc", sep = ""))
-    pushViewport(top.vp)
-    grid.rect(gp = gpar(fill = "white", col = 0), name = paste(lab, "_border", sep = ""))
-
-    ## main title
-    pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 1, name = paste(lab, "_title_vp", sep = "")))
-    grid.text(paste("Node ", nid, " (n = ", sum(node$weights), ")", sep = ""), name = paste(lab, "_title", sep = ""))
-    upViewport()
- 
-    ## finally the actual plot
-    pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 2, name = lab))
-    lab <- paste(lab, "_plot", sep = "")
- 
-    ## setup plotting area (3x3)
-    wcol <- if (is.null(ylab)) c(2.5, 1, 1) else c(4, 1, 1)
-    hrow <- c(0.5, 1, 1)
-
-    top.vp <- viewport(layout=grid.layout(nrow = 3, ncol = 3, widths = unit(wcol, c("lines", "null", "lines")),
-                         heights = unit(hrow, c("lines", "null", "lines"))), name = paste(lab, "_top-vp", sep = ""))
-    bmargin.vp <- viewport(layout.pos.row = 3, layout.pos.col = 2, name = paste(lab, "_bottom-margin_vp", sep = ""))
-    lmargin.vp <- viewport(layout.pos.row = 2, layout.pos.col = 1, name = paste(lab, "_left-margin_vp", sep = ""))
-    rmargin.vp <- viewport(layout.pos.row = 2, layout.pos.col = 3, name = paste(lab, "_right-margin_vp", sep = ""))
-    plot.vp <- viewport(layout.pos.row = 2, layout.pos.col = 2, name = paste(lab, "_vp", sep = ""), xscale = xlim, yscale = ylim)
-    pushViewport(top.vp)
-    pushViewport(plot.vp)
-
-    ## plot ccc curves for each item
-    for (i in seq_len(m)) {
-      for (j in seq_len(o[i])) {
-        grid.lines(x = - probs[[i]][, j] + i, y = theta, default.units = "native",
-                   gp = gpar(col = col[j], lwd = ccc_lwd), name = paste(lab, "_item", i, "_cat", j, "_ccc", sep = ""))
-      }
-    }
-    
-    ## plot vertical seperation lines
-    grid.polyline(x = rep(xi, each = 2), y = rep(ylim, m - 1), id.length = rep(2, m - 1),
-                  default.units = "native", name = paste(lab, "_seperation_line", sep = ""))
-
-    ## add box, labels and y-axis
-    grid.rect(name = paste(lab, "_plot-box", sep = ""))
-    grid.xaxis(at = c(0, xi) + 0.5, label = names, main = TRUE, name = paste(lab, "_xaxis-bottom", sep = ""), gp = gpar(lty = 0))
-    grid.yaxis(main = TRUE, name = paste(lab, "_yaxis-left", sep = ""))
-    upViewport()
-    
-    ## add descriptions
-    pushViewport(lmargin.vp)
-    grid.text(ylab, x = 0.2, rot = 90, name = paste(lab, "_ylab-left", sep = ""))
-    upViewport(2)
-    
-    ## go back to uper vp
-    upViewport(2)
-  }
-
-  ## return
-  return(panelfun)
+  if(!(is.null(x) || NCOL(x) == 0L)) warning("x not used")
+  if(!is.null(offset)) warning("offset not used")
+  rval <- PCModel.fit(y, weights = weights, start = start, ..., hessian = object | estfun)
+  rval <- list(
+    coefficients = rval$coefficients,
+    objfun = -rval$loglik,
+    estfun = if(estfun) estfun.PCModel(rval) else NULL,
+    object = if(object) rval else NULL
+  )
+  return(rval)
 }
-class(node_ccc) <- "grapcon_generator"
+
+## methods
+print.pctree <- function(x,
+  title = "Partial credit tree", objfun = "negative log-likelihood", ...)
+{
+  partykit::print.modelparty(x, title = title, objfun = objfun, ...)
+}
+
+predict.pctree <- function(object, newdata = NULL,
+  type = c("node"), ...)
+{
+  ## type of prediction
+  type <- match.arg(type)
+  
+  ## nodes can be handled directly
+  if(type == "node") return(partykit::predict.modelparty(object, newdata = newdata, type = "node", ...))
+  
+  ## get default newdata otherwise
+  ## if(is.null(newdata)) newdata <- model.frame(object)
+  
+  ## pred <- switch(type,
+  ##   "worth" = worth,
+  ##   "rank" = function(obj, ...) rank(-worth(obj)),
+  ##   "best" = function(obj, ...) {
+  ##     wrth <- worth(obj)
+  ##     factor(names(wrth)[which.max(wrth)], levels = names(wrth))
+  ##   }
+  ## )
+  ## partykit::predict.modelparty(object, newdata = newdata, type = pred, ...)
+}
+
+## rewrite of apply_to_models() -- "..." is now passed to FUN
+apply_to_models2 <- function(object, node = NULL, FUN = NULL, drop = FALSE, ...) {
+  if(is.null(node)) node <- nodeids(object, terminal = FALSE)
+  if(is.null(FUN)) FUN <- function(object) object  
+  rval <- if("object" %in% object$info$control$terminal) {
+    nodeapply(object, node, function(n) FUN(info_node(n)$object, ...))
+  } else {
+    lapply(refit.modelparty(object, node, drop = FALSE), FUN, ...)
+  }
+  names(rval) <- node
+  if(drop & length(node) == 1L) rval <- rval[[1L]]
+  return(rval)
+}
+
+## worth.pctree <- function(object, node = NULL, ...)
+## {
+##   ids <- if(is.null(node)) nodeids(object, terminal = TRUE) else node
+##   if(length(ids) == 1L) {
+##     apply_to_models(object, node = ids, FUN = worth, drop = TRUE)
+##   } else {
+##     do.call("rbind", apply_to_models(object, node = ids, FUN = worth, drop = FALSE))
+##   } 
+## }
+
+plot.pctree <- function(x, terminal_panel = node_effects,
+  tp_args = list(), tnex = NULL, drop_terminal = NULL, ...)
+{
+  if(is.null(tnex)) tnex <- if(is.null(terminal_panel)) 1L else 2L
+  if(is.null(drop_terminal)) drop_terminal <- !is.null(terminal_panel)
+  partykit::plot.modelparty(x, terminal_panel = terminal_panel,
+    tp_args = tp_args, tnex = tnex, drop_terminal = drop_terminal, ...)
+}
 
 
-## terminal panel function for effect displays
+## visualization function
 node_effects <- function(mobobj, names = NULL, type = c("mode", "median", "mean"),
                          ref = NULL, ylab = "Latent trait", ylim = NULL, off = 0.1, col_fun = gray.colors,
-                         uo_show = TRUE, uo_col = "red", uo_lty = 2, uo_lwd = 1.25)
+                         uo_show = TRUE, uo_col = "red", uo_lty = 2, uo_lwd = 1.25)    
 {
-  ## check input
-  stopifnot(!is.null(mobobj))
-  stopifnot(off >= 0)
-  type <- match.arg(type)
+    ## check input
+    stopifnot(!is.null(mobobj))
+    stopifnot(off >= 0)
+    type <- match.arg(type)
 
-  ## get number of terminal nodes, corresponding nodes and thresholds
-  tnodes <- terminal_nodeIDs(mobobj@tree)
-  nodes_lst <- nodes(mobobj, tnodes)
-  fun <- if (inherits(nodes_lst[[1]]$model, "RaschModel")) threshold.RaschModel else if (inherits(nodes_lst[[1]]$model, "RSModel")) threshold.RSModel else threshold.PCModel
-  delta_lst <- lapply(nodes_lst, function (node) fun(node$model, type = type, ref = ref, simplify = FALSE))
-
-  ## if requested and type = 'mode' check for unordered thresholds
-  if (uo_show && type == "mode") {
-    if (inherits(nodes_lst[[1]]$model, "RSModel")) {
-      ip_lst <- lapply(nodes_lst, function (node) itempar.RSModel(node$model, ref = ref, vcov = FALSE, simplify = FALSE))
-      ip_lst <- lapply(ip_lst, function (ip) lapply(as.list(ip[[1]]), function (beta) diff(0:length(ip[[2]]) * beta + c(0, ip[[2]]))))
-    } else if (inherits(nodes_lst[[1]]$model, "PCModel")) {
-      ip_lst <- lapply(nodes_lst, function (node) lapply(itempar.PCModel(node$model, ref = ref, vcov = FALSE, simplify = FALSE), function (j) diff.default(c(0, j))))
+    ## FIXME: glue code as long as threshold() and itempar() is not exported:
+    ## get one full model, determine class, set appropriate threshold and itempar function
+    model <- apply_to_models2(mobobj, node = 1L, FUN = NULL)[[1]]
+    RSM <- FALSE
+    if (inherits(model[[1]], "RaschModel")) {
+        threshold <- threshold.RaschModel
+        itempar <- function (node) lapply(itempar.RaschModel(node, ref = ref, vcov = FALSE, simplify = FALSE), function (j) diff.default(c(0, j)))
+    } else if (inherits(model[[1]], "RSModel")) {
+        threshold <- threshold.RSModel
+        itempar <- function (node) lapply(as.list(itempar.RSModel(node, ref = ref, vcov = FALSE, simplify = FALSE)[[1]]),
+                                          function (beta) diff(0:length(ip[[2]]) * beta + c(0, ip[[2]])))
     } else {
-      ip_lst <- lapply(nodes_lst, function (node) lapply(itempar.RaschModel(node$model, ref = ref, vcov = FALSE, simplify = FALSE), function (j) diff.default(c(0, j))))
+        threshold <- threshold.PCModel
+        itempar <- function (node) lapply(itempar.PCModel(node, ref = ref, vcov = FALSE, simplify = FALSE), function (j) diff.default(c(0, j)))
     }
 
-    names(ip_lst) <- tnodes
-  }
-
-  ## setup plotting parameters
-  m <- max(sapply(delta_lst, length))
-  xi <- 0:m + c(0:(m - 1), m - 1) * off
-  xlim <- c(xi[1], xi[m + 1])
-
-  ## setup axis range and labels
-  if (is.null(ylim)) ylim <- extendrange(unlist(delta_lst, use.names = FALSE), f = 0.25)
-  if (is.null(names)) names  <- paste("I", 1:m, sep = "") else stopifnot(length(names) == m)
-
-  ## label for extraction
-  names(delta_lst) <- tnodes
-
-  ## finally, panel function, just select and paint.
-  panelfun <- function(node) {
+    ## setup threshold parameters
+    node <- nodeids(mobobj, terminal = TRUE)
+    delta_lst <- apply_to_models2(mobobj, node, FUN = threshold, type = type, ref = ref, simplify = FALSE)
     
-    ## select node id, coefficients, identified items, x-position vector and label
-    nid <- as.character(node$nodeID)
-    cf <- delta_lst[[nid]]
-    lab <- paste("node", nid, sep = "")
- 
-    ## terminal panel viewport setup
-    top.vp <- viewport(layout = grid.layout(nrow = 2, ncol = 1, widths = unit(1, "null"), heights = unit(c(1, 1), c("lines", "null"))),
-                       width = unit(1, "npc"), height = unit(1, "npc") - unit(2, "lines"), name = paste(lab, "_effects", sep = ""))
-    pushViewport(top.vp)
-    grid.rect(gp = gpar(fill = "white", col = 0), name = paste(lab, "_border", sep = ""))
-
-    ## main title
-    pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 1, name = paste(lab, "_title_vp", sep = "")))
-    grid.text(paste("Node ", nid, " (n = ", sum(node$weights), ")", sep = ""), name = paste(lab, "_title", sep = ""))
-    upViewport()
- 
-    ## finally the actual plot
-    pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 2, name = lab))
-    lab <- paste(lab, "_plot", sep = "")
-
-    ## setup plotting area (3x3)
-    wcol <- if (is.null(ylab)) c(2.5, 1, 1) else c(4, 1, 1)
-    hrow <- c(0.5, 1, 1)
-
-    top.vp <- viewport(layout=grid.layout(nrow = 3, ncol = 3, widths = unit(wcol, c("lines", "null", "lines")), heights = unit(hrow, c("lines", "null", "lines"))), name = paste(lab, "_top_vp", sep = ""))
-    bmargin.vp <- viewport(layout.pos.row = 3, layout.pos.col = 2, name = paste(lab, "_bottom-margin_vp", sep = ""))
-    lmargin.vp <- viewport(layout.pos.row = 2, layout.pos.col = 1, name = paste(lab, "_left-margin_vp", sep = ""))
-    rmargin.vp <- viewport(layout.pos.row = 2, layout.pos.col = 3, name = paste(lab, "_right-margin_vp", sep = ""))
-    plot.vp <- viewport(layout.pos.row = 2, layout.pos.col = 2, name = paste(lab, "_vp", sep = ""), xscale = xlim, yscale = ylim)
-    pushViewport(top.vp)
-    pushViewport(plot.vp)
-
-    ## plot rectangles per item
-    for (j in seq_along(cf)) {
-      
-      ncat <- length(cf[[j]]) + 1
-      grid.rect(x = rep.int(xi[j], ncat), y = c(ylim[1], cf[[j]]), width = rep.int(1, ncat), height = diff.default(c(ylim[1], cf[[j]], ylim[2])),
-                just = c("left", "bottom"), gp = gpar(fill = col_fun(ncat)), default.units = "native",
-                name = paste(lab, "_item", j, "_rect", sep = ""))
-
-    }
-
-    ## if requested: indicate unordered parameters
+    ## if requested and type = 'mode' check for unordered thresholds
     if (uo_show && type == "mode") {
-      ip <- ip_lst[[nid]]
-      uo_items <- which(!sapply(mapply(all.equal, cf, ip, check.attributes = FALSE, SIMPLIFY = FALSE, USE.NAMES = FALSE), is.logical))
-      for (j in uo_items) {
-        uo_pars <- setdiff(ip[[j]], cf[[j]])
-        grid.polyline(x = rep(c(xi[j], xi[j] + 1), length(uo_pars)), y = rep(uo_pars, each = 2), 
-                      default.units = "native", id = rep(1:length(uo_pars), each = 2),
-                      name = paste(lab, "item", j, "_uolines", sep = ""),
-                      gp = gpar(col = uo_col, lwd = uo_lwd, lty = uo_lty))
-      }
+        ip_lst <- apply_to_models2(mobobj, node, FUN = itempar)
+        names(ip_lst) <- node
     }
 
-    ## add box and axis
-    grid.rect(name = paste(lab, "_plot-box", sep = ""))
-    grid.xaxis(at = (xi[-(m+1)] + 0.5), label = names, main = TRUE, name = paste(lab, "_xaxis-bottom", sep = ""))
-    grid.yaxis(main = TRUE, name = paste(lab, "_yaxis-left", sep = ""))
-    upViewport()
-    
-    ## add descriptions
-    pushViewport(lmargin.vp)
-    grid.text(ylab, x = 0.2, rot = 90, name = paste(lab, "_ylab-left", sep = ""))
-    upViewport(2)
-    
-    ## go back to uper vp
-    upViewport(2)
-  }
+    ## setup plotting parameters
+    m <- max(sapply(delta_lst, length))
+    xi <- 0:m + c(0:(m - 1), m - 1) * off
+    xlim <- c(xi[1], xi[m + 1])
 
-  ## return
-  return(panelfun)
+    ## setup axis range and labels
+    if (is.null(ylim)) ylim <- extendrange(unlist(delta_lst, use.names = FALSE), f = 0.25)
+    if (is.null(names)) names  <- paste("I", 1:m, sep = "") else stopifnot(length(names) == m)
+
+    ## label for extraction
+    names(delta_lst) <- node
+
+    ## finally, panel function, just select and paint.
+    panelfun <- function(node) {
+
+        ## select node id, coefficients, identified items, x-position vector and label
+        id <- as.character(id_node(node))
+        cf <- delta_lst[[id]]
+        lab <- paste("node", id, sep = "")
+        
+        ## terminal panel viewport setup
+        top.vp <- viewport(layout = grid.layout(nrow = 2, ncol = 1, widths = unit(1, "null"), heights = unit(c(1, 1), c("lines", "null"))),
+                           width = unit(1, "npc"), height = unit(1, "npc") - unit(2, "lines"), name = paste(lab, "_effects", sep = ""))
+        pushViewport(top.vp)
+        grid.rect(gp = gpar(fill = "white", col = 0), name = paste(lab, "_border", sep = ""))
+
+        ## main title
+        pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 1, name = paste(lab, "_title_vp", sep = "")))
+        grid.text(paste("Node ", id, " (n = ", info_node(node)$nobs, ")", sep = ""), name = paste(lab, "_title", sep = ""))
+        upViewport()
+        
+        ## finally the actual plot
+        pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 2, name = lab))
+        lab <- paste(lab, "_plot", sep = "")
+
+        ## setup plotting area (3x3)
+        wcol <- if (is.null(ylab)) c(2.5, 1, 1) else c(4, 1, 1)
+        hrow <- c(0.5, 1, 1)
+
+        top.vp <- viewport(layout=grid.layout(nrow = 3, ncol = 3, widths = unit(wcol, c("lines", "null", "lines")), heights = unit(hrow, c("lines", "null", "lines"))), name = paste(lab, "_top_vp", sep = ""))
+        bmargin.vp <- viewport(layout.pos.row = 3, layout.pos.col = 2, name = paste(lab, "_bottom-margin_vp", sep = ""))
+        lmargin.vp <- viewport(layout.pos.row = 2, layout.pos.col = 1, name = paste(lab, "_left-margin_vp", sep = ""))
+        rmargin.vp <- viewport(layout.pos.row = 2, layout.pos.col = 3, name = paste(lab, "_right-margin_vp", sep = ""))
+        plot.vp <- viewport(layout.pos.row = 2, layout.pos.col = 2, name = paste(lab, "_vp", sep = ""), xscale = xlim, yscale = ylim)
+        pushViewport(top.vp)
+        pushViewport(plot.vp)
+
+        ## plot rectangles per item
+        for (j in seq_along(cf)) {
+            
+            ncat <- length(cf[[j]]) + 1
+            grid.rect(x = rep.int(xi[j], ncat), y = c(ylim[1], cf[[j]]), width = rep.int(1, ncat), height = diff.default(c(ylim[1], cf[[j]], ylim[2])),
+                      just = c("left", "bottom"), gp = gpar(fill = col_fun(ncat)), default.units = "native",
+                      name = paste(lab, "_item", j, "_rect", sep = ""))
+
+        }
+
+        ## if requested: indicate unordered parameters
+        if (uo_show && type == "mode") {
+            ip <- ip_lst[[id]]
+            uo_items <- which(!sapply(mapply(all.equal, cf, ip, check.attributes = FALSE, SIMPLIFY = FALSE, USE.NAMES = FALSE), is.logical))
+            for (j in uo_items) {
+                uo_pars <- setdiff(ip[[j]], cf[[j]])
+                grid.polyline(x = rep(c(xi[j], xi[j] + 1), length(uo_pars)), y = rep(uo_pars, each = 2), 
+                              default.units = "native", id = rep(1:length(uo_pars), each = 2),
+                              name = paste(lab, "item", j, "_uolines", sep = ""),
+                              gp = gpar(col = uo_col, lwd = uo_lwd, lty = uo_lty))
+            }
+        }
+
+        ## add box and axis
+        grid.rect(name = paste(lab, "_plot-box", sep = ""))
+        grid.xaxis(at = (xi[-(m+1)] + 0.5), label = names, main = TRUE, name = paste(lab, "_xaxis-bottom", sep = ""))
+        grid.yaxis(main = TRUE, name = paste(lab, "_yaxis-left", sep = ""))
+        upViewport()
+        
+        ## add descriptions
+        pushViewport(lmargin.vp)
+        grid.text(ylab, x = 0.2, rot = 90, name = paste(lab, "_ylab-left", sep = ""))
+        upViewport(2)
+        
+        ## go back to uper vp
+        upViewport(2)
+    }
+
+    ## return
+    return(panelfun)
 }
 class(node_effects) <- "grapcon_generator"
 
-### plotCCC.pctree() plots the category characteristic curves of a number of specified items for a given number of nodes
-plotCCC.pctree <- function (object, nodes = NULL, items = NULL, byrow = TRUE, sum0 = TRUE, names = NULL, ylim = c(0, 1), xlim = NULL,
-                            col = NULL, n = 101, main = "Category Characteristic Curves",  xlab = "Latent Trait", ylab = "Probability", ...)
-{
-  ## get available nodes if necessary, elsewise check input within nodes(...)
-  nodes <- if (is.null(nodes)) terminal_nodeIDs(object$mob@tree) else nodes
-  n_nodes <- length(nodes)
-  nodes_lst <- nodes(object$mob, nodes)
-  
-  ##  set items to plot: if arguments items = NULL, then items is set to the maximum number of items (within all terminal nodes)
-  n_items <- numeric(n_nodes)
-  for (i in seq_len(n_nodes)) n_items[i] <- length(nodes_lst[[i]][["model"]][["items"]])
-  n_items <- max(n_items)
-  mvec <- 1:n_items
-  if (is.null(items)) items <- mvec  else {
-    stopifnot(is.numeric(items) && all(items %in% mvec))
-    n_items <- length(items)
-  }
+bread.PCModel <- function(x, ...) x$vcov * x$n
 
-  ## check custom item lab
-  if (is.null(names)) names <- paste("Item", items) else stopifnot(length(names) == n_items)
-  
-  ## setup threshold parameters and number of categories per node
-  oj_lst <- delta_lst <- vector("list", n_nodes)
-  for (i in seq_len(n_nodes)) {
-    model <- nodes_lst[[i]]$model
-    if (inherits(model, "RSModel")) {
-      delta_lst[[i]] <- coef(model, type = "PCM", sum0 = sum0, as.list = TRUE)[items]
-      oj_lst[[i]] <- model$categories[items]  + 1
-    } else {
-      delta_lst[[i]] <- coef(model, type = "threshold", sum0 = sum0, as.list = TRUE)[items]
-      oj_lst[[i]] <- (sapply(model$categories, length, USE.NAMES = FALSE) + 1)[items]
+estfun.PCModel <- function (x, ...) {
+  ## get relevant informations
+  dat <- x$data                    # completely cleaned (downcoded, null cats treatment, weights) data.
+  weights_org <- weights(x)
+  weights <- weights_org[weights_org > 0]
+  n <- nrow(dat)
+  m <- ncol(dat)
+  oj_vec <- x$categories
+  oj <- sapply(x$categories, length)
+  npar_all <- sum(oj)
+  npar_ident <- x$df
+  ptot <- rowSums(dat, na.rm = TRUE) + 1 # +1 because gamma of score 0 is in row 1.
+
+  ## helper variables
+  parindex <- unlist(oj_vec)
+  itemindex <- rep.int(1:m, oj)
+
+  ## calculate gradient
+  if (!x$na) {
+
+    ## select gamma zero and first derivatives with ptot
+    gamma0 <- x$esf[[1]][ptot]
+    gamma1 <- apply(x$esf[[2]], 2, "[", ptot)
+
+    ## construct data matrix ('selection' matrix, 0/1, cols = parameters)
+    if (!is.null(x$nullcats)) { ## null cats & strategy == 'keep', remove column of unidentified par
+      est_par <- !unlist(x$nullcats)
+      gamma1 <- gamma1[, est_par, drop = FALSE]
     }
-  }
+    xmat <- matrix(FALSE, nrow = n, ncol = npar_all)
+    for (i in 1:n) xmat[i, ] <- dat[i, itemindex] == parindex 
 
-  ## setup plotting parameters
-  if (is.null(xlim)) xlim <- extendrange(unlist(delta_lst, use.names = FALSE), f = 1.75)
-  if (is.null(col)) col <- rainbow(max(unlist(oj_lst, use.names = FALSE)))
+    ## calculate gradient
+    agrad <- weights * (- xmat + (gamma1 / gamma0))
 
-  ## setup theta and get probabilities for each node via psychotools:::ppcm()
-  theta <- seq(from = xlim[1], to = xlim[2], length.out = n)
-  probs_lst <- ppcm(theta = theta, delta = delta_lst)
+  } else {
 
-  ## setup plotting area
-  top.vp <- viewport(layout = grid.layout(nrow = 4, ncol = 3,
-                       heights = unit(c(3, 1, 5, 1), c("lines", "null", "lines", "lines")),
-                       widths = unit(c(4, 1, 1), c("lines", "null", "lines"))), name = "top.vp")
-  lyt <- if (byrow) grid.layout(nrow = n_nodes, ncol = 1) else grid.layout(nrow = 1, ncol = n_nodes)
-  node.vp <- viewport(layout.pos.row = 2, layout.pos.col = 2, name = "node.vp", layout = lyt)
-  grid.newpage()
-  pushViewport(top.vp)
-  pushViewport(node.vp)
+    ## return value & helper variables
+    agrad <- matrix(0, nrow = n, ncol = npar_all)
+    mv <- 1:m
 
-  ## plot CCCs for all nodes
-  for (i in seq_len(n_nodes)) {
-    lab <- paste("node.vp.node", i, sep = "")
-    if (byrow) {
-      vp <- viewport(layout.pos.row = i, name = paste(lab, ".vp", sep = ""),
-                     layout = grid.layout(1, n_items), xscale = xlim)
-    } else {
-      vp <- viewport(layout.pos.col = i, name = paste(lab, ".vp", sep = ""),
-                     layout = grid.layout(n_items, 1) , xscale = xlim)
-    }
-    pushViewport(vp)
-    
-    ## plot all ccc for current node i
-    for (j in seq_len(n_items)) {
-      ## plotting area
-      nlab <- paste(lab, ".item", items[j], sep = "")
-      if (byrow) vp <- viewport(layout.pos.col = j, name = nlab, layout = grid.layout(nrow = 2, ncol = 1, heights = unit(c(1, 1), c("lines", "null"))))
-      else vp <- viewport(layout.pos.row = j, name = nlab, layout = grid.layout(nrow = 3, ncol = 1, heights = unit(c(1, 1), c("lines", "null"))))
-      pushViewport(vp)
-      grid.rect(name = paste(nlab, ".box", sep = ""))
+    ## observed NA patterns 
+    na_patterns <- factor(apply(is.na(dat), 1, function(z) paste(which(z), collapse = "\r")))
 
-      ## strip
-      pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1, name = paste(nlab, ".strip.vp", sep = "")))
-      grid.rect(name = paste(nlab, ".strip", ".box", sep = ""), gp = gpar(fill = gray(0.8), ...))
-      grid.text(paste("Node", nodes[i], "/", names[j]), name = paste(nlab, ".strip", ".text", sep = ""), gp = gpar(...))
-      upViewport()
+    ## loop through na patterns, select derivatives and calculate gradient
+    for(i in seq_len(nlevels(na_patterns))) {
 
-      ## main ccc plot
-      pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 1, name = paste(nlab, ".ccc.vp", sep = ""), xscale = xlim, yscale = ylim))
-      
-      ## axis
-      if (byrow) {
-        if (i == n_nodes) grid.xaxis(main = TRUE, name = paste(nlab, ".ccc", ".xaxis.bottom", sep = ""), gp = gpar(...))
-        if (j == 1) grid.yaxis(main = TRUE, name = paste(nlab, ".ccc", ".yaxis.left", sep = ""), gp = gpar(...))
-      } else {
-        if (i == 1) grid.yaxis(main = TRUE, name = paste(nlab, ".ccc", ".yaxis.left", sep = ""), gp = gpar(...))
+      ## parse NA patterns and setup necessary stuff for gradient calculation
+      lev_i <- levels(na_patterns)[i]
+      na_i <- which(na_patterns == lev_i)
+      n_na_i <- length(na_i)
+      mv_i <- as.integer(strsplit(lev_i, "\r")[[1]])
+      mv_i <- if(length(mv_i) < 1) mv else mv[-mv_i]
+      oj_i <- oj[mv_i]
+      oj_vec_i <- oj_vec[mv_i]
+      weights_i <- weights[na_i]
+      ptot_i <- ptot[na_i]
+      dat_i <- dat[na_i, , drop = FALSE]
+
+      ## select gamma zero and first derivatives with ptot_i
+      gamma0_i <- x$esf[[i]][[1]][ptot_i]
+      gamma1_i <- apply(x$esf[[i]][[2]], 2, "[", ptot_i)
+      if (!is.matrix(gamma1_i)) gamma1_i <- matrix(gamma1_i, nrow = 1)
+
+      ## construct data matrix ('selection' matrix, 0/1, cols = parameters) for NA group i
+      parindex_i <- unlist(oj_vec_i)
+      itemindex_i <- rep.int(mv_i, oj_i)
+
+      if (!is.null(x$nullcats)) { ## null cats & strategy == 'keep', remove column of unidentified par
+        est_par_i<- !unlist(x$nullcat[mv_i])
+        gamma1_i <- gamma1_i[, est_par_i, drop = FALSE]
       }
 
-      ## finally, plot all CCC's for item j and node i.
-      ncat <- oj_lst[[i]][j]
-      grid.polyline(x = rep(theta, ncat), y = probs_lst[[i]][[j]], id.lengths = rep(n, ncat),
-                    default.units = "native", gp = gpar(col = col, ...), name = paste(nlab, ".ccc", sep = ""))
+      xmat_i <- matrix(FALSE, nrow = n_na_i, ncol = sum(oj_i))
+      for (i in 1:n_na_i) xmat_i[i, ] <- dat_i[i, itemindex_i] == parindex_i
 
-      ## go up again
-      upViewport(2)
+      ## finally: the gradient for NA group i
+      agrad[na_i, itemindex %in% mv_i] <- weights_i * (- xmat_i + (gamma1_i/ gamma0_i))
     }
-    ## box and x-axis
-    grid.rect(name = paste(lab, ".box", sep = ""))
-    if (!byrow) grid.xaxis(main = TRUE, name = paste(lab, ".xaxis.top", sep = ""))
-    upViewport()
-  }
-  upViewport()
 
-  ## add main
-  pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2, name = "top.vp.title.vp"))
-  grid.text(main, name = "top.vp.title.text", gp = gpar(...))
-  upViewport()
+  }  
 
-  ## add ylab
-  pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 1, name = "top.vp.ylab.vp"))
-  grid.text(ylab, x = 0.25, rot = 90, name = "top.vp.ylab.text", gp = gpar(...))
-  upViewport()
-
-  ## add xlab
-  pushViewport(viewport(layout.pos.row = 3, layout.pos.col = 2, name = "top.vp.xlab.vp"))
-  grid.text(xlab, y = 0.4, name = "top.vp.xlab.text", gp = gpar(...))
-  upViewport()
-
-  ## add legend
-  pushViewport(viewport(layout.pos.row = 4, layout.pos.col = 2, name = "top.vp.legend.vp"))
-  max_oj <- max(unlist(oj_lst, use.names = FALSE))
-  x <- seq(0, 1, length.out = 2 * max_oj + 1)
-  y <- rep(1, 2 * max_oj)
-  id <- rep(1:(max_oj), each = 2)
-  grid.polyline(x = x[1:(2 * max_oj)], y = y, id = id, gp = gpar(col = col, ...), name = "top.vp.legend.lines")
-  grid.text(paste("Cat.", 1:max_oj), x = (x[seq(from = 2, by = 2, length.out = max_oj)]+x[2] * 0.5), y = rep(1, max_oj), name = "top.vp.legend.text")
-  upViewport()
+  ## collect and return matrix of initial size with gradients plugged in.
+  grad <- matrix(0, ncol = npar_ident, nrow = length(weights_org))
+  grad[weights_org > 0, ] <- agrad[, -1, drop = FALSE]
+  return(grad)
 }

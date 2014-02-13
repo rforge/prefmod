@@ -1,91 +1,117 @@
-## infrastructure (copied from party)
-terminal_nodeIDs <- function(node) {
-  if(node$terminal) return(node$nodeID)
-  ll <- terminal_nodeIDs(node$left)
-  rr <- terminal_nodeIDs(node$right)
-  return(c(ll, rr))
+if(FALSE) {
+library("partykit")
+library("psychotools")
+data("Topmodel2007", package = "psychotree")
+mb <-    mob(preference ~ age + gender + q1 + q2 + q3, data = Topmodel2007, fit = btfit)
+bt <- bttree(preference ~ age + gender + q1 + q2 + q3, data = Topmodel2007)
 }
 
-## high-level convenience interface
+## high-level convenience interface to mob()
 bttree <- function(formula, data, na.action = na.pass,
-  type = "loglin", ref = NULL, undecided = NULL, position = NULL, minsplit = 10, ...)
+  type = "loglin", ref = NULL, undecided = NULL, position = NULL, ...)
 {
-  ## transform formula
-  stopifnot(length(formula) > 2)
-  formula <-  formula(terms(formula, data = data))
-  ff <- y ~ 1 | x
-  ff[[2]] <- formula[[2]]
-  ff[[3]][[3]] <- formula[[3]]
+  ## keep call
+  cl <- match.call(expand.dots = TRUE)
 
-  ## call mob()
-  rval <- mob(ff, data = data, model = btReg(type = type, ref = ref,
-      undecided = undecided, position = position),
-    control = mob_control(minsplit = minsplit, ...), na.action = na.action)
+  ## use dots for setting up mob_control
+  control <- mob_control(...)
 
-  ## add class and return
-  structure(list(mob = rval), class = "bttree")
-}
+  ## control options for btfit
+  btcontrol <- list(type = type, ref = ref, undecided = undecided, position = position)
 
-## convenience plotting
-plot.bttree <- function(x, terminal_panel = node_btplot, tnex = 2, ...) {
-  plot(x$mob, terminal_panel = terminal_panel, tnex = tnex, tp_args = list(...))
-}
-
-## hand-crafted "Next()" to bridge to
-## un-exported S4 classes "mob"/"BinaryTree", argh!
-deviance.bttree <- function(object, ...) deviance(object$mob, ...)
-logLik.bttree <- function(object, ...) logLik(object$mob, ...)
-sctest.bttree <- function(x, ...) sctest(x$mob, ...)
-weights.bttree <- function(object, ...) weights(object$mob, ...)
-summary.bttree <- function(object, ...) summary(object$mob, ...)
-print.bttree <- function(x, ...) {
-  print(x$mob, ...)
-  invisible(x)
-}
-
-## parameters for BT trees
-coef.bttree <- function (object, node = NULL, ...) 
-{
-  object <- object$mob
-  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
-  rval <- sapply(nodes(object, node), function(z) coef(z$model, ...))
-  if (!is.null(dim(rval))) {
-    rval <- t(rval)
-    rownames(rval) <- node
-  }
+  ## call mob
+  m <- match.call(expand.dots = FALSE)
+  m$fit <- btfit
+  m$control <- control
+  for(n in names(btcontrol)) if(!is.null(btcontrol[[n]])) m[[n]] <- btcontrol[[n]]
+  if("..." %in% names(m)) m[["..."]] <- NULL
+  m[[1L]] <- as.name("mob")
+  rval <- eval(m, parent.frame())
+  
+  ## extend class and keep original call
+  rval$info$call <- cl
+  class(rval) <- c("bttree", class(rval))
   return(rval)
 }
 
-worth.bttree <- function (object, node = NULL, ...) 
+## glue code for calling btReg.fit()
+btfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, ...,
+  estfun = FALSE, object = FALSE)
 {
-  object <- object$mob
-  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
-  rval <- sapply(nodes(object, node), function(z) worth(z$model, ...))
-  if (!is.null(dim(rval))) {
-    rval <- t(rval)
-    rownames(rval) <- node
-  }
+  if(!(is.null(x) || NCOL(x) == 0L)) warning("x not used")
+  if(!is.null(offset)) warning("offset not used")
+  vcov <- object
+  rval <- btReg.fit(y, weights = weights, ...,
+    estfun = estfun, vcov = object)
+  rval <- list(
+    coefficients = rval$coefficients,
+    objfun = -rval$loglik,
+    estfun = rval$estfun,
+    object = if(object) rval else NULL
+  )
   return(rval)
+}
+
+## methods
+print.bttree <- function(x,
+  title = "Bradley-Terry tree", objfun = "negative log-likelihood", ...)
+{
+  partykit::print.modelparty(x, title = title, objfun = objfun, ...)
 }
 
 predict.bttree <- function(object, newdata = NULL,
-  type = c("worth", "rank", "node"), ...)
+  type = c("worth", "rank", "best", "node"), ...)
 {
+  ## type of prediction
   type <- match.arg(type)
   
-  ## get nodes
-  nodes <- predict(object$mob, newdata = newdata, type = "node", ...)
-  if(type == "node") return(nodes)
+  ## nodes can be handled directly
+  if(type == "node") return(partykit::predict.modelparty(object, newdata = newdata, type = "node", ...))
   
-  ## get worth
-  w <- worth(object)
-  w <- w[as.character(nodes), , drop = FALSE]
-  rownames(w) <- NULL
-  if(type == "worth") return(w)
+  ## get default newdata otherwise
+  if(is.null(newdata)) newdata <- model.frame(object)
   
-  ## get order
-  o <- t(apply(-w, 1, rank))
-  return(o)
+  pred <- switch(type,
+    "worth" = worth,
+    "rank" = function(obj, ...) rank(-worth(obj)),
+    "best" = function(obj, ...) {
+      wrth <- worth(obj)
+      factor(names(wrth)[which.max(wrth)], levels = names(wrth))
+    }
+  )
+  partykit::predict.modelparty(object, newdata = newdata, type = pred, ...)
+}
+
+apply_to_models <- function(object, node = NULL, FUN = NULL, drop = FALSE, ...) {
+  if(is.null(node)) node <- nodeids(object, terminal = FALSE)
+  if(is.null(FUN)) FUN <- function(object, ...) object  
+  rval <- if("object" %in% object$info$control$terminal) {
+    nodeapply(object, node, function(n) FUN(info_node(n)$object))
+  } else {
+    lapply(refit.modelparty(object, node, drop = FALSE), FUN)
+  }
+  names(rval) <- node
+  if(drop & length(node) == 1L) rval <- rval[[1L]]
+  return(rval)
+}
+
+worth.bttree <- function(object, node = NULL, ...)
+{
+  ids <- if(is.null(node)) nodeids(object, terminal = TRUE) else node
+  if(length(ids) == 1L) {
+    apply_to_models(object, node = ids, FUN = worth, drop = TRUE)
+  } else {
+    do.call("rbind", apply_to_models(object, node = ids, FUN = worth, drop = FALSE))
+  } 
+}
+
+plot.bttree <- function(x, terminal_panel = node_btplot,
+  tp_args = list(), tnex = NULL, drop_terminal = NULL, ...)
+{
+  if(is.null(tnex)) tnex <- if(is.null(terminal_panel)) 1L else 2L
+  if(is.null(drop_terminal)) drop_terminal <- !is.null(terminal_panel)
+  partykit::plot.modelparty(x, terminal_panel = terminal_panel,
+    tp_args = tp_args, tnex = tnex, drop_terminal = drop_terminal, ...)
 }
 
 
@@ -94,20 +120,26 @@ node_btplot <- function(mobobj, id = TRUE,
   worth = TRUE, names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
   col = "black", linecol = "lightgray", cex = 0.5, pch = 19, xscale = NULL, yscale = NULL, ylines = 1.5)
 {
-    ## extract parameter of interest
-    node <- 1:max(terminal_nodeIDs(mobobj@tree))
-    cf <- t(sapply(nodes(mobobj, node), function(z)
-      if(worth) worth(z$model) else coef(z$model, all = FALSE, ref = TRUE)))
+    ## node ids
+    node <- nodeids(mobobj, terminal = FALSE)
+    
+    ## get all coefficients 
+    cf <- apply_to_models(mobobj, node, FUN = function(z)        
+      if(worth) worth(z) else coef(z, all = FALSE, ref = TRUE))
+    cf <- do.call("rbind", cf)
     rownames(cf) <- node
+
+    ## get one full model
+    mod <- apply_to_models(mobobj, node = 1L, FUN = NULL)
 
     if(!worth) {
       if(is.character(ref) | is.numeric(ref)) {
         reflab <- ref
         ref <- TRUE
       } else {
-        reflab <- mobobj@tree$model$ref
+        reflab <- mod$ref
       }
-      if(is.character(reflab)) reflab <- match(reflab, mobobj@tree$model$labels)
+      if(is.character(reflab)) reflab <- match(reflab, mod$labels)
       cf <- cf - cf[,reflab]
     }
 
@@ -142,50 +174,52 @@ node_btplot <- function(mobobj, id = TRUE,
          
     ## panel function for bt plots in nodes
     rval <- function(node) {
+
+      ## node index
+      id <- id_node(node)
     
-        ## dependent variable setup
-	cfi <- cf[node$nodeID,]
+      ## dependent variable setup
+      cfi <- cf[id,]
 
-        ## viewport setup
-        top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
-                           widths = unit(c(ylines, 1, 1), c("lines", "null", "lines")),  
-			   heights = unit(c(1, 1), c("lines", "null"))),
-                           width = unit(1, "npc"), 
-                           height = unit(1, "npc") - unit(2, "lines"),
-			   name = paste("node_btplot", node$nodeID, sep = ""))
-        pushViewport(top_vp)
-        grid.rect(gp = gpar(fill = "white", col = 0))
+      ## viewport setup
+      top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
+    			 widths = unit(c(ylines, 1, 1), c("lines", "null", "lines")),  
+        		 heights = unit(c(1, 1), c("lines", "null"))),
+    			 width = unit(1, "npc"), 
+    			 height = unit(1, "npc") - unit(2, "lines"),
+        		 name = paste("node_btplot", id, sep = ""))
+      pushViewport(top_vp)
+      grid.rect(gp = gpar(fill = "white", col = 0))
 
-        ## main title
-        top <- viewport(layout.pos.col = 2, layout.pos.row = 1)
-        pushViewport(top)
-	mainlab <- paste(ifelse(id, paste("Node", node$nodeID, "(n = "), ""),
-	                 sum(node$weights), ifelse(id, ")", ""), sep = "")
-        grid.text(mainlab)
-        popViewport()
+      ## main title
+      top <- viewport(layout.pos.col = 2, layout.pos.row = 1)
+      pushViewport(top)
+      mainlab <- paste(ifelse(id, paste("Node", id, "(n = "), ""),
+        	       info_node(node)$nobs, ifelse(id, ")", ""), sep = "")
+      grid.text(mainlab)
+      popViewport()
 
-        ## actual plot	
-        plot_vpi <- viewport(layout.pos.col = 2, layout.pos.row = 2,
-	    xscale = xscale, yscale = yscale, 
-	    name = paste("node_btplot", node$nodeID, "plot", sep = ""))
-        pushViewport(plot_vpi)
-	
-        grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = linecol), default.units = "native")
-	if(index) {
-	  grid.lines(x, cfi, gp = gpar(col = col, lty = 2), default.units = "native")
-	  grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
-	  grid.xaxis(at = x, label = if(names) names(cfi) else x)
-	} else {	  
-  	  if(names) grid.text(names(cfi), x = x, y = cfi, default.units = "native")
-	    else grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
-	}
-        grid.yaxis(at = c(ceiling(yscale[1] * 100)/100, floor(yscale[2] * 100)/100))
-        grid.rect(gp = gpar(fill = "transparent"))
+      ## actual plot  
+      plot_vpi <- viewport(layout.pos.col = 2, layout.pos.row = 2,
+        xscale = xscale, yscale = yscale, 
+        name = paste("node_btplot", id, "plot", sep = ""))
+      pushViewport(plot_vpi)
 
-	upViewport(2)
+      grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = linecol), default.units = "native")
+      if(index) {
+        grid.lines(x, cfi, gp = gpar(col = col, lty = 2), default.units = "native")
+        grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
+        grid.xaxis(at = x, label = if(names) names(cfi) else x)
+      } else {  	
+        if(names) grid.text(names(cfi), x = x, y = cfi, default.units = "native")
+          else grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
+      }
+      grid.yaxis(at = c(ceiling(yscale[1] * 100)/100, floor(yscale[2] * 100)/100))
+      grid.rect(gp = gpar(fill = "transparent"))
+
+      upViewport(2)
     }
 	    
     return(rval)
 }
 class(node_btplot) <- "grapcon_generator"
-

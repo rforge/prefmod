@@ -1,132 +1,161 @@
-## high-level convenience interface
-raschtree <- function(formula, data, minsplit = 10, reltol = 1e-10,
-  deriv = c("sum", "diff", "numeric"), hessian = TRUE, maxit = 100L, ...)
+if(FALSE) {
+library("partykit")
+library("psychotools")
+data("DIFSim", package = "psychotree")
+mb <-       mob(resp ~ age + gender + motivation, data = DIFSim, fit = raschfit, control = mob_control(ytype = "matrix"))
+rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
+}
+
+## high-level convenience interface to mob()
+raschtree <- function(formula, data, na.action = na.pass,
+  reltol = 1e-10, deriv = c("sum", "diff", "numeric"), maxit = 100L, ...)
 {
-  ## transform formula
-  stopifnot(length(formula) > 2)
-  formula <-  formula(terms(formula, data = data))
-  ff <- y ~ 1 | x
-  ff[[2]] <- formula[[2]]
-  ff[[3]][[3]] <- formula[[3]]
+  ## keep call
+  cl <- match.call(expand.dots = TRUE)
 
-  ## formula/data/model pre-processing
-  raschmod <- RaschModel(reltol = reltol, deriv = deriv, hessian = hessian, maxit = maxit)
-  ff <- attr(ParseFormula(ff), "formula")
-  ff$input[[3]] <- ff$input[[2]]
-  ff$input[[2]] <- ff$response[[2]]
-  ff <- dpp(raschmod, as.formula(ff$input), other = list(part = as.formula(ff$blocks)), 
-    data = data, na.action = na.pass)
+  ## use dots for setting up mob_control
+  control <- mob_control(...)
+  control$ytype <- "matrix"
 
-  ## data sanity checks
-  y <- as.matrix(ff@get("response"))
-  if(ncol(y) < 3) stop("need at least three items")
-  if(!all(as.vector(y) %in% c(0:1, NA))) stop("y must be a binary 0/1 matrix (potentially with NAs)")
-  if(!all(apply(y, 1, function(x) all(0:1 %in% x))))
-    stop("each row of y must have at least one 0 and one 1 entry")
+  ## control options for raschfit
+  raschcontrol <- list(reltol = reltol, deriv = deriv, maxit = maxit)
 
-  ## call mob()
-  rval <- mob(ff, model = raschmod, control = mob_control(minsplit = minsplit,
-      objfun = function(object) - as.vector(logLik(object)), ...))
-
-  ## add class and return
-  structure(list(mob = rval), class = "raschtree")
+  ## call mob
+  m <- match.call(expand.dots = FALSE)
+  m$fit <- raschfit
+  m$control <- control
+  for(n in names(raschcontrol)) if(!is.null(raschcontrol[[n]])) m[[n]] <- raschcontrol[[n]]
+  if("..." %in% names(m)) m[["..."]] <- NULL
+  m[[1L]] <- as.name("mob")
+  rval <- eval(m, parent.frame())
+  
+  ## extend class and keep original call
+  rval$info$call <- cl
+  class(rval) <- c("raschtree", class(rval))
+  return(rval)
 }
 
-## convenience plotting
-plot.raschtree <- function(x, terminal_panel = node_raschplot, tnex = 2,
-  pval = TRUE, id = TRUE, ...) {
-  plot(x$mob, terminal_panel = terminal_panel, tnex = tnex,
-    tp_args = list(id = id, ...), ip_args = list(pval = pval, id = id))
-}
-
-## hand-crafted "Next()" to bridge to
-## un-exported S4 classes "mob"/"BinaryTree", argh!
-logLik.raschtree <- function(object, ...) logLik(object$mob, ...)
-sctest.raschtree <- function(x, ...) sctest(x$mob, ...)
-weights.raschtree <- function(object, ...) weights(object$mob, ...)
-summary.raschtree <- function(object, ...) summary(object$mob, ...)
-print.raschtree <- function(x, ...) {
-  print(x$mob, ...)
-  invisible(x)
-}
-
-## parameters for Rasch trees
-coef.raschtree <- function (object, node = NULL, ...) 
+## glue code for calling RaschModel.fit()
+raschfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, ...,
+  estfun = FALSE, object = FALSE)
 {
-  object <- object$mob
-  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
-  nam <- names(object@tree$model$coefficients)
-  rval <- sapply(nodes(object, node), function(z) coef(z$model, ...)[nam])
-  if (!is.null(dim(rval))) {
-    rval <- t(rval)
-    rownames(rval) <- node
-    colnames(rval) <- nam
+  if(!(is.null(x) || NCOL(x) == 0L)) warning("x not used")
+  if(!is.null(offset)) warning("offset not used")
+  ## rval <- RaschModel.fit(y, weights = weights, start = start, ..., full = object | estfun)
+  rval <- RaschModel.fit(y, weights = weights, start = start, ..., hessian = object | estfun)
+  ## rval <- RaschModel.fit(y, weights = weights, start = NULL, ..., full = object | estfun)
+  ## rval <- RaschModel.fit(y, weights = weights, start = start, ..., full = TRUE)
+  rval <- list(
+    coefficients = rval$coefficients,
+    objfun = -rval$loglik,
+    estfun = if(estfun) estfun.RaschModel(rval) else NULL,
+    object = if(object) rval else NULL
+  )
+  return(rval)
+}
+
+## methods
+print.raschtree <- function(x,
+  title = "Rasch tree", objfun = "negative log-likelihood", ...)
+{
+  partykit::print.modelparty(x, title = title, objfun = objfun, ...)
+}
+
+predict.raschtree <- function(object, newdata = NULL,
+  type = c("worth", "rank", "best", "node"), ...)
+{
+  ## type of prediction
+  type <- match.arg(type)
+  
+  ## nodes can be handled directly
+  if(type == "node") return(partykit::predict.modelparty(object, newdata = newdata, type = "node", ...))
+  
+  ## get default newdata otherwise
+  if(is.null(newdata)) newdata <- model.frame(object)
+  
+  pred <- switch(type,
+    "worth" = worth,
+    "rank" = function(obj, ...) rank(-worth(obj)),
+    "best" = function(obj, ...) {
+      wrth <- worth(obj)
+      factor(names(wrth)[which.max(wrth)], levels = names(wrth))
+    }
+  )
+  partykit::predict.modelparty(object, newdata = newdata, type = pred, ...)
+}
+
+apply_to_models <- function(object, node = NULL, FUN = NULL, drop = FALSE, ...) {
+  if(is.null(node)) node <- nodeids(object, terminal = FALSE)
+  if(is.null(FUN)) FUN <- function(object, ...) object  
+  rval <- if("object" %in% object$info$control$terminal) {
+    nodeapply(object, node, function(n) FUN(info_node(n)$object))
+  } else {
+    lapply(refit.modelparty(object, node, drop = FALSE), FUN)
   }
-  return(rval)
-}
-
-
-itempar.raschtree <- function (object, node = NULL, ...) {
-
-  object <- object$mob
-  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
-  rval <- lapply(nodes(object, node), function(z) itempar.RaschModel(z$model, ...))
   names(rval) <- node
-
+  if(drop & length(node) == 1L) rval <- rval[[1L]]
   return(rval)
-
 }
 
-threshold.raschtree <- function (object, node = NULL, ...) {
-
-  object <- object$mob
-  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
-  rval <- lapply(nodes(object, node), function(z) threshold.RaschModel(z$model, ...))
-  names(rval) <- node
-
-  return(rval)
-
-}
-
-worth.raschtree <- function (object, node = NULL, ...) 
+worth.raschtree <- function(object, node = NULL, ...)
 {
-  object <- object$mob
-  if(is.null(node)) node <- terminal_nodeIDs(object@tree)
-  rval <- sapply(nodes(object, node), function(z) worth(z$model, ...))
-  if (!is.null(dim(rval))) {
-    rval <- t(rval)
-    rownames(rval) <- node
-  }
-  return(rval)
+  ids <- if(is.null(node)) nodeids(object, terminal = TRUE) else node
+  if(length(ids) == 1L) {
+    apply_to_models(object, node = ids, FUN = worth, drop = TRUE)
+  } else {
+    do.call("rbind", apply_to_models(object, node = ids, FUN = worth, drop = FALSE))
+  } 
 }
+
+plot.raschtree <- function(x, terminal_panel = node_raschplot,
+  tp_args = list(), tnex = NULL, drop_terminal = NULL, ...)
+{
+  if(is.null(tnex)) tnex <- if(is.null(terminal_panel)) 1L else 2L
+  if(is.null(drop_terminal)) drop_terminal <- !is.null(terminal_panel)
+  partykit::plot.modelparty(x, terminal_panel = terminal_panel,
+    tp_args = tp_args, tnex = tnex, drop_terminal = drop_terminal, ...)
+}
+
 
 ## visualization function
-node_raschplot <- function(mobobj, id = TRUE, difficulty = TRUE,
-  center = TRUE, index = TRUE, names = NULL, abbreviate = FALSE, ref = TRUE,
-  col = cbind("lightgray", "black"), refcol = "lightgray", linecol = "black",
-  lty = 2, cex = 0.5, pch = cbind(19, 1), xscale = NULL, yscale = NULL,
-  xaxis = TRUE, yaxis = TRUE, ylines = 1.5)
+node_raschplot <- function(mobobj, id = TRUE,
+  worth = TRUE, names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
+  col = "black", linecol = "lightgray", cex = 0.5, pch = 19, xscale = NULL, yscale = NULL, ylines = 1.5)
 {
-    ## extract parameter of interest
-    node <- 1:max(terminal_nodeIDs(mobobj@tree))
-    cf <- t(sapply(nodes(mobobj, node), function(z) if(center) {
-        worth(z$model, difficulty = difficulty)
-      } else {
-        worth(z$model, difficulty = difficulty) - worth(z$model, difficulty = difficulty)[1]
-      }))
+    ## node ids
+    node <- nodeids(mobobj, terminal = FALSE)
+    
+    ## get all coefficients 
+    cf <- apply_to_models(mobobj, node, FUN = function(z)        
+      if(worth) worth(z) else coef(z, all = FALSE, ref = TRUE))
+    cf <- do.call("rbind", cf)
     rownames(cf) <- node
-    ncf <- NCOL(cf)
+
+    ## get one full model
+    mod <- apply_to_models(mobobj, node = 1L, FUN = NULL)
+
+    if(!worth) {
+      if(is.character(ref) | is.numeric(ref)) {
+        reflab <- ref
+        ref <- TRUE
+      } else {
+        reflab <- mod$ref
+      }
+      if(is.character(reflab)) reflab <- match(reflab, mod$labels)
+      cf <- cf - cf[,reflab]
+    }
+
+    ## reference
+    if(worth) {
+      cf_ref <- 1/ncol(cf)
+    } else {
+      cf_ref <- 0
+    }
 
     ## labeling
-    if(is.null(names)) names <- !index
     if(is.character(names)) {
       colnames(cf) <- names
       names <- TRUE
-    }
-    if(!names & index) {
-      lab <- rep("", ncf)
-      lab[c(1, ncf)] <- c(1, ncf)
-      colnames(cf) <- lab
     }
 
     ## abbreviation
@@ -135,26 +164,6 @@ node_raschplot <- function(mobobj, id = TRUE, difficulty = TRUE,
       abbreviate <- if(abbreviate) as.numeric(cut(nlab, c(-Inf, 1.5, 4.5, 7.5, Inf))) else nlab
     }
     colnames(cf) <- abbreviate(colnames(cf), abbreviate)
-
-    ## graphical parameter processing  
-    if(NCOL(pch) == 2) {
-      pch2 <- pch[,2]
-      pch <- pch[,1]
-    } else {
-      pch2 <- NA
-    }
-    if(NCOL(col) == 2) {
-      col2 <- col[,2]
-      col <- col[,1]
-    } else {
-      col2 <- NULL
-    }
-    pch <- rep(pch, length.out = ncf)
-    col <- rep(col, length.out = ncf)
-    cex <- rep(cex, length.out = ncf)
-    pch2 <- rep(pch2, length.out = ncf)
-    if(!is.null(col2)) col2 <- rep(col2, length.out = ncf)
-  
     
     if(index) {
       x <- 1:NCOL(cf)
@@ -163,66 +172,106 @@ node_raschplot <- function(mobobj, id = TRUE, difficulty = TRUE,
       x <- rep(0, length(cf))
       if(is.null(xscale)) xscale <- c(-1, 1)      
     }
-    yrange <- range(cf[is.finite(cf)], na.rm = TRUE)
-    if(is.null(yscale)) yscale <- yrange + c(-0.1 - 0.2 * any(cf <= -Inf), 0.1 + 0.2 * any(cf >= Inf)) * diff(yrange)
+    if(is.null(yscale)) yscale <- range(cf) + c(-0.1, 0.1) * diff(range(cf))
          
-    ## panel function for bt plots in nodes
+    ## panel function for rasch plots in nodes
     rval <- function(node) {
+
+      ## node index
+      id <- id_node(node)
     
-        ## dependent variable setup
-	cfi <- cf[node$nodeID,]
-	cf_ref <- mean(cfi)        
+      ## dependent variable setup
+      cfi <- cf[id,]
 
-        cf_ident <- is.finite(cfi) & !is.na(cfi)
-        cf_inf <- cfi >= Inf
-        cf_ninf <- cfi <= -Inf
-        cfi[is.na(cfi)] <- cf_ref
-        if(index) {
-          cfi[cf_ninf] <- yscale[1]
-          cfi[cf_inf] <- yscale[2]
-        }
+      ## viewport setup
+      top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
+    			 widths = unit(c(ylines, 1, 1), c("lines", "null", "lines")),  
+        		 heights = unit(c(1, 1), c("lines", "null"))),
+    			 width = unit(1, "npc"), 
+    			 height = unit(1, "npc") - unit(2, "lines"),
+        		 name = paste("node_raschplot", id, sep = ""))
+      pushViewport(top_vp)
+      grid.rect(gp = gpar(fill = "white", col = 0))
 
-        ## viewport setup
-        top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
-                           widths = unit(c(ylines, 1, 1), c("lines", "null", "lines")),  
-			   heights = unit(c(1, 1), c("lines", "null"))),
-                           width = unit(1, "npc"), 
-                           height = unit(1, "npc") - unit(2, "lines"),
-			   name = paste("node_raschplot", node$nodeID, sep = ""))
-        pushViewport(top_vp)
-        grid.rect(gp = gpar(fill = "white", col = 0))
+      ## main title
+      top <- viewport(layout.pos.col = 2, layout.pos.row = 1)
+      pushViewport(top)
+      mainlab <- paste(ifelse(id, paste("Node", id, "(n = "), ""),
+        	       info_node(node)$nobs, ifelse(id, ")", ""), sep = "")
+      grid.text(mainlab)
+      popViewport()
 
-        ## main title
-        top <- viewport(layout.pos.col = 2, layout.pos.row = 1)
-        pushViewport(top)
-	mainlab <- paste(ifelse(id, paste("Node", node$nodeID, "(n = "), "n = "),
-	                 sum(node$weights), ifelse(id, ")", ""), sep = "")
-        grid.text(mainlab)
-        popViewport()
+      ## actual plot  
+      plot_vpi <- viewport(layout.pos.col = 2, layout.pos.row = 2,
+        xscale = xscale, yscale = yscale, 
+        name = paste("node_raschplot", id, "plot", sep = ""))
+      pushViewport(plot_vpi)
 
-        ## actual plot	
-        plot_vpi <- viewport(layout.pos.col = 2, layout.pos.row = 2,
-	    xscale = xscale, yscale = yscale, 
-	    name = paste("node_raschplot", node$nodeID, "plot", sep = ""))
-        pushViewport(plot_vpi)
-	
-        grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = refcol), default.units = "native")
-	if(index) {
-	  grid.lines(x, cfi, gp = gpar(col = linecol, lty = lty), default.units = "native")
-  	  grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = ifelse(cf_ident, pch, NA), default.units = "native")
-          if(!is.null(col2)) grid.points(x, cfi, gp = gpar(col = col2, cex = cex), pch = ifelse(cf_ident, pch2, NA), default.units = "native")
-	  if(xaxis) grid.xaxis(at = x, label = colnames(cf))
-	} else {	  
-  	  if(names) grid.text(names(cfi), x = x, y = cfi, default.units = "native")
-	    else grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
-	}
-        if(yaxis) grid.yaxis(at = c(ceiling(yscale[1] * 100)/100, floor(yscale[2] * 100)/100))
-        grid.rect(gp = gpar(fill = "transparent"))
+      grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = linecol), default.units = "native")
+      if(index) {
+        grid.lines(x, cfi, gp = gpar(col = col, lty = 2), default.units = "native")
+        grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
+        grid.xaxis(at = x, label = if(names) names(cfi) else x)
+      } else {  	
+        if(names) grid.text(names(cfi), x = x, y = cfi, default.units = "native")
+          else grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
+      }
+      grid.yaxis(at = c(ceiling(yscale[1] * 100)/100, floor(yscale[2] * 100)/100))
+      grid.rect(gp = gpar(fill = "transparent"))
 
-	upViewport(2)
+      upViewport(2)
     }
 	    
     return(rval)
 }
 class(node_raschplot) <- "grapcon_generator"
+
+
+bread.RaschModel <- function(x, ...) x$vcov * x$n
+
+estfun.RaschModel <- function(x, ...) {
+  ## extract data and parameters of interest
+  par <- x$coefficients
+  esf <- x$elementary_symmetric_functions
+  y <- x$data
+  weights_orig <- weights(x)
+  y <- y[weights_orig > 0, , drop = FALSE]
+  weights <- weights_orig[weights_orig > 0]
+  rs <- rowSums(y)
+  
+  ## analytical gradient
+  if(!x$na) {
+    agrad <- weights * (- y + esf[[2]][rs + 1, , drop = FALSE] / esf[[1]][rs + 1])[,-1, drop = FALSE]
+  } else {
+    ## set up return value
+    n <- nrow(y)
+    k <- ncol(y)
+    agrad <- matrix(0, nrow = n, ncol = k)
+
+    ## observed NA patterns
+    na_patterns <- factor(apply(is.na(y), 1, function(z) paste(which(z), collapse = "\r")))
+
+    ## loop over observed NA patterns	   
+    for(i in seq_along(levels(na_patterns))) {
+      ## parse NA pattern
+      lev_i <- levels(na_patterns)[i]
+      na_i <- which(na_patterns == lev_i)
+      wi_i <- as.integer(strsplit(lev_i, "\r")[[1]])
+      wi_i <- if(length(wi_i) < 1) 1:k else (1:k)[-wi_i]
+
+      ## compute gradient per pattern
+      esf_i <- esf[[i]]
+      rs_i <- rowSums(y[na_i, wi_i, drop = FALSE])
+      agrad[na_i, wi_i] <- weights[na_i] * (- y[na_i, wi_i, drop = FALSE] +
+    	esf_i[[2]][rs_i + 1, , drop = FALSE] / esf_i[[1]][rs_i + 1])
+    }
+
+    agrad <- agrad[, -1, drop = FALSE]
+  }
+
+  ## collect and return
+  grad <- matrix(0, ncol = length(par), nrow = length(weights_orig))
+  grad[weights_orig > 0,] <- agrad
+  return(grad)
+}
 
