@@ -1,17 +1,9 @@
 \name{raschtree}
-
 \alias{raschtree}
 
 \alias{plot.raschtree}
 \alias{print.raschtree}
-\alias{summary.raschtree}
-\alias{sctest.raschtree}
-
-\alias{deviance.raschtree}
-\alias{logLik.raschtree}
-\alias{coef.raschtree}
 \alias{worth.raschtree}
-\alias{weights.raschtree}
 
 \encoding{latin1}
 
@@ -22,33 +14,32 @@
 }
 
 \usage{
-raschtree(formula, data, minsize = 10L, minsplit = minsize, reltol = 1e-10,
-  deriv = c("sum", "diff", "numeric"), hessian = TRUE, maxit = 100L, \dots)
+raschtree(formula, data, na.action = na.pass,
+  reltol = 1e-10, deriv = c("sum", "diff", "numeric"), maxit = 100L,
+  \dots)
 }
 
 \arguments{
   \item{formula}{A symbolic description of the model to be fit. This
     should be of type \code{y ~ x1 + x2}
-    where \code{y} should be a binary 0/1 matrix
+    where \code{y} should be a binary 0/1 item response matrix
     and \code{x1} and \code{x2} are used as partitioning variables.}
   \item{data}{a data frame containing the variables in the model.}
+  \item{na.action}{a function which indicates what should happen when the data
+    contain missing values (\code{NA}s).}
   \item{deriv}{character. Which type of derivatives should be used for computing
     gradient and Hessian matrix? Analytical with sum algorithm (\code{"sum"}),
     analytical with difference algorithm (\code{"diff"}, faster but numerically unstable),
-    or numerical. Passed to \code{\link{RaschModel}}.}
-  \item{hessian}{logical. Should the Hessian of the final model be computed?
-    If set to \code{FALSE}, the \code{vcov} method can only return \code{NA}s
-    and consequently no standard errors or tests are available in the \code{summary}.}
-  \item{reltol, maxit}{arguments passed via \code{\link{RaschModel}}
+    or numerical. Passed to \code{\link[psychotools]{RaschModel.fit}}.}
+  \item{reltol, maxit}{arguments passed via \code{\link[psychotools]{RaschModel.fit}}
     to \code{\link[stats]{optim}}.}
-  \item{minsize, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
-  \item{minsplit}{FIXME}
+  \item{\dots}{arguments passed to \code{\link[partykit]{mob_control}}.}
 }
 
 \details{
   Rasch tree models are an application of model-based recursive partitioning
-  (implemented in \code{\link[party]{mob}}) to Rasch models
-  (implemented in \code{\link{RaschModel}}).
+  (implemented in \code{\link[partykit]{mob}}) to Rasch models
+  (implemented in \code{\link[psychotools]{RaschModel.fit}}).
   
   Various methods are provided for \code{"raschtree"} objects, most of them
   inherit their behavior from \code{"mob"} objects (e.g., \code{print}, \code{summary},
@@ -76,7 +67,7 @@ raschtree(formula, data, minsize = 10L, minsplit = minsize, reltol = 1e-10,
   exported from the party package).
 }
 
-\seealso{\code{\link[party]{mob}}, \code{\link{RaschModel}},
+\seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{RaschModel.fit}},
   \code{\link{rstree}}, \code{\link{pctree}}}
 
 \examples{

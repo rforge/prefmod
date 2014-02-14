@@ -1,10 +1,8 @@
-if(FALSE) {
-library("partykit")
-library("psychotools")
-data("Topmodel2007", package = "psychotree")
-mb <-    mob(preference ~ age + gender + q1 + q2 + q3, data = Topmodel2007, fit = btfit)
-bt <- bttree(preference ~ age + gender + q1 + q2 + q3, data = Topmodel2007)
-}
+## library("partykit")
+## library("psychotools")
+## data("Topmodel2007", package = "psychotree")
+## mb <-    mob(preference ~ age + gender + q1 + q2 + q3, data = Topmodel2007, fit = btfit)
+## bt <- bttree(preference ~ age + gender + q1 + q2 + q3, data = Topmodel2007)
 
 ## high-level convenience interface to mob()
 bttree <- function(formula, data, na.action = na.pass,

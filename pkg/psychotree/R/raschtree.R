@@ -1,10 +1,8 @@
-if(FALSE) {
-library("partykit")
-library("psychotools")
-data("DIFSim", package = "psychotree")
-mb <-       mob(resp ~ age + gender + motivation, data = DIFSim, fit = raschfit, control = mob_control(ytype = "matrix"))
-rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
-}
+## library("partykit")
+## library("psychotools")
+## data("DIFSim", package = "psychotree")
+## mb <-       mob(resp ~ age + gender + motivation, data = DIFSim, fit = raschfit, control = mob_control(ytype = "matrix"))
+## rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
 
 ## high-level convenience interface to mob()
 raschtree <- function(formula, data, na.action = na.pass,
@@ -227,6 +225,7 @@ node_raschplot <- function(mobobj, id = TRUE,
 class(node_raschplot) <- "grapcon_generator"
 
 
+## FIXME: move to psychotools
 bread.RaschModel <- function(x, ...) x$vcov * x$n
 
 estfun.RaschModel <- function(x, ...) {
@@ -274,4 +273,3 @@ estfun.RaschModel <- function(x, ...) {
   grad[weights_orig > 0,] <- agrad
   return(grad)
 }
-

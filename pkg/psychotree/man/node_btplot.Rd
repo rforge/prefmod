@@ -13,12 +13,11 @@ node_btplot(mobobj, id = TRUE,
   worth = TRUE, names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
   col = "black", linecol = "lightgray", cex = 0.5, pch = 19,
   xscale = NULL, yscale = NULL, ylines = 1.5)
-
 }
 
 \arguments{
   \item{mobobj}{an object of class \code{"mob"} based on Bradley-Terry models
-    fitted by \code{\link{btReg}}.}
+    fitted by \code{\link[psychotools]{btReg.fit}}.}
   \item{id}{logical. Should the node ID be displayed?}
   \item{worth}{logical. Should worth parameters (or their logs) be visualized?}
   \item{names}{logical. Should the names for the objects be displayed?}

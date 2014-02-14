@@ -1,11 +1,9 @@
-if(FALSE) {
-library("partykit")
-library("psychotools")
-source("../R/pctree-psychotools.R")
-data("DIFSim", package = "psychotree")
-mb <-  mob(resp ~ age + gender + motivation, data = DIFSim, fit = pcmfit, control = mob_control(ytype = "matrix"))
-pct <- pctree(resp ~ age + gender + motivation, data = DIFSim)
-}
+## library("partykit")
+## library("psychotools")
+## source("pctree-psychotools.R")
+## data("DIFSim", package = "psychotree")
+## mb <-  mob(resp ~ age + gender + motivation, data = DIFSim, fit = pcmfit, control = mob_control(ytype = "matrix"))
+## pct <- pctree(resp ~ age + gender + motivation, data = DIFSim)
 
 ### high-level convenience interface to mob()
 pctree <- function (formula, data, na.action = na.pass, nullcats = c("keep", "downcode", "ignore"),

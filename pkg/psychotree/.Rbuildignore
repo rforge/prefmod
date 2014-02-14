@@ -8,3 +8,4 @@ man/node_mptplot.Rd
 man/plotCCC.pctree.Rd
 man/node_ccc.Rd
 man/node_rsmplot.Rd
+tests/Examples/psychotree-Ex.Rout.save

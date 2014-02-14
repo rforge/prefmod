@@ -26,7 +26,7 @@ node_effects(mobobj, names = NULL, type = c("mode", "median", "mean"),
 \arguments{
 
   \item{mobobj}{an object of class \code{"mob"} based on rating scale models
-    fitted by \code{\link{RSModel}} or partial credit models fitted by \code{\link{PCModel}}.}
+    fitted by \code{\link[psychotools]{RSModel.fit}} or partial credit models fitted by \code{\link[psychotools]{PCModel.fit}}.}
 
   \item{names}{character vector containing x-axis labels for the
     threshold parameters. If set to \code{NULL} (the default), these are

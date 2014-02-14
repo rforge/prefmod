@@ -3,12 +3,6 @@
 
 \alias{plot.pctree}
 \alias{print.pctree}
-\alias{summary.pctree}
-\alias{sctest.pctree}
-\alias{deviance.pctree}
-\alias{logLik.pctree}
-\alias{coef.pctree}
-\alias{weights.pctree}
 
 \title{Partial Credit Tree Models}
 
@@ -17,9 +11,8 @@
 }
 
 \usage{
-pctree(formula, data, minsize = 30, minsplit = minsize, nullcats = c("keep", "downcode",
-  "ignore"), reltol = 1e-10,  deriv = c("sum", "diff"),
-  hessian = TRUE, maxit = 100L, \dots)
+pctree(formula, data, na.action = na.pass, nullcats = c("keep", "downcode", "ignore"),
+  reltol = 1e-10,  deriv = c("sum", "diff"), maxit = 100L, \dots)
 }
 
 \arguments{
@@ -31,6 +24,9 @@ pctree(formula, data, minsize = 30, minsplit = minsize, nullcats = c("keep", "do
 
   \item{data}{a data frame containing the variables in the model.}
 
+  \item{na.action}{a function which indicates what should happen when the data
+    contain missing values (\code{NA}s).}
+
   \item{nullcats}{character. How null categories should be treated. See
   \code{\link[psychotools]{PCModel.fit}} for details.}
 
@@ -39,23 +35,17 @@ pctree(formula, data, minsize = 30, minsplit = minsize, nullcats = c("keep", "do
     algorithm. Otherwise ("diff") the difference algorithm (faster but
     numerically unstable) is used.}
   
-  \item{hessian}{logical. Should the Hessian of the final model be computed?
-    If set to \code{FALSE}, the \code{vcov} method can only return \code{NA}s
-    and consequently no standard errors or tests are available in the \code{summary}.}
-
-  \item{reltol, maxit}{arguments passed via \code{\link{PCModel}}
+  \item{reltol, maxit}{arguments passed via \code{\link[psychotools]{PCModel.fit}}
     to \code{\link[stats]{optim}}.}
   
-  \item{minsize, \dots}{arguments passed to \code{\link[party]{mob_control}}.}
-
-  \item{minsplit}{FIXME}
+  \item{\dots}{arguments passed to \code{\link[partykit]{mob_control}}.}
 }
 
 
 \details{
   Partial credit tree models are an application of model-based recursive partitioning
-  (implemented in \code{\link[party]{mob}}) to partial credit models
-  (implemented in \code{\link{PCModel}}).
+  (implemented in \code{\link[partykit]{mob}}) to partial credit models
+  (implemented in \code{\link[psychotools]{PCModel.fit}}).
   
   Various methods are provided for \code{"pctree"} objects, most of them
   inherit their behavior from \code{"mob"} objects (e.g., \code{print},
@@ -87,7 +77,7 @@ pctree(formula, data, minsize = 30, minsplit = minsize, nullcats = c("keep", "do
   exported from the party package).
 }
 
-\seealso{\code{\link[party]{mob}}, \code{\link{PCModel}},
+\seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{PCModel.fit}},
   \code{\link{rstree}}, \code{\link{raschtree}}}
 
 \examples{

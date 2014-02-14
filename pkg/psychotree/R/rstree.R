@@ -1,11 +1,9 @@
-if(FALSE) {
-library("partykit")
-library("psychotools")
-source("../R/pctree-psychotools.R")
-data("VerbalAggression", package = "psychotools")
-mb <-       mob(resp ~ anger + gender, data = VerbalAggression, fit = rsmfit, control = mob_control(ytype = "matrix"))
-rst <- rstree(resp ~ anger + gender, data = VerbalAggression)
-}
+## library("partykit")
+## library("psychotools")
+## source("pctree-psychotools.R")
+## data("VerbalAggression", package = "psychotools")
+## mb  <-    mob(resp ~ anger + gender, data = VerbalAggression, fit = rsmfit, control = mob_control(ytype = "matrix"))
+## rst <- rstree(resp ~ anger + gender, data = VerbalAggression)
 
 ## high-level convenience interface to mob()
 rstree <- function(formula, data, na.action = na.pass,
