@@ -17,7 +17,7 @@ pattLrep.fit(obj, nitems, tpoints = 1, formel = ~1, elim = ~1,
   \item{formel}{the formula for subject covariates to fit different
         preference scales for the objects (see below).}
   \item{elim}{the formula for the subject covariates that specify the table
-        to be analysed. If ommitted and \code{formel} is not \code{ ~1} then
+        to be analysed. If ommitted and \code{formel} is not \code{~1} then
         \code{elim} will be set to the highest interaction between all terms
         contained in \code{formel}. If \code{elim} is specified, the terms
         must be separated by the \code{*} operator.}

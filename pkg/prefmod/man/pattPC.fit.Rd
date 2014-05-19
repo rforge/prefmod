@@ -17,7 +17,7 @@ pattPC.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "paircomp",
   \item{formel}{the formula for subject covariates to fit different
         preference scales for the objects (see below).}
   \item{elim}{the formula for the subject covariates that specify the table
-        to be analysed. If ommitted and \code{formel} is not \code{ ~1} then
+        to be analysed. If ommitted and \code{formel} is not \code{~1} then
         \code{elim} will be set to the highest interaction between all terms
         contained in \code{formel}. If \code{elim} is specified, the terms
         must be separated by the \code{*} operator.}
@@ -134,7 +134,7 @@ pattPC.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "paircomp",
 %\note{}
 \section{Warning}{The size of the table to be analysed increases dramatically
      with the number of objects. For paired comparisons with two response
-     categories the number of rows of the table is \eqn{ 2 ^ (number of comparisons)}, e.g.,
+     categories the number of rows of the table is \eqn{2^\mathrm{\mbox{(number of comparisons)}}}{2^(number of comparisons)}, e.g.,
      with six objects this is 32768, for three response categories this is 14348907.
      A reasonable maximum number of objects to be analysed with pattern models is
      6 in the case of two response categories and 5 when an additional undecided/neutral

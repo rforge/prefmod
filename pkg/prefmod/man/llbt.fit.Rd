@@ -31,11 +31,11 @@ llbt.fit(y, Xmodel, q, ncat, maxiter = 100)
      (\url{http://epub.wu-wien.ac.at/dyn/openURL?id=oai:epub.wu-wien.ac.at:epub-wu-01_709})
 }
 \author{Reinhold Hatzinger}
-%\note{ **further notes**
+%\note{**further notes**
 %
 % ~Make other sections like Warning with \section{Warning }{....} ~
 %}
-%\seealso{ **objects to See Also as \code{\link{help}}, **~ }
+%\seealso{**objects to See Also as \code{\link{help}}, **~ }
 \examples{
 # fit basic model casewise
 mfr <- llbt.design(cemspc, nitems = 6,

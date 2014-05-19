@@ -7,10 +7,10 @@
 \description{
 Generates design matrix for analysing real paired comparisons and derived
 paired comparison data (Likert type items / ratings or rankings) using a
-loglinear approach. Fits loglinear Bradley-Terry model (LLBT) exploting an
+loglinear approach. Fits loglinear Bradley-Terry model (LLBT) exploiting an
 eliminate feature. Computes pattern models for paired comparisons,
 rankings, and ratings. Some treatment of missing values (MCAR and MNAR).
-Fits pattern mixture models using a nonparametric ML approach.
+Fits pattern mixture models using a non-parametric ML approach.
 }
 \details{\tabular{ll}{
 Package:\tab{}prefmod\cr%
