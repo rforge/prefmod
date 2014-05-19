@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{pattnpml.fit}
 \alias{pattnpml.fit}
 \title{ NPML estimation for paired comparison models}
@@ -12,6 +13,7 @@ pattnpml.fit(formula,
         startp = NULL,
         EMmaxit = 500,
         EMdev.change = 0.001,
+        seed = NULL,
         pr.it = FALSE
         )
 }
@@ -25,6 +27,7 @@ pattnpml.fit(formula,
   \item{startp}{Optional numerical vector of length \code{k} specifying the starting probabilities for the mass points to initiailise the EM algorithm. The default is to take gausssian quandrature probabilities  }
   \item{EMmaxit}{The maximum number of EM iterations.   }
   \item{EMdev.change}{Stops EM algorithm when deviance change falls below this value.  }
+  \item{seed}{Seed for random weights. If \code{NULL}, the seed is set using the system time.  }
   \item{pr.it}{A dot is printed at each iteration cycle of the EM algorithm if set to \code{TRUE}.}
 }
 \details{
@@ -67,6 +70,8 @@ pattnpml.fit(formula,
   \code{random} term, and also in the \code{formula} part. Thus the setting \code{random= ~
   x:(o1+o2+o3} gives a model with a set of random slopes (one set for each
   mass point) and a set of random intercepts, one set for each mass point.
+
+  The \code{AIC} and \code{BIC} functions from the \pkg{stats}-package can be used.
 
 }
 \value{
@@ -148,26 +153,24 @@ counts as weights (see example below).
 
 \examples{
 # two latent classes for paired comparison data
-data(dat4)
-dfr <- patt.design(dat4, 4)
-modPC<-pattnpml.fit(y ~ 1, random = ~o1 + o2 + o3, k = 2, design = dfr)
+dfr   <- patt.design(dat4, 4)
+modPC <- pattnpml.fit(y ~ 1, random = ~o1 + o2 + o3, k = 2, design = dfr)
 modPC
 
 # estimated proportion of cases in each mixture component
-apply(modPC$post.prob, 2, function(x) sum(x * dfr$y / sum(dfr$y)))
+apply(modPC$post.prob, 2, function(x){ sum(x * dfr$y / sum(dfr$y)) })
 
 \dontrun{
-# fitting a model for two latent classes and fixed categorical
-# subject covariates to the Eurobarometer 55.2 data (see help("euro55.2.des"))
+# fitting a model for two latent classes and fixed categorical subject
+# covariates to the Eurobarometer 55.2 data (see help("euro55.2.des"))
 # on rankings of sources of information on scientific developments
 
-data(euro55.2.des)
-model2cl <- pattnpml.fit(formula = y ~ -1 + SEX:AGE4 + (SEX + AGE4):
-               (TV + RAD + NEWSP + SCIMAG + WWW + EDINST),
-               random = ~ TV + RAD + NEWSP + SCIMAG + WWW + EDINST,
-               k = 2, design = euro55.2.des, pr.it = TRUE)
+model2cl <- pattnpml.fit(
+  y ~ SEX:AGE4 + (SEX + AGE4):(TV + RAD + NEWSP + SCIMAG + WWW + EDINST) - 1,
+  random = ~ TV + RAD + NEWSP + SCIMAG + WWW + EDINST,
+  k = 2, design = euro55.2.des, pr.it = TRUE)
 summary(model2cl)
-}
+BIC(model2cl)}
 }
 \keyword{models}
 \keyword{regression}

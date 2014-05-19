@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{pattRrep.fit}
 \alias{pattRrep.fit}
 \title{Function to fit a pattern model for repeated rankings)}
@@ -120,13 +121,13 @@ pattRrep.fit(obj, nitems, tpoints = 1, formel = ~1, elim = ~1,
 \seealso{\code{\link{pattL.fit}},\code{\link{patt.design}}, \code{\link{pattPC.fit}}, \code{\link{pattR.fit}}, \code{\link{pattLrep.fit}}
      }
 \examples{
-## simulated data: 3 items, 2 timepoints
-dat1<-simR(3,100,c(0.2,0.7,0.1))
-dat2<-simR(3,100,c(0.5,0.4,0.1))
-dat<-data.frame(dat1,dat2)
-res<-pattLrep.fit(dat, nitems=3, tpoints=2, iaT=TRUE)
+# simulated data: 3 items, 2 timepoints
+dat1 <- simR(3, 100, c(.2, .7, .1))
+dat2 <- simR(3, 100, c(.5, .4, .1))
+dat  <- data.frame(dat1, dat2)
+res  <- pattLrep.fit(dat, nitems = 3, tpoints = 2, iaT = TRUE)
 res
-patt.worth(res,obj.names=LETTERS[1:3])
+patt.worth(res, obj.names = LETTERS[1:3])
 }
 \keyword{models}
 \keyword{multivariate}

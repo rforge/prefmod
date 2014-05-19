@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{print.pattMod}
 \alias{print.pattMod}
 \title{Print methods for pattern models}
@@ -16,8 +17,7 @@
 }
 \author{Reinhold Hatzinger}
 \examples{
-data(salad)
-res<-pattR.fit(salad, nitems=4)
-print(res)
+res <- pattR.fit(salad, nitems = 4)
+res
 }
 \keyword{models}

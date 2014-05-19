@@ -1,16 +1,16 @@
+\encoding{UTF-8}
 \name{pattL.fit}
 \alias{pattL.fit}
 \title{Function to fit a pattern model for ratings (Likert items)}
-\description{Function to fit a pattern model for ratings/Likert items
-      (transformed to paired comparisons)
-       allowing for missing values using a CL approach.}
+\description{%
+Function to fit a pattern model for ratings/Likert items (transformed to paired comparisons) allowing for missing values using a CL approach.
+}
 \usage{
 pattL.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "rating",
     obj.names=NULL, undec = TRUE, ia = FALSE, NItest = FALSE, pr.it = FALSE)
 }
 \arguments{
-  \item{obj}{either a dataframe or the path/name of the datafile to be read.
-       }
+  \item{obj}{either a dataframe or the path/name of the datafile to be read.}
   \item{nitems}{the number of items}
   \item{formel}{the formula for subject covariates to fit different
         preference scales for the objects (see below).}
@@ -20,21 +20,16 @@ pattL.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "rating",
         contained in \code{formel}. If \code{elim} is specified, the terms
         must be separated by the \code{*} operator.}
   \item{resptype}{is \code{"rating"} by default and is reserved for future usage.
-        Any other specification will not change the behaviour of \code{pattL.fit}
-        }
-  \item{obj.names}{character vector with names for objects.
-        }
+        Any other specification will not change the behaviour of \code{pattL.fit}}
+  \item{obj.names}{character vector with names for objects.}
   \item{undec}{for paired comparisons with a undecided/neutral category,
         a common parameter will be estimated if \code{undec = TRUE}.}
   \item{ia}{interaction parameters between comparisons that have one object
-        in common if \code{ia = TRUE}.
-        }
+        in common if \code{ia = TRUE}.}
   \item{NItest}{separate estimation of object parameters for complete and
         incomplete patterns if \code{NItest = TRUE}. Currently,
-        \code{NItest} is set to \code{FALSE} if subject covariates are specified.
-        }
-  \item{pr.it}{a dot is printed at each iteration cycle if set to \code{TRUE}
-        }
+        \code{NItest} is set to \code{FALSE} if subject covariates are specified.}
+  \item{pr.it}{a dot is printed at each iteration cycle if set to \code{TRUE}}
 }
 \details{Models including categorical subject covariates can be fitted using the
         \code{formel} and \code{elim} arguments. \code{formel} specifies the
@@ -113,24 +108,24 @@ pattL.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "rating",
      A reasobale maximum number of items with five response categories
      to be analysed with pattern models is 7.
      }
-\seealso{\code{\link{patt.design}}, \code{\link{pattPC.fit}}, \code{\link{pattR.fit}}
-     }
-\examples{
-## fit only four items
-data(music)
-music4<-music[,c("jazz","blue","folk","rap")]
-pattL.fit(music4, nitems=4)
-
-## fit additional undecided effect
-pattL.fit(music4, nitems=4, undec=TRUE)
-
-## fit dependence parameters
-pattL.fit(music4, nitems=4, undec=TRUE, ia=TRUE)
-
-## check for ignorable missing
-pattL.fit(music4, nitems=4, undec=TRUE, NItest=TRUE)
+\seealso{%
+\code{\link[prefmod:patt.design]{patt.design}},
+\code{\link[prefmod:pattPC.fit]{pattPC.fit}},
+\code{\link[prefmod:pattR.fit]{pattR.fit}}
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+\examples{
+# fit only four items
+music4 <- music[,c("jazz", "blue", "folk", "rap")]
+pattL.fit(music4, nitems = 4)
+
+# fit additional undecided effect
+pattL.fit(music4, nitems = 4, undec = TRUE)
+
+# fit dependence parameters
+\donttest{pattL.fit(music4, nitems = 4, undec = TRUE, ia = TRUE)}
+
+# check for ignorable missing
+pattL.fit(music4, nitems = 4, undec = TRUE, NItest = TRUE)
+}
 \keyword{models}
 \keyword{multivariate}

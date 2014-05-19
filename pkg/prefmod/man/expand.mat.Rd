@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{expand.mat}
 \alias{expand.mat}
 \title{Utility function to expand aggregated data}
@@ -18,13 +19,11 @@ expand.mat(mat, freq)
 \value{
   the expanded matrix
 }
-\note{This utility allows to generate input data for the design generating
-      and model fitting functions of the \pkg{prefmod} package
-      from aggregated data.
+\note{%
+This utility allows to generate input data for the design generating and model fitting functions of the \pkg{prefmod} package from aggregated data.
 }
 \examples{
-data(tennis)
-tdat<-expand.mat(tennis[,-1],tennis[,1])
+tdat <- expand.mat(tennis[, -1], tennis[, 1])
 head(tdat)
 }
 \keyword{utilities}

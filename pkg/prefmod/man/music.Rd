@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{music}
 \alias{music}
 \docType{data}
@@ -8,7 +9,7 @@
   The data is an excerpt from the US General Social Survey 1993. Missing values have been removed from
   the subject variables.
 }
-\usage{data(music)}
+\usage{music}
 \format{
   A data frame with 1597 observations.
   The variables bigb through hvym are are responses to items asking for liking/disliking of
@@ -45,7 +46,6 @@
    \url{http://www.cpanda.org/cpanda/getDDI.xq?studyID=a00006#dataDscr}\cr
 }
 \examples{
-data(music)
 summary(music)
 }
 \keyword{datasets}

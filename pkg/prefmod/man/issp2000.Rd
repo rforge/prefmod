@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{issp2000}
 \alias{issp2000}
 \docType{data}
@@ -10,7 +11,7 @@ on six items (with a 5-point rating scale (Likert type)) where respondents
 from Austria and Great Britain
 were asked about their perception of environmental dangers.
 }
-\usage{data(issp2000)}
+\usage{issp2000}
 \format{
   A data frame with 1595 observations on the following 11 variables. The first six
   variables are items to be answered on a 5-point rating scale (Likert type) with
@@ -42,8 +43,5 @@ were asked about their perception of environmental dangers.
 \references{Dittrich, R,, Francis, B.J., Hatzinger R., Katzenbeisser, W. (2007),
 A Paired Comparison Approach for the Analysis of Sets of Likert Scale Responses. \emph{Statistical
 Modelling}, Vol. 7, No. 1, 3-28. }
-\examples{
-data(issp2000)
-str(issp2000)
-}
+\examples{str(issp2000)}
 \keyword{datasets}

@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{simPC}
 \alias{simPC}
 \alias{simR}

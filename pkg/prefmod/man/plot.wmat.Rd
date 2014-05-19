@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{plot.wmat}
 \alias{plot.wmat}
 \title{Method to plot worth or model parameters from LLBT or pattern models}
@@ -39,22 +40,21 @@ This matrix is obtained from \code{llbt.worth} or \code{patt.worth} and is an ob
 \author{Reinhold Hatzinger}
 \seealso{\code{\link{patt.worth}}}
 \examples{
-## fit only first three objects with SEX effect
-data(cemspc)
-m2 <- pattPC.fit(cemspc, nitems=3, formel=~SEX, elim=~SEX, undec=TRUE)
+# fit only first three objects with SEX effect
+m2 <- pattPC.fit(cemspc, nitems = 3, formel = ~SEX, elim = ~SEX, undec = TRUE)
 
-## calculate and plot worth parameters
+# calculate and plot worth parameters
 m2worth <- patt.worth(m2)
 plot(m2worth)
 plot(m2worth, pcol = "terrain")
 
-## display of some plotsymbols (pch)
-plot(0:25, rep(1,26), pch=0:25, cex=1.5)
-text(0:25, rep(0.95,26), 0:25)
+# display of some plotsymbols (pch)
+plot(0:25, rep(1, 26), pch = 0:25, cex = 1.5)
+text(0:25, rep(0.95, 26), 0:25)
 
-## usage of the RColorBrewer package
+# usage of the "RColorBrewer" package
 \dontrun{
-library(RColorBrewer)
+library("RColorBrewer")
 mypalette <- brewer.pal(3, "Set1")
 plot(m2worth, pcol = mypalette)}
 }

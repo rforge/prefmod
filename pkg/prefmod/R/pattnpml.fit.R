@@ -6,6 +6,7 @@
                     startp = NULL,
                     EMmaxit=500,               #
                     EMdev.change=0.001,        #
+                    seed = NULL,
                     pr.it = FALSE
                     )
 {
@@ -21,6 +22,12 @@
      if (!is.null(startp))
         if(!(length(startp) == k & all.equal(sum(startp),1)))
            stop("startp incorrectly specified!")
+
+     # seed for random weights
+     if (is.null(seed)){
+        seed <- as.integer(as.double(format(Sys.time(), "%H%M%OS3"))*1000) + 2**29 - 1
+     }
+     set.seed(seed)
 
      RET <- alldistPC(formula=formula,
                     random = random,

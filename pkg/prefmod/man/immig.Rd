@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{immig}
 \alias{immig}
 \docType{data}
@@ -20,7 +21,7 @@ university was preferred and 0 if no decision was made. The variable
 ENG characterises the knowledge of English and the variable
 SEX characterises the gender.
 }
-\usage{data(immig)}
+\usage{immig}
 \format{
   A data frame with 98 observations on the following 9 variables.
   \describe{
@@ -32,15 +33,13 @@ SEX characterises the gender.
     \item{\code{V34}}{\code{socBurd} vs \code{culture}}
     \item{\code{SEX}}{Gender 1=male, 2=female}
     \item{\code{AGE}}{Age (continuous)}
-    \item{\code{NAT}}{Nationality (Factor). Cannot directly be used in \code{prefmod}}
+    \item{\code{NAT}}{Nationality (Factor). Cannot directly be used in \pkg{prefmod}}
   }
 }
 \references{
-Weber D, Hatzinger R (2011). A novel approach for modelling paired
-comparisons data with non-ignorable missing values on students'
-attitudes towards foreigners. Data Analysis Bulletin, 12.}
-\examples{
-data(immig)
-summary(immig)
+Weber, D., & Hatzinger, R. (2011).
+A novel approach for modelling paired comparisons data with non-ignorable missing values on students' attitudes towards foreigners.
+\emph{Data Analysis Bulletin, 12}, 11--22.
 }
+\examples{summary(immig)}
 \keyword{datasets}

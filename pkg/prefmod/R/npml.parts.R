@@ -214,7 +214,16 @@ cat('\n')
   cat('\n')
   invisible(x)
 }
-"BIC.pattNPML"<-
-function(object, ...){
-object$disparity + (length(c(na.omit(object$coefficients),object$masses))-1) * log(sum(object$data$y))
-}
+# obsolete
+#"BIC.pattNPML"<-
+#function(object, ...){
+#object$disparity + (length(c(na.omit(object$coefficients),object$masses))-1) * log(sum(object$data$y))
+#}
+# Achim's proposal - thanks Achim
+# allows for using stats AIC(), BIC()
+logLik.pattNPML <- function(object, ...)
+    structure(-0.5 * object$disparity,
+      df = length(c(na.omit(object$coefficients), object$masses)) - 1,
+      class = "logLik")
+
+nobs.pattNPML <- function(object, ...) sum(object$data$y)

@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{tennis}
 \alias{tennis}
 \docType{data}
@@ -7,7 +8,7 @@
   female students were asked whom they would prefer to interview. The potential
   interview partners were Bonnie Blair, Jackie Joyner, and Jennifer Capriati.
 }
-\usage{data(tennis)}
+\usage{tennis}
 \format{
   A data frame with 16 observations on the following 5 variables.
   \describe{
@@ -18,12 +19,10 @@
     \item{\code{SEX}}{a numeric vector: 1 \dots male, 2 \dots female}
   }
 }
-\references{B\"ockenholt , U. and Dillon , W.R., Modelling within-subject
-dependencies in ordinal paired comparison data, Psychometrika, 1997, 62, p.411-434
-}
+\references{Böckenholt, U., & Dillon, W.R., (1997).
+Modelling within-subject dependencies in ordinal paired comparison data. \emph{Psychometrika, 62}, 411--434.}
 \examples{
-data(tennis)
-tdat<-expand.mat(tennis[,-1],tennis[,1])
+tdat <- expand.mat(tennis[, -1], tennis[, 1])
 head(tdat)
 }
 \keyword{datasets}

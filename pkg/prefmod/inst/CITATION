@@ -1,0 +1,33 @@
+citHeader('To cite package "prefmod" in publications use:')
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+citEntry(
+  header  = "JSS 2012 Citation",
+  entry   = "Article",
+  title   = "{{prefmod}: An {R} Package for Modeling Preferences Based on Paired Comparisons, Rankings, or Ratings}",
+  author  = personList(person("Reinhold", "Hatzinger"), person("Regina", "Dittrich")),
+  journal = "{Journal of Statistical Software}",
+  year    = "2012",
+  volume  = "48",
+  number  = "10",
+  pages   = "1--31",
+  url     = "http://www.jstatsoft.org/v48/i10/",
+
+  textVersion =
+  paste0("Hatzinger, R., & Dittrich, R. (2012). ",
+         "prefmod: An R Package for Modeling Preferences Based on Paired Comparisons, Rankings, or Ratings. ",
+         "Journal of Statistical Software, 48(10), 1-31. ",
+         "http://www.jstatsoft.org/v48/i10/")
+)
+
+bibentry(
+  header  = "Package Citation",
+  key     = "prefmod.package",
+  bibtype = "Manual",
+  title   = "{{prefmod}: Utilities to fit paired comparison models for preferences}",
+  author  = c(person("Reinhold", "Hatzinger"), person(c("Marco", "Johannes"), "Maier")),
+  year    = year,
+  note    = paste0("{", note, "}"),
+  url     = "http://CRAN.R-project.org/package=prefmod"
+)

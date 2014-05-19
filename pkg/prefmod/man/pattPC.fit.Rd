@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{pattPC.fit}
 \alias{pattPC.fit}
 \title{Function to fit a pattern model for paired comparisons}
@@ -5,7 +6,7 @@
        allowing for missing values using a CL approach.}
 \usage{
 pattPC.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "paircomp",
-    obj.names = NULL, undec = FALSE, ia = FALSE, NItest = FALSE,
+    obj.names = NULL, undec = TRUE, ia = FALSE, NItest = FALSE,
     NI = FALSE, MIScommon = FALSE, MISmodel="obj", MISalpha = NULL,
     MISbeta = NULL, pr.it = FALSE)
 }
@@ -135,7 +136,7 @@ pattPC.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "paircomp",
      with the number of objects. For paired comparisons with two response
      categories the number of rows of the table is \eqn{ 2 ^ (number of comparisons)}, e.g.,
      with six objects this is 32768, for three response categories this is 14348907.
-     A reasobale maximum number of objects to be analysed with pattern models is
+     A reasonable maximum number of objects to be analysed with pattern models is
      6 in the case of two response categories and 5 when an additional undecided/neutral
      category has been observed).
      }
@@ -143,38 +144,38 @@ pattPC.fit(obj, nitems, formel = ~1, elim = ~1, resptype = "paircomp",
      \code{\link{pattR.fit}}
      }
 \examples{
-## fit only first three objects with undecided parameter
-data(cemspc)
-pattPC.fit(cemspc, nitems=3, undec=TRUE)
+# fit only first three objects with undecided parameter
+pattPC.fit(cemspc, nitems = 3, undec = TRUE)
 
-## check for ignorable missing
-pattPC.fit(cemspc, nitems=3, undec=TRUE, NItest=TRUE)
+# check for ignorable missing
+pattPC.fit(cemspc, nitems = 3, undec = TRUE, NItest = TRUE)
 
-## check if SEX has an effect
-m1<-pattPC.fit(cemspc, nitems=3, formel=~1,elim=~SEX, undec=TRUE)
-m2<-pattPC.fit(cemspc, nitems=3, formel=~SEX, elim=~SEX, undec=TRUE)
+# check if SEX has an effect
+m1 <- pattPC.fit(cemspc, nitems = 3, formel = ~1,   elim = ~SEX, undec = TRUE)
+m2 <- pattPC.fit(cemspc, nitems = 3, formel = ~SEX, elim = ~SEX, undec = TRUE)
 
-## calculate LR test for SEX
-ll1<-m1$result$minimum
-ll2<-m2$result$minimum
-df1<-length(m1$result$estimate)
-df2<-length(m2$result$estimate)
-lr<-2*(ll1-ll2)
-df<-df2-df1
-cat("LR test is",lr,"on df =",df," ( p =",round(1-pchisq(lr,df),digits=4),")\n")
+# calculate LR test for SEX
+ll1 <- m1$result$minimum
+ll2 <- m2$result$minimum
+df1 <- length(m1$result$estimate)
+df2 <- length(m2$result$estimate)
+lr  <- 2*(ll1 - ll2)
+df  <- df2 - df1
+cat("LR test = ", lr, " on df = ", df, " (p = ",
+    round(pchisq(lr, df, lower.tail = FALSE), digits = 5), ")\n", sep="")
 
 
-## generates data set with three items and some missing values
-## in comparison (23), column 3, then there are no NAs for
-## object 1
-data(dat4)
-data3<-dat4[,1:3]
-idx3<-sample(1:100,10)
-data3[idx3,3]<-NA
-checkMIS(data3,nitems=3,verbose=TRUE)
+# generates data set with three items and some missing values in
+# comparison (23), column 3, then there are no NAs for object 1
+data3 <- dat4[, 1:3]
+idx3  <- sample(1:100, 10)
+data3[idx3, 3] <- NA
+checkMIS(data3, nitems = 3, verbose = TRUE)
 
-## estimate MNAR PC pattern model for data3 without alpha1 and beta1
-pattPC.fit(data3, nitems=3, MISalpha=c(FALSE,TRUE,TRUE), MISbeta=c(FALSE,TRUE,TRUE))
+# estimate MNAR PC pattern model for data3 without alpha1 and beta1
+pattPC.fit(data3, nitems = 3,
+  MISalpha = c(FALSE, TRUE, TRUE),
+  MISbeta  = c(FALSE, TRUE, TRUE))
 }
 \keyword{models}
 \keyword{multivariate}

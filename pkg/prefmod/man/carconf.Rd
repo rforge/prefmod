@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{carconf}
 \alias{carconf}
 \docType{data}
@@ -12,7 +13,7 @@ to their preferences. They could choose freely from several modules: such as
 exterior and interior design, technical equipment, brand, price, and producing country.
 The order of module choice was recorded as ranks. Since not all modules had to
 be chosen the response format was partial rankings.}
-\usage{data(carconf)}
+\usage{carconf}
 \format{
   A data frame with 435 observations on the following 9 variables.
   \describe{
@@ -33,8 +34,5 @@ Konfigurationssystemen ?? eine empirische Studie im Automobilmarkt --
 Partial Rankings. In R Hatzinger, R Dittrich, T Salzberger (eds.),
 Praeferenzanalyse mit R: Anwendungen aus Marketing, Behavioural
 Finance und Human Resource Management. Facultas. }
-\examples{
-data(carconf)
-head(carconf)
-}
+\examples{head(carconf)}
 \keyword{datasets}

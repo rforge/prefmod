@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{euro55.2.des}
 \Rdversion{1.1}
 \alias{euro55.2.des}
@@ -17,7 +18,7 @@ rank them in order of importance. The items were:
 Television, Radio, Press, Scientific Magazines, Internet, School and
 University.
 }
-\usage{data(euro55.2.des)}
+\usage{euro55.2.des}
 \format{
 The data is a design data frame generated from the original data using
 \code{\link{patt.design}}. Each row represents a (derived) paired comparison
@@ -48,8 +49,5 @@ Brussels.
 %MI: Inter-university Consortium for Political and Social Research [distributors], 2006-08-03.
 %doi:10.3886/ICPSR03341
 }
-\examples{
-data(euro55.2.des)
-str(euro55.2.des)
-}
+\examples{str(euro55.2.des)}
 \keyword{datasets}

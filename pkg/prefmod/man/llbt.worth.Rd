@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{llbt.worth}
 \alias{llbt.worth}
 \title{Function to calculate and print worth parameters from LLBT model results}
@@ -46,34 +47,33 @@ the corresponding variable must have been named \code{pos}.
 \author{Reinhold Hatzinger}
 \seealso{\code{\link{llbtPC.fit}}, \code{\link{llbt.design}}, \code{\link{plot}}}
 \examples{
-    ## fit only first three objects with SEX effect
-    data(cemspc)
-    mod <- llbtPC.fit(cemspc, nitems=3, formel=~SEX, elim=~SEX, undec=TRUE)
+# fit only first three objects with SEX effect
+mod <- llbtPC.fit(cemspc, nitems = 3, formel = ~SEX, elim = ~SEX, undec = TRUE)
 
-    ## calculate and print worth parameters
-    mw <- llbt.worth(mod)
-    mw
+# calculate and print worth parameters
+mw <- llbt.worth(mod)
+mw
 
-    ## the same using llbt.design and gnm
-    data(cemspc)
-    des <- llbt.design(cemspc, nitems=3, cat.scovs="SEX")
-    m2 <- gnm(y~o1+o2+o3+SEX:(o1+o2+o3)+g1, elim=SEX:mu, family=poisson, data=des)
+# the same using llbt.design and gnm
+des <- llbt.design(cemspc, nitems = 3, cat.scovs = "SEX")
+m2  <- gnm(y ~ o1+o2+o3 + SEX:(o1+o2+o3) + g1, elim = SEX:mu,
+  data = des, family = poisson)
 
-    ## calculate and plot worth parameters
-    w2 <- llbt.worth(m2)
-    plot(w2)
+# calculate and plot worth parameters
+w2 <- llbt.worth(m2)
+plot(w2)
 
 
-    ## model with object specific covariates
-    latin <- c(0,1,1,0,1,0)           # object-specific covariate
-    LAT <- data.frame(LAT=latin)      # objcovs must be data frame with named columns
+# model with object specific covariates
+latin <- c(0, 1, 1, 0, 1, 0)     # object-specific covariate
+LAT   <- data.frame(LAT = latin) # objcovs must be data frame with named columns
 
-    onames <- c("LO","PA","MI","SG","BA","ST")
+onames <- c("LO", "PA", "MI", "SG", "BA", "ST")
 
-    des <- llbt.design(cemspc, nitems=6, objnames=onames, objcovs=LAT)
-    m3 <- gnm(y~LAT+g1, eliminate=mu, family=poisson, data=des)
-    w3 <- llbt.worth(m3)
-    w3
-    attr(w3, "objtable")
+des <- llbt.design(cemspc, nitems = 6, objnames = onames, objcovs = LAT)
+m3  <- gnm(y ~ LAT + g1, eliminate = mu, data = des, family = poisson)
+w3  <- llbt.worth(m3)
+w3
+attr(w3, "objtable")
 }
 \keyword{models}

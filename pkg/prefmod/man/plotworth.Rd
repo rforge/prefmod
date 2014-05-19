@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{plotworth}
 \alias{plotworth}
 \title{Deprecated function to plot worth or model parameters from LLBT or pattern models}
@@ -41,22 +42,21 @@ plotworth(worthmat, main = "Preferences", ylab = "Estimate",
 \author{Reinhold Hatzinger}
 \seealso{\code{\link{patt.worth}}}
 \examples{
-## fit only first three objects with SEX effect
-data(cemspc)
-m2 <- pattPC.fit(cemspc, nitems=3, formel=~SEX, elim=~SEX, undec=TRUE)
+# fit only first three objects with SEX effect
+m2 <- pattPC.fit(cemspc, nitems = 3, formel = ~SEX, elim = ~SEX, undec = TRUE)
 
-## calculate and plot worth parameters
+# calculate and plot worth parameters
 m2worth <- patt.worth(m2)
 plotworth(m2worth)
 plotworth(m2worth, pcol = "terrain")
 
-## display of some plotsymbols (pch)
-plot(0:25, rep(1,26), pch=0:25, cex=1.5)
-text(0:25, rep(0.95,26), 0:25)
+# display of some plotsymbols (pch)
+plot(0:25, rep(1, 26), pch = 0:25, cex = 1.5)
+text(0:25, rep(0.95, 26), 0:25)
 
-## usage of the RColorBrewer package
+# usage of the "RColorBrewer" package
 \dontrun{
-library(RColorBrewer)
+library("RColorBrewer")
 mypalette <- brewer.pal(3, "Set1")
 plotworth(m2worth, pcol = mypalette)}
 }

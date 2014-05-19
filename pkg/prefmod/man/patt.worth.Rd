@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{patt.worth}
 \alias{patt.worth}
 \title{Function to calculate and print worth parameters from pattern model results}
@@ -40,12 +41,11 @@ patt.worth(fitobj, obj.names = NULL, outmat = "worth")
 \seealso{\code{\link{pattPC.fit}}, \code{\link{pattR.fit}}, \code{\link{pattL.fit}}, and
    \code{\link{pattLrep.fit}}, \code{\link{plot}}}
 \examples{
-    ## fit only first three objects with SEX effect
-    data(cemspc)
-    m2<-pattPC.fit(cemspc, nitems=3, formel=~SEX, elim=~SEX, undec=TRUE)
+# fit only first three objects with SEX effect
+m2 <- pattPC.fit(cemspc, nitems = 3, formel = ~SEX, elim = ~SEX, undec = TRUE)
 
-    ## calculate and print worth parameters
-    m2worth<-patt.worth(m2)
-    m2worth
+# calculate and print worth parameters
+m2worth <- patt.worth(m2)
+m2worth
 }
 \keyword{models}

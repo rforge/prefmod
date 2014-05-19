@@ -76,12 +76,12 @@ pattRrep.fit<-function(obj, nitems,tpoints=1,formel=~1,elim=~1,resptype="ranking
     ## reduce datamatrix
     # for each timepoint
     #dat.t<-NULL
-    dat.t<-as.data.frame(prefmod:::diffsred(dat[,1:nitems],nitems))
+    dat.t<-as.data.frame(diffsred(dat[,1:nitems],nitems))
     if(tpoints>1){
        for (t in 2:tpoints){
           from<-nitems*(t-1)+1
           to<-from+nitems-1
-          dat.t<-cbind(dat.t,as.data.frame(prefmod:::diffsred(dat[,from:to],nitems)))
+          dat.t<-cbind(dat.t,as.data.frame(diffsred(dat[,from:to],nitems)))
        }
     }
     ## replace 0 with NA
@@ -114,7 +114,7 @@ pattRrep.fit<-function(obj, nitems,tpoints=1,formel=~1,elim=~1,resptype="ranking
 #######################################  end data, inits
 
 ## design matrix
-    ENV$Y <- ifelse(prefmod:::Rpatternmat(nitems)>0,1,-1) # pattern matrix
+    ENV$Y <- ifelse(Rpatternmat(nitems)>0,1,-1) # pattern matrix
 
    # "recursively" expand patternmatrix for timepoints
     np<-nrow(ENV$Y)                     # no patterns in Y
@@ -181,7 +181,7 @@ pattRrep.fit<-function(obj, nitems,tpoints=1,formel=~1,elim=~1,resptype="ranking
 
 
 
-    #X<- ENV$Y %*% prefmod:::pcdesign(nobj)
+    #X<- ENV$Y %*% pcdesign(nobj)
     #X<- -X[,-nobj]                          # basic design matrix
 
     cList<-splitCovs(pc.dat,covs,formel,elim,ENV)     # split data according to subject covariates

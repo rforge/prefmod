@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{salad}
 \alias{salad}
 \docType{data}
@@ -7,7 +8,7 @@
   with values ranging from 1 (most tart) 
   to 4 (least tart).
 }
-\usage{data(salad)}
+\usage{salad}
 \format{
   A data frame with 32 observations on 4 variables (\code{A}, \code{B}, \code{C}, \code{D}) each
  representing a different salad dressing.
@@ -21,10 +22,11 @@
 # salads A - D have varying concentrations of acetic and gluconic acid.
 # The four pairs of concentrations are
 # A = (.5, 0), B = (.5, 10.0), C = (1.0, 0), and D = (0, 10.0),
-data(salad)
-conc<-matrix(c(.5,0, .5,10,  1,0, 0,10), nc=2, byrow=TRUE)
-sal<-patt.design(salad,nitems=4,resptype="ranking")
-X<-as.matrix(sal[,2:5])%*%conc
-glm(y~X,family=poisson,data=sal)
+
+conc <- matrix(c(.5,0, .5,10, 1,0, 0,10), ncol = 2, byrow = TRUE)
+sal  <- patt.design(salad, nitems = 4, resptype = "ranking")
+X    <- as.matrix(sal[, 2:5]) %*% conc
+
+glm(y ~ X, data = sal, family = poisson)
 }
 \keyword{datasets}

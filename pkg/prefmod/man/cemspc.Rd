@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{cemspc}
 \alias{cemspc}
 \docType{data}
@@ -12,7 +13,7 @@ university was preferred and 1 if no decision was made. The variable
 ENG contains the knowledge of English and the variable
 SEX contains the gender.
 }
-\usage{data(cemspc)}
+\usage{cemspc}
 \format{
   A data frame with 303 rows for the subjects containing the outcome of the 15 comparisons and the two covariates 
   \describe{
@@ -35,13 +36,13 @@ SEX contains the gender.
     \item{\code{SEX}}{Gender : 1= female, 2= male}
   }
 }
-\references{
-  R. Dittrich, R.Hatzinger and W.Katzenbeisser: Modelling the effect of subject-specific covariates in paired comparison studies with an application to university rankings. Applied Statistics, Vol. 47 (1998), Part 4
+\references{Dittrich, R., Hatzinger, R., & Katzenbeisser, W. (1998).
+Modelling the effect of subject-specific covariates in paired comparison studies with an application to university rankings.
+\emph{Applied Statistics, 47}(4), 511--525.
 }
 \examples{
-data(cemspc)
-par(mfrow=c(4,4))
-for (i in 1:15) barplot(table(cemspc[,i]))
-par(mfrow=c(1,1))
+old_par <- par(mfrow = c(4, 4))
+for(i in 1:15){ barplot(table(cemspc[, i])) }
+par(old_par)
 }
 \keyword{datasets}

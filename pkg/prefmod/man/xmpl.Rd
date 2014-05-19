@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{xmpl}
 \alias{xmpl}
 \docType{data}
@@ -5,7 +6,7 @@
 \description{
   Data to illustrate the usage of \code{\link{patt.design} for rating scale (Likert type) items}.
 }
-\usage{data(xmpl)}
+\usage{xmpl}
 \format{
   A data frame with 100 observations on 5 numeric variables.
   The first three variables (\code{I1}, \code{I2}, \code{I3})
@@ -34,9 +35,7 @@
   }
 }
 \examples{
-data(xmpl)
-des<-patt.design(xmpl, nitems = 3, resptype = "rating",
-        cov.sel = "SEX")
+des <- patt.design(xmpl, nitems = 3, resptype = "rating", cov.sel = "SEX")
 head(des)
 }
 \keyword{datasets}

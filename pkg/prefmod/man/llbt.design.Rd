@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{llbt.design}
 \alias{llbt.design}
 \title{Loglinear Bradley-Terry Model (LLBT) - Design Matrix Generation}
@@ -127,7 +128,7 @@ frame.
 }
 Options for requesting GLIM commands and data structures are no longer supported.
 Specifying the input to \code{llbt.design} via a control list is also deprecated.
-If you want to use these features you have to install prefmod <= 0.8-22.
+If you want to use these features you have to install \pkg{prefmod} <= 0.8-22.
 }
 \references{R. Dittrich, R. Hatzinger and W. Katzenbeisser.
 Modelling the effect of subject-specific covariates in paired
@@ -139,33 +140,32 @@ Applied Statististics (1998), 47, Part 4,  pp. 511-525
 \code{\link{llbt.worth}}, \code{\link{llbtPC.fit}}
 }
 \examples{
-## cems universities example
-data(cemspc)
-des<-llbt.design(cemspc, nitems=6, cat.scovs="ENG")
+# cems universities example
+des <- llbt.design(cemspc, nitems = 6, cat.scovs = "ENG")
 
-res0<-gnm(y~o1+o2+o3+o4+o5+o6+ENG:(o1+o2+o3+o4+o5+o6),
-      eliminate=mu:ENG, family=poisson, data=des)
+res0 <- gnm(y ~ o1+o2+o3+o4+o5+o6 + ENG:(o1+o2+o3+o4+o5+o6),
+    eliminate = mu:ENG, data = des, family = poisson)
 summary(res0)
 
 # inclusion of g1 allows for an undecided effect
-res<-gnm(y~o1+o2+o3+o4+o5+o6+ENG:(o1+o2+o3+o4+o5+o6)+g1,
-      eliminate=mu:ENG, family=poisson, data=des)
+res <- gnm(y ~ o1+o2+o3+o4+o5+o6 + ENG:(o1+o2+o3+o4+o5+o6) + g1,
+    eliminate = mu:ENG, data = des, family = poisson)
 summary(res)
 
-## calculating and plotting worth parameters
-wmat<-llbt.worth(res)
+# calculating and plotting worth parameters
+wmat <- llbt.worth(res)
 plot(wmat)
 
-## object specific covariates
-LAT <- c(0,1,1,0,1,0)        # latin cities
-EC  <- c(1,0,1,0,0,1)
-OBJ <- data.frame(LAT,EC)
-des2<-llbt.design(cemspc,nitems=6, objcovs=OBJ, cat.scovs="ENG")
-res2<-gnm(y~LAT+EC+LAT:ENG+g1,
-      eliminate=mu:ENG, family=poisson, data=des2)
+# object specific covariates
+LAT  <- c(0, 1, 1, 0, 1, 0)        # latin cities
+EC   <- c(1, 0, 1, 0, 0, 1)
+OBJ  <- data.frame(LAT,EC)
+des2 <- llbt.design(cemspc, nitems = 6, objcovs = OBJ, cat.scovs = "ENG")
+res2 <- gnm(y ~ LAT + EC + LAT:ENG + g1,
+    eliminate = mu:ENG, data = des2, family = poisson)
 
-## calculating and plotting worth parameters
-wmat2<-llbt.worth(res2)
+# calculating and plotting worth parameters
+wmat2 <- llbt.worth(res2)
 wmat2
 plot(wmat2)
 }

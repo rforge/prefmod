@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{pattLrep.fit}
 \alias{pattLrep.fit}
 \title{Function to fit a pattern model for repeated ratings (Likert items)}
@@ -6,7 +7,7 @@
        allowing for missing values using a CL approach.}
 \usage{
 pattLrep.fit(obj, nitems, tpoints = 1, formel = ~1, elim = ~1,
-        resptype = "ratingT",  obj.names=NULL, undec = FALSE, ia = FALSE,
+        resptype = "ratingT",  obj.names=NULL, undec = TRUE, ia = FALSE,
         iaT = FALSE, NItest = FALSE, pr.it = FALSE)
 }
 \arguments{
@@ -119,17 +120,17 @@ pattLrep.fit(obj, nitems, tpoints = 1, formel = ~1, elim = ~1,
      Generally, the number of rows in the design matrix is
      \eqn{(number of patterns) ^ (number of timepoints)}. The number of covariate levels and the number of missing
      value patterns have effects only on the run time.
-     A (reasobale) maximum number of items for two time points is 5, for three timepoints 4, and
+     A (reasonable) maximum number of items for two time points is 5, for three timepoints 4, and
      for four to five timepoints 3.
      }
 \seealso{\code{\link{pattL.fit}},\code{\link{patt.design}}, \code{\link{pattPC.fit}}, \code{\link{pattR.fit}}, \code{\link{pattRrep.fit}}
      }
 \examples{
-## simulated data: 3 items, 2 timepoints
-dat<-as.data.frame(matrix(sample(1:5,300,replace=TRUE),nc=6))
-res<-pattLrep.fit(dat, nitems=3, tpoints=2, iaT=TRUE)
+# simulated data: 3 items, 2 timepoints
+dat <- as.data.frame(matrix(sample(1:5, 300, replace = TRUE), ncol = 6))
+res <- pattLrep.fit(dat, nitems = 3, tpoints = 2, iaT = TRUE)
 res
-patt.worth(res,obj.names=LETTERS[1:3])
+patt.worth(res, obj.names = LETTERS[1:3])
 }
 \keyword{models}
 \keyword{multivariate}
