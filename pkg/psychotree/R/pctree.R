@@ -44,7 +44,7 @@ pcmfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, ...
   rval <- list(
     coefficients = rval$coefficients,
     objfun = -rval$loglik,
-    estfun = if(estfun) estfun.PCModel(rval) else NULL,
+    estfun = if(estfun) estfun.pcmodel(rval) else NULL,
     object = if(object) rval else NULL
   )
   return(rval)
