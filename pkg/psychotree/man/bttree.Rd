@@ -31,11 +31,11 @@ bttree(formula, data, na.action = na.pass,
     contain \code{NA}s, defaulting to \code{\link[stats]{na.pass}}.}
   \item{type}{character indicating the type of auxiliary model in \code{bttree} and the
     type of predictions in the \code{predict} method, respectively. For the auxiliary
-    model see \code{\link[psychotools]{btReg.fit}}. For the \code{predict} method, four options are
+    model see \code{\link[psychotools]{btmodel}}. For the \code{predict} method, four options are
     available: the fitted \code{"worth"} for each alternative, the corresponding
     \code{"rank"}, the \code{"best"} alternative or the predicted \code{"node"} number.}
   \item{ref, undecided, position}{arguments for the Bradley-Terry
-    model passed on to \code{\link[psychotools]{btReg.fit}}.}
+    model passed on to \code{\link[psychotools]{btmodel}}.}
   \item{\dots}{arguments passed to \code{\link[partykit]{mob_control}}.}
   \item{object}{fitted model object of class \code{"bttree"}.}
   \item{newdata}{optionally, a data frame in which to look for variables with
@@ -45,7 +45,7 @@ bttree(formula, data, na.action = na.pass,
 \details{
   Bradley-Terry tree models are an application of model-based recursive partitioning
   (implemented in \code{\link[partykit]{mob}}) to Bradley-Terry models for
-  paired comparison data (implemented in \code{\link[psychotools]{btReg.fit}}).
+  paired comparison data (implemented in \code{\link[psychotools]{btmodel}}).
   Details about the underlying theory and further explanations of the
   illustrations in the example section can be found in
   Strobl, Wickelmaier, Zeileis (2011).
@@ -70,7 +70,7 @@ bttree(formula, data, na.action = na.pass,
   doi:10.3102/1076998609359791
 }
 
-\seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{btReg.fit}}}
+\seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{btmodel}}}
 
 \examples{
 ## Germany's Next Topmodel 2007 data

@@ -1,10 +1,3 @@
-## library("partykit")
-## library("psychotools")
-## source("pctree-psychotools.R")
-## data("DIFSim", package = "psychotree")
-## mb <-  mob(resp ~ age + gender + motivation, data = DIFSim, fit = pcmfit, control = mob_control(ytype = "matrix"))
-## pct <- pctree(resp ~ age + gender + motivation, data = DIFSim)
-
 ### high-level convenience interface to mob()
 pctree <- function (formula, data, na.action = na.pass, nullcats = c("keep", "downcode", "ignore"),
   reltol = 1e-10, deriv = c("sum", "diff"), maxit = 100L, ...)
@@ -34,13 +27,13 @@ pctree <- function (formula, data, na.action = na.pass, nullcats = c("keep", "do
   return(rval)
 }
 
-## glue code for calling PCModel.fit()
+## glue code for calling pcmodel()
 pcmfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, ...,
   estfun = FALSE, object = FALSE)
 {
   if(!(is.null(x) || NCOL(x) == 0L)) warning("x not used")
   if(!is.null(offset)) warning("offset not used")
-  rval <- PCModel.fit(y, weights = weights, start = start, ..., hessian = object | estfun)
+  rval <- pcmodel(y, weights = weights, start = start, ..., hessian = object | estfun)
   rval <- list(
     coefficients = rval$coefficients,
     objfun = -rval$loglik,
@@ -80,20 +73,6 @@ predict.pctree <- function(object, newdata = NULL,
   ## partykit::predict.modelparty(object, newdata = newdata, type = pred, ...)
 }
 
-## rewrite of apply_to_models() -- "..." is now passed to FUN
-apply_to_models2 <- function(object, node = NULL, FUN = NULL, drop = FALSE, ...) {
-  if(is.null(node)) node <- nodeids(object, terminal = FALSE)
-  if(is.null(FUN)) FUN <- function(object) object  
-  rval <- if("object" %in% object$info$control$terminal) {
-    nodeapply(object, node, function(n) FUN(info_node(n)$object, ...))
-  } else {
-    lapply(refit.modelparty(object, node, drop = FALSE), FUN, ...)
-  }
-  names(rval) <- node
-  if(drop & length(node) == 1L) rval <- rval[[1L]]
-  return(rval)
-}
-
 ## worth.pctree <- function(object, node = NULL, ...)
 ## {
 ##   ids <- if(is.null(node)) nodeids(object, terminal = TRUE) else node
@@ -113,7 +92,6 @@ plot.pctree <- function(x, terminal_panel = node_effects,
     tp_args = tp_args, tnex = tnex, drop_terminal = drop_terminal, ...)
 }
 
-
 ## visualization function
 node_effects <- function(mobobj, names = NULL, type = c("mode", "median", "mean"),
                          ref = NULL, ylab = "Latent trait", ylim = NULL, off = 0.1, col_fun = gray.colors,
@@ -124,31 +102,12 @@ node_effects <- function(mobobj, names = NULL, type = c("mode", "median", "mean"
     stopifnot(off >= 0)
     type <- match.arg(type)
 
-    ## FIXME: glue code as long as threshold() and itempar() is not exported:
-    ## get one full model, determine class, set appropriate threshold and itempar function
-    model <- apply_to_models2(mobobj, node = 1L, FUN = NULL)[[1]]
-    RSM <- FALSE
-    if (inherits(model[[1]], "RaschModel")) {
-        threshold <- threshold.RaschModel
-        itempar <- function (node) lapply(itempar.RaschModel(node, ref = ref, vcov = FALSE, simplify = FALSE), function (j) diff.default(c(0, j)))
-    } else if (inherits(model[[1]], "RSModel")) {
-        threshold <- threshold.RSModel
-        itempar <- function (node) lapply(as.list(itempar.RSModel(node, ref = ref, vcov = FALSE, simplify = FALSE)[[1]]),
-                                          function (beta) diff(0:length(ip[[2]]) * beta + c(0, ip[[2]])))
-    } else {
-        threshold <- threshold.PCModel
-        itempar <- function (node) lapply(itempar.PCModel(node, ref = ref, vcov = FALSE, simplify = FALSE), function (j) diff.default(c(0, j)))
-    }
+    ## function to extract absolute item threshold parameters from model objects in terminal nodes
+    threshparlst <- function (node) coef(threshpar(node, ref = ref, type = type, alias = TRUE, relative = FALSE, cumulative = FALSE, vcov = FALSE), type = "list")
 
     ## setup threshold parameters
     node <- nodeids(mobobj, terminal = TRUE)
-    delta_lst <- apply_to_models2(mobobj, node, FUN = threshold, type = type, ref = ref, simplify = FALSE)
-    
-    ## if requested and type = 'mode' check for unordered thresholds
-    if (uo_show && type == "mode") {
-        ip_lst <- apply_to_models2(mobobj, node, FUN = itempar)
-        names(ip_lst) <- node
-    }
+    delta_lst <- apply_to_models(mobobj, node, FUN = threshparlst, ref = ref, type = type)
 
     ## setup plotting parameters
     m <- max(sapply(delta_lst, length))
@@ -167,9 +126,38 @@ node_effects <- function(mobobj, names = NULL, type = c("mode", "median", "mean"
 
         ## select node id, coefficients, identified items, x-position vector and label
         id <- as.character(id_node(node))
-        cf <- delta_lst[[id]]
+        delta_unsorted <- delta_lst[[id]]
         lab <- paste("node", id, sep = "")
         
+        ## compute sorted absolute item threshold parameters (code borrowed from psychotools::regionplot())
+        delta_sorted <- delta_unsorted
+        us <- sapply(delta_unsorted, is.unsorted)
+        if (any(us)) {
+          usj <- which(us)
+          for (j in usj) {
+            tpj <- delta_unsorted[[j]]
+            nj <- length(tpj)
+            
+            ## check if there is a point with a biggest parameter, if yes, take mean
+            for (i in 1:nj) {
+              if (all(tpj[i] > tpj[(i+1):nj])) {
+                tpj[i] <- mean(tpj[i:nj])
+                tpj <- tpj[-(i+1:nj)]
+                break
+              }
+            }
+            
+            ## recursive sorting if there is still unorder (e.g. 4, 2, 3, 1)
+            while(is.unsorted(tpj)) {
+              uo_pos <- which(diff(tpj) < 0)                     # locate unordered parameters, returns position of the first
+              tpj[uo_pos] <- (tpj[uo_pos] + tpj[uo_pos + 1]) / 2 # replace first with location of intersection of ccc curves (= (eps1 + eps2)/ 2)
+              tpj <- tpj[-(uo_pos + 1)]                          # remove second
+            }
+            
+            delta_sorted[[j]] <- tpj
+          }
+        }
+
         ## terminal panel viewport setup
         top.vp <- viewport(layout = grid.layout(nrow = 2, ncol = 1, widths = unit(1, "null"), heights = unit(c(1, 1), c("lines", "null"))),
                            width = unit(1, "npc"), height = unit(1, "npc") - unit(2, "lines"), name = paste(lab, "_effects", sep = ""))
@@ -198,26 +186,21 @@ node_effects <- function(mobobj, names = NULL, type = c("mode", "median", "mean"
         pushViewport(plot.vp)
 
         ## plot rectangles per item
-        for (j in seq_along(cf)) {
-            
-            ncat <- length(cf[[j]]) + 1
-            grid.rect(x = rep.int(xi[j], ncat), y = c(ylim[1], cf[[j]]), width = rep.int(1, ncat), height = diff.default(c(ylim[1], cf[[j]], ylim[2])),
-                      just = c("left", "bottom"), gp = gpar(fill = col_fun(ncat)), default.units = "native",
-                      name = paste(lab, "_item", j, "_rect", sep = ""))
-
+        for (j in seq_along(delta_sorted)) {
+            ncat <- length(delta_sorted[[j]]) + 1
+            grid.rect(x = rep.int(xi[j], ncat), y = c(ylim[1], delta_sorted[[j]]), width = rep.int(1, ncat),
+                      height = diff.default(c(ylim[1], delta_sorted[[j]], ylim[2])), just = c("left", "bottom"),
+                      gp = gpar(fill = col_fun(ncat)), default.units = "native", name = paste(lab, "_item", j, "_rect", sep = ""))
         }
 
         ## if requested: indicate unordered parameters
         if (uo_show && type == "mode") {
-            ip <- ip_lst[[id]]
-            uo_items <- which(!sapply(mapply(all.equal, cf, ip, check.attributes = FALSE, SIMPLIFY = FALSE, USE.NAMES = FALSE), is.logical))
-            for (j in uo_items) {
-                uo_pars <- setdiff(ip[[j]], cf[[j]])
-                grid.polyline(x = rep(c(xi[j], xi[j] + 1), length(uo_pars)), y = rep(uo_pars, each = 2), 
-                              default.units = "native", id = rep(1:length(uo_pars), each = 2),
-                              name = paste(lab, "item", j, "_uolines", sep = ""),
-                              gp = gpar(col = uo_col, lwd = uo_lwd, lty = uo_lty))
-            }
+          uo_items <- which(!sapply(mapply(all.equal, delta_sorted, delta_unsorted, check.attributes = FALSE, SIMPLIFY = FALSE, USE.NAMES = FALSE), is.logical))
+          for (j in uo_items) {
+            uo_pars <- setdiff(delta_unsorted[[j]], delta_sorted[[j]])
+            grid.polyline(x = rep(c(xi[j], xi[j] + 1), length(uo_pars)), y = rep(uo_pars, each = 2), default.units = "native", id = rep(1:length(uo_pars), each = 2),
+                          name = paste(lab, "item", j, "_uolines", sep = ""), gp = gpar(col = uo_col, lwd = uo_lwd, lty = uo_lty))
+          }
         }
 
         ## add box and axis

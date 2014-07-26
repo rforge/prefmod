@@ -28,14 +28,14 @@ pctree(formula, data, na.action = na.pass, nullcats = c("keep", "downcode", "ign
     contain missing values (\code{NA}s).}
 
   \item{nullcats}{character. How null categories should be treated. See
-  \code{\link[psychotools]{PCModel.fit}} for details.}
+  \code{\link[psychotools]{pcmodel}} for details.}
 
   \item{deriv}{character. If "sum" (the default), the first derivatives
     of the elementary symmetric functions are calculated with the sum
     algorithm. Otherwise ("diff") the difference algorithm (faster but
     numerically unstable) is used.}
   
-  \item{reltol, maxit}{arguments passed via \code{\link[psychotools]{PCModel.fit}}
+  \item{reltol, maxit}{arguments passed via \code{\link[psychotools]{pcmodel}}
     to \code{\link[stats]{optim}}.}
   
   \item{\dots}{arguments passed to \code{\link[partykit]{mob_control}}.}
@@ -45,7 +45,7 @@ pctree(formula, data, na.action = na.pass, nullcats = c("keep", "downcode", "ign
 \details{
   Partial credit tree models are an application of model-based recursive partitioning
   (implemented in \code{\link[partykit]{mob}}) to partial credit models
-  (implemented in \code{\link[psychotools]{PCModel.fit}}).
+  (implemented in \code{\link[psychotools]{pcmodel}}).
   
   Various methods are provided for \code{"pctree"} objects, most of them
   inherit their behavior from \code{"mob"} objects (e.g., \code{print},
@@ -77,7 +77,7 @@ pctree(formula, data, na.action = na.pass, nullcats = c("keep", "downcode", "ign
   exported from the party package).
 }
 
-\seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{PCModel.fit}},
+\seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{pcmodel}},
   \code{\link{rstree}}, \code{\link{raschtree}}}
 
 \examples{

@@ -1,9 +1,3 @@
-## library("partykit")
-## library("psychotools")
-## data("DIFSim", package = "psychotree")
-## mb <-       mob(resp ~ age + gender + motivation, data = DIFSim, fit = raschfit, control = mob_control(ytype = "matrix"))
-## rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
-
 ## high-level convenience interface to mob()
 raschtree <- function(formula, data, na.action = na.pass,
   reltol = 1e-10, deriv = c("sum", "diff", "numeric"), maxit = 100L, ...)

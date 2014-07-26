@@ -34,7 +34,7 @@ rstree(formula, data, na.action = na.pass, reltol = 1e-10,
     algorithm. Otherwise ("diff") the difference algorithm (faster but
     numerically unstable) is used.}
   
-  \item{reltol, maxit}{arguments passed via \code{\link[psychotools]{RSModel.fit}}
+  \item{reltol, maxit}{arguments passed via \code{\link[psychotools]{rsmodel}}
     to \code{\link[stats]{optim}}.}
 
   \item{\dots}{arguments passed to \code{\link[partykit]{mob_control}}.}
@@ -44,7 +44,7 @@ rstree(formula, data, na.action = na.pass, reltol = 1e-10,
 \details{
   Rating scale tree models are an application of model-based recursive partitioning
   (implemented in \code{\link[partykit]{mob}}) to rating scale models
-  (implemented in \code{\link[psychotools]{RSModel.fit}}).
+  (implemented in \code{\link[psychotools]{rsmodel}}).
   
   Various methods are provided for \code{"rstree"} objects, most of them
   inherit their behavior from \code{"mob"} objects (e.g., \code{print},
@@ -77,7 +77,7 @@ rstree(formula, data, na.action = na.pass, reltol = 1e-10,
   exported from the party package).
 }
 
-\seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{RSModel.fit}},
+\seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{rsmodel}},
   \code{\link{pctree}}, \code{\link{raschtree}}}
 
 \examples{

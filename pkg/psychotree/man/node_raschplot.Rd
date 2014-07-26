@@ -17,7 +17,7 @@ node_raschplot(mobobj, id = TRUE, worth = TRUE, names = TRUE,
 
 \arguments{
   \item{mobobj}{an object of class \code{"mob"} based on Rasch models
-    fitted by \code{\link[psychotools]{RaschModel.fit}}.}
+    fitted by \code{\link[psychotools]{raschmodel}}.}
   \item{id}{logical. Should the node ID be displayed?}
   \item{worth}{logical. Should the worth parameters or raw coefficients be displayed?}
   \item{names}{logical. Should the names for the objects be displayed?}

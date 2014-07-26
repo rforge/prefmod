@@ -1,3 +1,9 @@
+Changes in Version 0.13-1
+
+  o Adjusted package psychotree to recent additions and changes
+    in the related package psychotools.
+
+
 Changes in Version 0.13-0
 
   o New functionality for recursive partitioning of partial credit

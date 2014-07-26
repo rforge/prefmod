@@ -26,7 +26,8 @@ node_effects(mobobj, names = NULL, type = c("mode", "median", "mean"),
 \arguments{
 
   \item{mobobj}{an object of class \code{"mob"} based on rating scale models
-    fitted by \code{\link[psychotools]{RSModel.fit}} or partial credit models fitted by \code{\link[psychotools]{PCModel.fit}}.}
+    fitted by \code{\link[psychotools]{rsmodel}} or partial credit
+    models fitted by \code{\link[psychotools]{pcmodel}}.}
 
   \item{names}{character vector containing x-axis labels for the
     threshold parameters. If set to \code{NULL} (the default), these are
@@ -34,7 +35,7 @@ node_effects(mobobj, names = NULL, type = c("mode", "median", "mean"),
   
   \item{type}{character, specifying which type of threshold parameters
     are to be used to mark the category regions per item in the plot
-    (see \code{\link[psychotools]{plot.PCModel}} for details).}
+    (see \code{\link[psychotools]{plot.raschmodel}} for details).}
   
   \item{ref}{a vector of labels or position indices of item parameters
     which should be used as restriction/for normalization. If
@@ -72,7 +73,7 @@ node_effects(mobobj, names = NULL, type = c("mode", "median", "mean"),
   \code{plot} method for \code{"rstree"} and \code{"pctree"} objects by
   default and does not have to be called by the user directly. 
 
-  See \code{\link[psychotools]{plot.PCModel}} for details and references
+  See \code{\link[psychotools]{plot.raschmodel}} for details and references
   of the drawn effect plots and possible values and their meaning for
   argument \code{cut} (taken by \code{node_effects}).
 
@@ -88,7 +89,7 @@ node_effects(mobobj, names = NULL, type = c("mode", "median", "mean"),
 
 
 \seealso{\code{\link{rstree}}, \code{\link{pctree}},
-\code{\link[psychotools]{plot.PCModel}}}
+\code{\link[psychotools]{plot.pcmodel}}}
 
 
 \keyword{hplot}
