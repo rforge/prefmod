@@ -10,19 +10,21 @@ import(
 export(
   ## Rasch tree tools
   "raschtree",
-  "node_raschplot",
 
   ## Rating-Scale tree tools
   "rstree",
-##  "node_rsmplot",
 
   ## Partial-Credit (and Rating-Scale) tree tools
   "pctree",
-  "node_effects",
-##  "node_ccc",
 
   ## Bradley-Terry tree tools
   "bttree",
+
+  ## panel-generating visualization functions
+  "node_profileplot",
+  "node_regionplot",
+  "node_raschplot",
+  "node_effects",
   "node_btplot"
 
 #  ## MPT tree tools
@@ -31,27 +33,18 @@ export(
 #  "node_mptplot"
 )
 
-## FIXME check: coef, logLik, summary, weights // bread, estfun
-
 ## methods for raschtree objects
-## S3method("itempar", "raschtree")
 S3method("plot", "raschtree")
 S3method("print", "raschtree")
-## S3method("threshold", "raschtree")
 S3method("worth", "raschtree")
 
 ## methods for rstree objects
-## S3method("itempar", "rstree")
 S3method("plot", "rstree")
 S3method("print", "rstree")
-## S3method("threshold", "rstree")
 
 ## methods for pctree objects
-## S3method("itempar", "pctree")
 S3method("plot", "pctree")
-## S3method("plotCCC", "pctree")
 S3method("print", "pctree")
-## S3method("threshold", "pctree")
 
 ## methods for bttree objects
 S3method("plot", "bttree")
@@ -62,20 +55,6 @@ S3method("worth", "bttree")
 # ## methods for mpttree objects
 # S3method("plot", "mpttree")
 # S3method("print", "mpttree")
-
-## methods for RaschModel objects
-# S3method("bread", "RaschModel")
-# S3method("estfun", "RaschModel")
-
-## methods for RSModel objects
-# S3method("estfun", "RSModel")
-
-## methods for PCModel objects
-# S3method("estfun", "PCModel")
-
-## methods for btReg objects
-## S3method("bread", "btReg")
-## S3method("estfun", "btReg")
 
 # ## methods for mptModel objects
 # S3method("bread", "mptModel")

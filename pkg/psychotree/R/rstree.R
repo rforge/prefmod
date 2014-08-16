@@ -83,7 +83,7 @@ predict.rstree <- function(object, newdata = NULL,
 ##   } 
 ## }
 
-plot.rstree <- function(x, terminal_panel = node_effects,
+plot.rstree <- function(x, terminal_panel = node_regionplot,
   tp_args = list(), tnex = NULL, drop_terminal = NULL, ...)
 {
   if(is.null(tnex)) tnex <- if(is.null(terminal_panel)) 1L else 2L

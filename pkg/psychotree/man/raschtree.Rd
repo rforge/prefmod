@@ -46,7 +46,7 @@ raschtree(formula, data, na.action = na.pass,
   etc.). For the Rasch models in the nodes of a tree, \code{coef} extracts all item
   parameters except the first one which is always restricted to be zero. \code{worth}
   extracts all item parameters (including the first one) and restricts their sum to
-  be zero. The \code{plot} method employs the \code{\link{node_raschplot}}
+  be zero. The \code{plot} method employs the \code{\link{node_profileplot}}
   panel-generating function.
 
   Rasch tree models are introduced in Strobl et al. (2010), whose analysis

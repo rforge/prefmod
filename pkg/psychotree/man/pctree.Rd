@@ -51,7 +51,7 @@ pctree(formula, data, na.action = na.pass, nullcats = c("keep", "downcode", "ign
   inherit their behavior from \code{"mob"} objects (e.g., \code{print},
   \code{summary}, etc.). For the partial credit models in the nodes of a
   tree, \code{coef} extracts all threshold parameters. The \code{plot}
-  method employs the \code{\link{node_effects}} panel-generating
+  method employs the \code{\link{node_regionplot}} panel-generating
   function by default.
 
   %% Alternatively, this can be also set to
@@ -99,7 +99,7 @@ print(pct)
 ## show summary for terminal panel nodes
 summary(pct)
 
-## plot with default (and currently only) terminal panel function (node_effects)
+## plot with default terminal panel function (node_regionplot)
 plot(pct)
 
 ## extract item and category parameters
