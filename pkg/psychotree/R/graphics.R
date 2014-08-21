@@ -5,11 +5,14 @@ node_raschplot <- function (...)
 {
   node_profileplot(...)
 }
+class(node_raschplot) <- "grapcon_generator"
+
 
 node_effects <- function (...)
 {
   node_regionplot(...)
 }
+class(node_effects) <- "grapcon_generator"
 
 
 ## profile plot visualization function
@@ -38,10 +41,10 @@ node_profileplot <- function(mobobj, what = c("items", "thresholds", "discrimina
     cf <- apply_to_models(mobobj, node, FUN = function(z) coef(discrpar(z, ref = refpar, alias = alias, vcov = FALSE)))
   }
   names(cf) <- node
-  
+
   ## labeling
   if (is.logical(names) & names) {
-    nms <- lapply(cf, names)
+    if (what != "thresholds") nms <- lapply(cf, names) else nms <- lapply(cf, function (j) rownames(j))
   } else if (is.character(names)) {
     nms <- split(rep(names, length(node)), f = rep(1:length(node), each = length(names)))
     names <- TRUE
@@ -51,25 +54,28 @@ node_profileplot <- function(mobobj, what = c("items", "thresholds", "discrimina
 
   ## abbreviation
   if (is.logical(abbreviate)) {
-    nlab <- max(lapply(nms, function (j) nchar(j)))
+    nlab <- max(unlist(lapply(nms, function (j) nchar(j))))
     abbreviate <- if (abbreviate) as.numeric(cut(nlab, c(-Inf, 1.5, 4.5, 7.5, Inf))) else nlab
   }
   nms <- lapply(nms, function (j) abbreviate(j, abbreviate))
 
   ## axis scale
   if (index) {
-    x <- 1:length(cf[[1]])
+    x <- if (what == "thresholds") 1:nrow(cf[[1]]) else 1:length(cf[[1]])
     if (is.null(xscale)) xscale <- range(x) + c(-0.1, 0.1) * diff(range(x))
   } else {
     if (what == "thresholds") {
-      if (is.null(xscale)) xscale <- c(-1, ncol(cf[[1]]) + 1)
+      x <- 0:(ncol(cf[[1]]) - 1)
+      if (is.null(xscale)) xscale <- c(-1, ncol(cf[[1]]))
     } else {
       x <- rep(0, length(cf[[1]]))
       if (is.null(xscale)) xscale <- c(-1, 1)
     }
   }
-  if (is.null(yscale)) yscale <- range(unlist(cf)) + c(-0.1, 0.1) * diff(range(unlist(cf)))
-  
+  r <- diff(range(unlist(cf), na.rm = TRUE))
+  if (!r) r <- 1
+  if (is.null(yscale)) yscale <- range(unlist(cf), na.rm = TRUE) + c(-0.1, 0.1) * r
+
   ## panel function for profile plots in nodes
   panelfun <- function (node) {
 
@@ -97,30 +103,29 @@ node_profileplot <- function(mobobj, what = c("items", "thresholds", "discrimina
                      info_node(node)$nobs, ifelse(idn, ")", ""), sep = "")
     grid.text(mainlab)
     popViewport()
-
+    cf
     ## actual plot  
     plot_vpi <- viewport(layout.pos.col = 2, layout.pos.row = 2, xscale = xscale, yscale = yscale, 
                          name = paste("node_profileplot", idn, "plot", sep = ""))
     pushViewport(plot_vpi)
-
     grid.lines(xscale, c(mean(cfi), mean(cfi)), gp = gpar(col = linecol), default.units = "native")
     if(index) {
       if (what == "thresholds") {
         for (j in 1:ncol(cfi)) {
           grid.lines(x, cfi[, j], gp = gpar(col = col, lty = 2), default.units = "native")
-          grid.points(x, cfi[, j], gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
+          grid.text(label = paste0("C", j), x, cfi[, j], gp = gpar(col = col), default.units = "native")
         }
       } else {
         grid.lines(x, cfi, gp = gpar(col = col, lty = 2), default.units = "native")
         grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
       }
-      grid.xaxis(at = x, label = if (names) names(cfi) else x)
+      grid.xaxis(at = x, label = if (names) nmsi else x)
     } else {	
       if (names) {
         if (what == "thresholds") {
-          for (j in 1:ncol(cfi)) grid.text(names(cfi), x = rep(j, nrow(cfi)), y = cfi[, j], default.units = "native")
+          for (j in 1:ncol(cfi)) grid.text(paste0(nmsi, "-C", j), x[j], y = cfi[, j], default.units = "native")
         } else {
-          grid.text(names(cfi), x = x, y = cfi, default.units = "native")
+          grid.text(nmsi, x = x, y = cfi, default.units = "native")
         }
       } else {
         if (what == "thresholds") {
@@ -138,7 +143,7 @@ node_profileplot <- function(mobobj, what = c("items", "thresholds", "discrimina
   
   return(panelfun)
 }
-class(node_raschplot) <- "grapcon_generator"
+class(node_profileplot) <- "grapcon_generator"
 
 
 ## region plot visualization function
@@ -270,7 +275,7 @@ node_regionplot <- function(mobobj, names = NULL, type = c("mode", "median", "me
     ## return
     return(panelfun)
 }
-class(node_effects) <- "grapcon_generator"
+class(node_regionplot) <- "grapcon_generator"
 
 
 ## bradley-terry plot visualization function
