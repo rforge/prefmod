@@ -36,7 +36,7 @@ export(
 ## methods for raschtree objects
 S3method("plot", "raschtree")
 S3method("print", "raschtree")
-S3method("worth", "raschtree")
+S3method("itempar", "raschtree")
 
 ## methods for rstree objects
 S3method("plot", "rstree")
@@ -50,7 +50,7 @@ S3method("print", "pctree")
 S3method("plot", "bttree")
 S3method("predict", "bttree")
 S3method("print", "bttree")
-S3method("worth", "bttree")
+S3method("itempar", "bttree")
 
 # ## methods for mpttree objects
 # S3method("plot", "mpttree")
