@@ -34,7 +34,7 @@ raschfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, .
   if(!(is.null(x) || NCOL(x) == 0L)) warning("x not used")
   if(!is.null(offset)) warning("offset not used")
   ## rval <- RaschModel.fit(y, weights = weights, start = start, ..., full = object | estfun)
-  rval <- RaschModel.fit(y, weights = weights, start = start, ..., hessian = object | estfun)
+  rval <- raschmodel(y, weights = weights, start = start, ..., hessian = object | estfun)
   ## rval <- RaschModel.fit(y, weights = weights, start = NULL, ..., full = object | estfun)
   ## rval <- RaschModel.fit(y, weights = weights, start = start, ..., full = TRUE)
   rval <- list(
@@ -89,13 +89,13 @@ apply_to_models <- function(object, node = NULL, FUN = NULL, drop = FALSE, ...) 
   return(rval)
 }
 
-worth.raschtree <- function(object, node = NULL, ...)
+itempar.raschtree <- function(object, node = NULL, ...)
 {
   ids <- if(is.null(node)) nodeids(object, terminal = TRUE) else node
   if(length(ids) == 1L) {
-    apply_to_models(object, node = ids, FUN = worth, drop = TRUE)
+    apply_to_models(object, node = ids, FUN = itempar, drop = TRUE)
   } else {
-    do.call("rbind", apply_to_models(object, node = ids, FUN = worth, drop = FALSE))
+    do.call("rbind", apply_to_models(object, node = ids, FUN = itempar, drop = FALSE))
   } 
 }
 

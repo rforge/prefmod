@@ -33,7 +33,7 @@ rsmfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, ...
 {
   if(!(is.null(x) || NCOL(x) == 0L)) warning("x not used")
   if(!is.null(offset)) warning("offset not used")
-  rval <- RSModel.fit(y, weights = weights, start = start, ..., hessian = object | estfun)
+  rval <- rsmodel(y, weights = weights, start = start, ..., hessian = object | estfun)
   rval <- list(
     coefficients = rval$coefficients,
     objfun = -rval$loglik,
