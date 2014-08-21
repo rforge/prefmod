@@ -5,4 +5,3 @@ inst/raschtree.R
 man/mptModel.Rd
 man/mpttree.Rd
 man/node_mptplot.Rd
-tests/Examples/psychotree-Ex.Rout.save
