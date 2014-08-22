@@ -20,18 +20,6 @@ Type 'q()' to quit R.
 > pkgname <- "psychotree"
 > source(file.path(R.home("share"), "R", "examples-header.R"))
 > options(warn = 1)
-> base::assign(".ExTimings", "psychotree-Ex.timings", pos = 'CheckExEnv')
-> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
-> base::assign(".format_ptime",
-+ function(x) {
-+   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
-+   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
-+   options(OutDec = '.')
-+   format(x[1L:3L], digits = 7L)
-+ },
-+ pos = 'CheckExEnv')
-> 
-> ### * </HEADER>
 > library('psychotree')
 Loading required package: partykit
 Loading required package: grid
@@ -51,7 +39,6 @@ Loading required package: psychotools
 > 
 > flush(stderr()); flush(stdout())
 > 
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: CEMSChoice
 > ### Title: CEMS University Choice Data
 > ### Aliases: CEMSChoice
@@ -88,15 +75,12 @@ Stockholm            finance    other
 > 
 > 
 > 
-> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
-> base::cat("CEMSChoice", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("DIFSim")
 > ### * DIFSim
 > 
 > flush(stderr()); flush(stdout())
 > 
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: DIFSim
 > ### Title: Artificial Data with Differential Item Functioning
 > ### Aliases: DIFSim
@@ -122,15 +106,12 @@ Stockholm            finance    other
 > 
 > 
 > 
-> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
-> base::cat("DIFSim", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("EuropeanValuesStudy")
 > ### * EuropeanValuesStudy
 > 
 > flush(stderr()); flush(stdout())
 > 
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: EuropeanValuesStudy
 > ### Title: European Values Study
 > ### Aliases: EuropeanValuesStudy
@@ -160,15 +141,12 @@ prices    : freedom   1558 1066  960
 > 
 > 
 > 
-> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
-> base::cat("EuropeanValuesStudy", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("SPISA")
 > ### * SPISA
 > 
 > flush(stderr()); flush(stdout())
 > 
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: SPISA
 > ### Title: SPIEGEL Studentenpisa Data (Subsample)
 > ### Aliases: SPISA
@@ -200,15 +178,12 @@ prices    : freedom   1558 1066  960
 > 
 > 
 > 
-> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
-> base::cat("SPISA", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("Topmodel2007")
 > ### * Topmodel2007
 > 
 > flush(stderr()); flush(stdout())
 > 
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: Topmodel2007
 > ### Title: Attractiveness of Germany's Next Topmodels 2007
 > ### Aliases: Topmodel2007
@@ -242,15 +217,12 @@ gender   FALSE TRUE
 > 
 > 
 > 
-> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
-> base::cat("Topmodel2007", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("bttree")
 > ### * bttree
 > 
 > flush(stderr()); flush(stdout())
 > 
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: bttree
 > ### Title: Bradley-Terry Tree Models
 > ### Aliases: bttree plot.bttree print.bttree predict.bttree worth.bttree
@@ -263,7 +235,6 @@ gender   FALSE TRUE
 > ## BT tree
 > tm_tree <- bttree(preference ~ ., data = Topmodel2007, minsize = 5, ref = "Barbara")
 Loading required package: Formula
-Warning: package ‘Formula’ was built under R version 3.2.0
 > plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
 > ## parameter instability tests in root node
 > library("strucchange")
@@ -321,8 +292,6 @@ Barcelona : Stockholm 172 41  90    0
 > 
 > 
 > 
-> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
-> base::cat("bttree", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 
 detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
@@ -333,7 +302,6 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
 > 
 > flush(stderr()); flush(stdout())
 > 
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: pctree
 > ### Title: Partial Credit Tree Models
 > ### Aliases: pctree plot.pctree print.pctree
@@ -353,7 +321,6 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
 > ## fit partial credit tree model
 > pct <- pctree(s2 ~ anger + gender, data = VerbalAggression)
 Loading required package: Formula
-Warning: package ‘Formula’ was built under R version 3.2.0
 > 
 > ## just print mob object
 > print(pct)
@@ -468,8 +435,6 @@ p.value    0.9577897 1.745895e-05
 > 
 > 
 > 
-> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
-> base::cat("pctree", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 
 detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
@@ -480,7 +445,6 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
 > 
 > flush(stderr()); flush(stdout())
 > 
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: raschtree
 > ### Title: Rasch Tree Models
 > ### Aliases: raschtree plot.raschtree print.raschtree worth.raschtree
@@ -494,7 +458,6 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
 > ## fit Rasch tree model
 > rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
 Loading required package: Formula
-Warning: package ‘Formula’ was built under R version 3.2.0
 > plot(rt)
 > 
 > ## extract item parameters
@@ -554,8 +517,6 @@ p.value   3.613254e-04     NA  0.9259663
 > 
 > 
 > 
-> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
-> base::cat("raschtree", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 
 detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
@@ -566,7 +527,6 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
 > 
 > flush(stderr()); flush(stdout())
 > 
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: rstree
 > ### Title: Rating Scale Tree Models
 > ### Aliases: rstree plot.rstree print.rstree
@@ -586,7 +546,6 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
 > ## fit rating scale tree model for the first other-to-blame situation
 > rst <- rstree(s1 ~ anger + gender, data = VerbalAggression)
 Loading required package: Formula
-Warning: package ‘Formula’ was built under R version 3.2.0
 > 
 > ## just print mob object
 > print(rst)
@@ -711,13 +670,11 @@ p.value    0.01672397     NA
 > 
 > 
 > 
-> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
-> base::cat("rstree", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > ### * <FOOTER>
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  9.844 0.034 9.899 0 0 
+Time elapsed:  9.603 0.044 9.668 0 0 
 > grDevices::dev.off()
 null device 
           1 
