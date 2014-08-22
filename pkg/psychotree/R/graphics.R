@@ -88,57 +88,58 @@ node_profileplot <- function(mobobj, what = c("items", "thresholds", "discrimina
 
 
     ## viewport setup
-    top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
-                           widths = unit(c(ylines, 1, 1), c("lines", "null", "lines")),  
-                           heights = unit(c(1, 1), c("lines", "null"))),
-                       width = unit(1, "npc"), height = unit(1, "npc") - unit(2, "lines"),
+    top_vp <- grid::viewport(layout = grid::grid.layout(nrow = 2, ncol = 3,
+                           widths = grid::unit(c(ylines, 1, 1), c("lines", "null", "lines")),  
+                           heights = grid::unit(c(1, 1), c("lines", "null"))),
+                       width = grid::unit(1, "npc"), height = grid::unit(1, "npc") - grid::unit(2, "lines"),
                        name = paste("node_profileplot", idn, sep = ""))
-    pushViewport(top_vp)
-    grid.rect(gp = gpar(fill = "white", col = 0))
+    grid::pushViewport(top_vp)
+    grid::grid.rect(gp = grid::gpar(fill = "white", col = 0))
 
     ## main title
-    top <- viewport(layout.pos.col = 2, layout.pos.row = 1)
-    pushViewport(top)
+    top <- grid::viewport(layout.pos.col = 2, layout.pos.row = 1)
+    grid::pushViewport(top)
     mainlab <- paste(ifelse(id, paste("Node", idn, "(n = "), ""),
                      info_node(node)$nobs, ifelse(idn, ")", ""), sep = "")
-    grid.text(mainlab)
-    popViewport()
-    cf
+    grid::grid.text(mainlab)
+    grid::popViewport()
+
     ## actual plot  
-    plot_vpi <- viewport(layout.pos.col = 2, layout.pos.row = 2, xscale = xscale, yscale = yscale, 
-                         name = paste("node_profileplot", idn, "plot", sep = ""))
-    pushViewport(plot_vpi)
-    grid.lines(xscale, c(mean(cfi), mean(cfi)), gp = gpar(col = linecol), default.units = "native")
+    plot_vpi <- grid::viewport(layout.pos.col = 2, layout.pos.row = 2, xscale = xscale, yscale = yscale, 
+                               name = paste("node_profileplot", idn, "plot", sep = ""))
+    grid::pushViewport(plot_vpi)
+    grid::grid.lines(xscale, c(mean(cfi), mean(cfi)), gp = grid::gpar(col = linecol), default.units = "native")
     if(index) {
       if (what == "thresholds") {
         for (j in 1:ncol(cfi)) {
-          grid.lines(x, cfi[, j], gp = gpar(col = col, lty = 2), default.units = "native")
-          grid.text(label = paste0("C", j), x, cfi[, j], gp = gpar(col = col), default.units = "native")
+          grid::grid.lines(x, cfi[, j], gp = grid::gpar(col = col, lty = 2), default.units = "native")
+          grid::grid.text(label = paste0("C", j), x, cfi[, j], gp = grid::gpar(col = col), default.units = "native")
         }
       } else {
-        grid.lines(x, cfi, gp = gpar(col = col, lty = 2), default.units = "native")
-        grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
+        grid::grid.lines(x, cfi, gp = grid::gpar(col = col, lty = 2), default.units = "native")
+        grid::grid.points(x, cfi, gp = grid::gpar(col = col, cex = cex), pch = pch, default.units = "native")
       }
-      grid.xaxis(at = x, label = if (names) nmsi else x)
+      grid::grid.xaxis(at = x, label = if (names) nmsi else x)
     } else {	
       if (names) {
         if (what == "thresholds") {
-          for (j in 1:ncol(cfi)) grid.text(paste0(nmsi, "-C", j), x[j], y = cfi[, j], default.units = "native")
+          for (j in 1:ncol(cfi)) grid::grid.text(paste0(nmsi, "-C", j), x[j], y = cfi[, j], default.units = "native")
         } else {
-          grid.text(nmsi, x = x, y = cfi, default.units = "native")
+          grid::grid.text(nmsi, x = x, y = cfi, default.units = "native")
         }
       } else {
         if (what == "thresholds") {
-          for (j in 1:ncol(cfi)) grid.points(x = rep(j, nrow(cfi)), y = cfi[, j], gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
+          for (j in 1:ncol(cfi)) grid::grid.points(x = rep(j, nrow(cfi)), y = cfi[, j],
+                                                   gp = grid::gpar(col = col, cex = cex), pch = pch, default.units = "native")
         } else {
-          grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
+          grid::grid.points(x, cfi, gp = grid::gpar(col = col, cex = cex), pch = pch, default.units = "native")
         }
       }
     }
-    grid.yaxis(at = c(ceiling(yscale[1] * 100)/100, floor(yscale[2] * 100)/100))
-    grid.rect(gp = gpar(fill = "transparent"))
+    grid::grid.yaxis(at = c(ceiling(yscale[1] * 100)/100, floor(yscale[2] * 100)/100))
+    grid::grid.rect(gp = grid::gpar(fill = "transparent"))
 
-    upViewport(2)
+    grid::upViewport(2)
   }
   
   return(panelfun)
@@ -213,38 +214,38 @@ node_regionplot <- function(mobobj, names = NULL, type = c("mode", "median", "me
         }
 
         ## terminal panel viewport setup
-        top.vp <- viewport(layout = grid.layout(nrow = 2, ncol = 1, widths = unit(1, "null"), heights = unit(c(1, 1), c("lines", "null"))),
-                           width = unit(1, "npc"), height = unit(1, "npc") - unit(2, "lines"), name = paste(lab, "_effects", sep = ""))
-        pushViewport(top.vp)
-        grid.rect(gp = gpar(fill = "white", col = 0), name = paste(lab, "_border", sep = ""))
+        top.vp <- grid::viewport(layout = grid::grid.layout(nrow = 2, ncol = 1, widths = grid::unit(1, "null"), heights = grid::unit(c(1, 1), c("lines", "null"))),
+                                 width = grid::unit(1, "npc"), height = grid::unit(1, "npc") - grid::unit(2, "lines"), name = paste(lab, "_effects", sep = ""))
+        grid::pushViewport(top.vp)
+        grid::grid.rect(gp = grid::gpar(fill = "white", col = 0), name = paste(lab, "_border", sep = ""))
 
         ## main title
-        pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 1, name = paste(lab, "_title_vp", sep = "")))
-        grid.text(paste("Node ", id, " (n = ", info_node(node)$nobs, ")", sep = ""), name = paste(lab, "_title", sep = ""))
-        upViewport()
+        grid::pushViewport(grid::viewport(layout.pos.col = 1, layout.pos.row = 1, name = paste(lab, "_title_vp", sep = "")))
+        grid::grid.text(paste("Node ", id, " (n = ", info_node(node)$nobs, ")", sep = ""), name = paste(lab, "_title", sep = ""))
+        grid::upViewport()
         
         ## finally the actual plot
-        pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 2, name = lab))
+        grid::pushViewport(grid::viewport(layout.pos.col = 1, layout.pos.row = 2, name = lab))
         lab <- paste(lab, "_plot", sep = "")
 
         ## setup plotting area (3x3)
         wcol <- if (is.null(ylab)) c(2.5, 1, 1) else c(4, 1, 1)
         hrow <- c(0.5, 1, 1)
 
-        top.vp <- viewport(layout=grid.layout(nrow = 3, ncol = 3, widths = unit(wcol, c("lines", "null", "lines")), heights = unit(hrow, c("lines", "null", "lines"))), name = paste(lab, "_top_vp", sep = ""))
-        bmargin.vp <- viewport(layout.pos.row = 3, layout.pos.col = 2, name = paste(lab, "_bottom-margin_vp", sep = ""))
-        lmargin.vp <- viewport(layout.pos.row = 2, layout.pos.col = 1, name = paste(lab, "_left-margin_vp", sep = ""))
-        rmargin.vp <- viewport(layout.pos.row = 2, layout.pos.col = 3, name = paste(lab, "_right-margin_vp", sep = ""))
-        plot.vp <- viewport(layout.pos.row = 2, layout.pos.col = 2, name = paste(lab, "_vp", sep = ""), xscale = xlim, yscale = ylim)
-        pushViewport(top.vp)
-        pushViewport(plot.vp)
+        top.vp <- grid::viewport(layout = grid::grid.layout(nrow = 3, ncol = 3, widths = grid::unit(wcol, c("lines", "null", "lines")), heights = grid::unit(hrow, c("lines", "null", "lines"))), name = paste(lab, "_top_vp", sep = ""))
+        bmargin.vp <- grid::viewport(layout.pos.row = 3, layout.pos.col = 2, name = paste(lab, "_bottom-margin_vp", sep = ""))
+        lmargin.vp <- grid::viewport(layout.pos.row = 2, layout.pos.col = 1, name = paste(lab, "_left-margin_vp", sep = ""))
+        rmargin.vp <- grid::viewport(layout.pos.row = 2, layout.pos.col = 3, name = paste(lab, "_right-margin_vp", sep = ""))
+        plot.vp <- grid::viewport(layout.pos.row = 2, layout.pos.col = 2, name = paste(lab, "_vp", sep = ""), xscale = xlim, yscale = ylim)
+        grid::pushViewport(top.vp)
+        grid::pushViewport(plot.vp)
 
         ## plot rectangles per item
         for (j in seq_along(delta_sorted)) {
             ncat <- length(delta_sorted[[j]]) + 1
-            grid.rect(x = rep.int(xi[j], ncat), y = c(ylim[1], delta_sorted[[j]]), width = rep.int(1, ncat),
-                      height = diff.default(c(ylim[1], delta_sorted[[j]], ylim[2])), just = c("left", "bottom"),
-                      gp = gpar(fill = col_fun(ncat)), default.units = "native", name = paste(lab, "_item", j, "_rect", sep = ""))
+            grid::grid.rect(x = rep.int(xi[j], ncat), y = c(ylim[1], delta_sorted[[j]]), width = rep.int(1, ncat),
+                            height = diff.default(c(ylim[1], delta_sorted[[j]], ylim[2])), just = c("left", "bottom"),
+                            gp = grid::gpar(fill = col_fun(ncat)), default.units = "native", name = paste(lab, "_item", j, "_rect", sep = ""))
         }
 
         ## if requested: indicate unordered parameters
@@ -252,24 +253,24 @@ node_regionplot <- function(mobobj, names = NULL, type = c("mode", "median", "me
           uo_items <- which(!sapply(mapply(all.equal, delta_sorted, delta_unsorted, check.attributes = FALSE, SIMPLIFY = FALSE, USE.NAMES = FALSE), is.logical))
           for (j in uo_items) {
             uo_pars <- setdiff(delta_unsorted[[j]], delta_sorted[[j]])
-            grid.polyline(x = rep(c(xi[j], xi[j] + 1), length(uo_pars)), y = rep(uo_pars, each = 2), default.units = "native", id = rep(1:length(uo_pars), each = 2),
-                          name = paste(lab, "item", j, "_uolines", sep = ""), gp = gpar(col = uo_col, lwd = uo_lwd, lty = uo_lty))
+            grid::grid.polyline(x = rep(c(xi[j], xi[j] + 1), length(uo_pars)), y = rep(uo_pars, each = 2), default.units = "native", id = rep(1:length(uo_pars), each = 2),
+                          name = paste(lab, "item", j, "_uolines", sep = ""), gp = grid::gpar(col = uo_col, lwd = uo_lwd, lty = uo_lty))
           }
         }
 
         ## add box and axis
-        grid.rect(name = paste(lab, "_plot-box", sep = ""))
-        grid.xaxis(at = (xi[-(m+1)] + 0.5), label = names, main = TRUE, name = paste(lab, "_xaxis-bottom", sep = ""))
-        grid.yaxis(main = TRUE, name = paste(lab, "_yaxis-left", sep = ""))
-        upViewport()
+        grid::grid.rect(name = paste(lab, "_plot-box", sep = ""))
+        grid::grid.xaxis(at = (xi[-(m+1)] + 0.5), label = names, main = TRUE, name = paste(lab, "_xaxis-bottom", sep = ""))
+        grid::grid.yaxis(main = TRUE, name = paste(lab, "_yaxis-left", sep = ""))
+        grid::upViewport()
         
         ## add descriptions
-        pushViewport(lmargin.vp)
-        grid.text(ylab, x = 0.2, rot = 90, name = paste(lab, "_ylab-left", sep = ""))
-        upViewport(2)
+        grid::pushViewport(lmargin.vp)
+        grid::grid.text(ylab, x = 0.2, rot = 90, name = paste(lab, "_ylab-left", sep = ""))
+        grid::upViewport(2)
         
         ## go back to uper vp
-        upViewport(2)
+        grid::upViewport(2)
     }
 
     ## return
@@ -345,42 +346,41 @@ node_btplot <- function(mobobj, id = TRUE, worth = TRUE, names = TRUE,
       cfi <- cf[id,]
 
       ## viewport setup
-      top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
-    			 widths = unit(c(ylines, 1, 1), c("lines", "null", "lines")),  
-        		 heights = unit(c(1, 1), c("lines", "null"))),
-    			 width = unit(1, "npc"), 
-    			 height = unit(1, "npc") - unit(2, "lines"),
-        		 name = paste("node_btplot", id, sep = ""))
-      pushViewport(top_vp)
-      grid.rect(gp = gpar(fill = "white", col = 0))
+      top_vp <- grid::viewport(layout = grid::grid.layout(nrow = 2, ncol = 3,
+                                   widths = grid::unit(c(ylines, 1, 1), c("lines", "null", "lines")),  
+                                   heights = grid::unit(c(1, 1), c("lines", "null"))),
+                               width = grid::unit(1, "npc"), 
+                               height = grid::unit(1, "npc") - grid::unit(2, "lines"),
+                               name = paste("node_btplot", id, sep = ""))
+      grid::pushViewport(top_vp)
+      grid::grid.rect(gp = grid::gpar(fill = "white", col = 0))
 
       ## main title
-      top <- viewport(layout.pos.col = 2, layout.pos.row = 1)
-      pushViewport(top)
+      top <- grid::viewport(layout.pos.col = 2, layout.pos.row = 1)
+      grid::pushViewport(top)
       mainlab <- paste(ifelse(id, paste("Node", id, "(n = "), ""),
         	       info_node(node)$nobs, ifelse(id, ")", ""), sep = "")
-      grid.text(mainlab)
-      popViewport()
+      grid::grid.text(mainlab)
+      grid::popViewport()
 
       ## actual plot  
-      plot_vpi <- viewport(layout.pos.col = 2, layout.pos.row = 2,
-        xscale = xscale, yscale = yscale, 
-        name = paste("node_btplot", id, "plot", sep = ""))
-      pushViewport(plot_vpi)
+      plot_vpi <- grid::viewport(layout.pos.col = 2, layout.pos.row = 2,
+        xscale = xscale, yscale = yscale, name = paste("node_btplot", id, "plot", sep = ""))
+      grid::pushViewport(plot_vpi)
 
-      grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = linecol), default.units = "native")
+      grid::grid.lines(xscale, c(cf_ref, cf_ref), gp = grid::gpar(col = linecol), default.units = "native")
       if(index) {
-        grid.lines(x, cfi, gp = gpar(col = col, lty = 2), default.units = "native")
-        grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
-        grid.xaxis(at = x, label = if(names) names(cfi) else x)
+        grid::grid.lines(x, cfi, gp = grid::gpar(col = col, lty = 2), default.units = "native")
+        grid::grid.points(x, cfi, gp = grid::gpar(col = col, cex = cex), pch = pch, default.units = "native")
+        grid::grid.xaxis(at = x, label = if(names) names(cfi) else x)
       } else {  	
-        if(names) grid.text(names(cfi), x = x, y = cfi, default.units = "native")
-          else grid.points(x, cfi, gp = gpar(col = col, cex = cex), pch = pch, default.units = "native")
+        if(names) grid::grid.text(names(cfi), x = x, y = cfi, default.units = "native")
+          else grid::grid.points(x, cfi, gp = grid::gpar(col = col, cex = cex), pch = pch, default.units = "native")
       }
-      grid.yaxis(at = c(ceiling(yscale[1] * 100)/100, floor(yscale[2] * 100)/100))
-      grid.rect(gp = gpar(fill = "transparent"))
+      grid::grid.yaxis(at = c(ceiling(yscale[1] * 100)/100, floor(yscale[2] * 100)/100))
+      grid::grid.rect(gp = grid::gpar(fill = "transparent"))
 
-      upViewport(2)
+      grid::upViewport(2)
     }
 	    
     return(rval)
