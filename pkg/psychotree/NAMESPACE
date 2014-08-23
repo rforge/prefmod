@@ -2,6 +2,7 @@
 import(
   "stats",
   "graphics",
+  "grid",
   "psychotools",
   "partykit",
   "Formula"
