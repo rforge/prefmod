@@ -1,7 +1,9 @@
-Changes in Version 0.13-1
+Changes in Version 0.14-0
 
-  o Adjusted package psychotree to recent additions and changes
-    in the related package psychotools.
+  o Internals of package psychotree reorganized to employ the
+    recent additions and changes in psychotools (>= 0.3-0) and to
+    use the new partykit (>= 0.2-0) implementation of the mob()
+    function (rather than the old party implementation).
 
   o The handling of argument 'ref' when producing a region/effect
     plot was changed. Whereas in the previous implementation,
@@ -12,9 +14,7 @@ Changes in Version 0.13-1
   o New panel-generating visualization functions 'node_profileplot'
     and 'node_regionplot' have been added. These correspond to the
     visualization techniques added to the related package psychotools
-    in version 0.3-0. For backward compatibility, wrapper functions
-    for the old panel-generating functions 'node_effects' and 
-    'node_raschplot' have been added.
+    in version 0.3-0.
 
 
 Changes in Version 0.13-0
