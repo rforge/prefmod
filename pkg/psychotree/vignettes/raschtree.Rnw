@@ -9,12 +9,6 @@
 %\VignetteKeywords{item response theory, IRT, Rasch model, differential item functioning, DIF, structural change, multidimensionality}
 %\VignettePackage{psychotree}
 
-\usepackage{xcolor}
-\usepackage{longtable}
-\usepackage{amsmath} 
-\usepackage{paralist}
-
-
 \renewcommand{\rm}[0]{Rasch model}
 %\newcommand{\dif}[0]{differential item functioning}
 \newcommand{\dif}[0]{DIF}
