@@ -9,16 +9,10 @@ import(
 )
 
 export(
-  ## Rasch tree tools
+  ## trees
   "raschtree",
-
-  ## Rating-Scale tree tools
   "rstree",
-
-  ## Partial-Credit (and Rating-Scale) tree tools
   "pctree",
-
-  ## Bradley-Terry tree tools
   "bttree",
 
   ## panel-generating visualization functions
