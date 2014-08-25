@@ -12,9 +12,8 @@ Changes in Version 0.14-0
     applied to the absolute item threshold parameters.
 
   o New panel-generating visualization functions 'node_profileplot'
-    and 'node_regionplot' have been added. These correspond to the
-    visualization techniques added to the related package psychotools
-    in version 0.3-0.
+    and 'node_regionplot' have been added which replace the old 
+    functions 'node_raschplot' and 'node_effects'. 
 
 
 Changes in Version 0.13-0

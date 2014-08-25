@@ -1,20 +1,5 @@
 ##### panel generating graphic functions for various tree models
 
-## wrapper functions for backward compatibility
-node_raschplot <- function (...)
-{
-  node_profileplot(...)
-}
-class(node_raschplot) <- "grapcon_generator"
-
-
-node_effects <- function (...)
-{
-  node_regionplot(...)
-}
-class(node_effects) <- "grapcon_generator"
-
-
 ## profile plot visualization function
 node_profileplot <- function(mobobj, what = c("items", "thresholds", "discriminations"),
   paramarg = list(type = NULL, ref = NULL, alias = TRUE), id = TRUE, names = TRUE,

@@ -18,8 +18,6 @@ export(
   ## panel-generating visualization functions
   "node_profileplot",
   "node_regionplot",
-  "node_raschplot",
-  "node_effects",
   "node_btplot"
 
 #  ## MPT tree tools

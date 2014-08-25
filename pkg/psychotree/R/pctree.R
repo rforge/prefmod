@@ -83,9 +83,16 @@ predict.pctree <- function(object, newdata = NULL,
 ##   } 
 ## }
 
-plot.pctree <- function(x, terminal_panel = node_regionplot,
+plot.pctree <- function(x, type = "regions", terminal_panel = node_regionplot,
   tp_args = list(), tnex = NULL, drop_terminal = NULL, ...)
 {
+  if(!is.null(terminal_panel) && !missing(type)) {
+    warning("Only one of 'type' and 'terminal_panel' should be specified")
+  } else {
+    terminal_panel <- switch(match.arg(type),
+      "regions" = node_regionplot,
+      "profiles" = node_profileplot)
+  }
   if(is.null(tnex)) tnex <- if(is.null(terminal_panel)) 1L else 2L
   if(is.null(drop_terminal)) drop_terminal <- !is.null(terminal_panel)
   partykit::plot.modelparty(x, terminal_panel = terminal_panel,
