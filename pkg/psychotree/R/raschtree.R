@@ -99,18 +99,16 @@ itempar.raschtree <- function(object, node = NULL, ...)
   } 
 }
 
-plot.raschtree <- function(x, type = "profiles", terminal_panel = NULL,
-  tp_args = list(), tnex = NULL, drop_terminal = NULL, ...)
+plot.raschtree <- function(x, type = c("profiles", "regions"), terminal_panel = NULL,
+  tp_args = list(...), tnex = 2L, drop_terminal = TRUE, ...)
 {
-  if(!is.null(terminal_panel) && !missing(type)) {
-    warning("Only one of 'type' and 'terminal_panel' should be specified")
+  if(!is.null(terminal_panel)) {
+    if(!missing(type)) warning("Only one of 'type' and 'terminal_panel' should be specified")
   } else {
     terminal_panel <- switch(match.arg(type),
       "regions" = node_regionplot,
       "profiles" = node_profileplot)
   }
-  if(is.null(tnex)) tnex <- if(is.null(terminal_panel)) 1L else 2L
-  if(is.null(drop_terminal)) drop_terminal <- !is.null(terminal_panel)
   partykit::plot.modelparty(x, terminal_panel = terminal_panel,
     tp_args = tp_args, tnex = tnex, drop_terminal = drop_terminal, ...)
 }
