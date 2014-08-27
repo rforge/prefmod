@@ -1,8 +1,8 @@
 Changes in Version 0.14-0
 
-  o Internals of package psychotree reorganized to employ the
-    recent additions and changes in psychotools (>= 0.3-0) and to
-    use the new partykit (>= 0.2-0) implementation of the mob()
+  o Internals of package psychotree completely reorganized to employ
+    the recent additions and changes in psychotools (>= 0.3-0) and
+    to use the new partykit (>= 0.2-0) implementation of the mob()
     function (rather than the old party implementation).
 
   o The handling of argument 'ref' when producing a region/effect
