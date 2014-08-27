@@ -2,15 +2,15 @@
 
 ## profile plot visualization function
 node_profileplot <- function(mobobj, what = c("items", "thresholds", "discriminations"),
-  paramarg = list(type = NULL, ref = NULL, alias = TRUE), id = TRUE, names = TRUE,
+  parg = list(type = NULL, ref = NULL, alias = TRUE), id = TRUE, names = TRUE,
   abbreviate = TRUE, index = TRUE, ref = TRUE, col = "black", linecol = "lightgray",
   cex = 0.5, pch = 19, xscale = NULL, yscale = NULL, ylines = 1.5, ...)
 {
   ## check input
   what <- match.arg(what)
-  if (what == "thresholds") type <- paramarg$type
-  refpar <- paramarg$ref
-  alias <- if (is.null(paramarg$alias)) TRUE else paramarg$alias
+  if (what == "thresholds") type <- parg$type
+  refpar <- parg$ref
+  alias <- if (is.null(parg$alias)) TRUE else parg$alias
   addargs <- list(...)
   if ("worth" %in% names(addargs)) warning("The argument 'worth' is deprecated and not longer used.")
 
@@ -57,9 +57,10 @@ node_profileplot <- function(mobobj, what = c("items", "thresholds", "discrimina
       if (is.null(xscale)) xscale <- c(-1, 1)
     }
   }
-  r <- diff(range(unlist(cf), na.rm = TRUE))
+  rg <- range(unlist(cf)[is.finite(unlist(cf))], na.rm = TRUE)
+  r <- diff(rg)
   if (!r) r <- 1
-  if (is.null(yscale)) yscale <- range(unlist(cf), na.rm = TRUE) + c(-0.1, 0.1) * r
+  if (is.null(yscale)) yscale <- rg + c(-0.1, 0.1) * r
 
   ## panel function for profile plots in nodes
   panelfun <- function (node) {
@@ -69,8 +70,11 @@ node_profileplot <- function(mobobj, what = c("items", "thresholds", "discrimina
     
     ## get cfs and labels
     cfi <- cf[[idn]]
+    if(any(!is.finite(cfi))) {
+      cfi[cfi < 0 & !is.finite(cfi)] <- yscale[1]
+      cfi[cfi > 0 & !is.finite(cfi)] <- yscale[2]
+    }
     if (names) nmsi <- nms[[idn]]
-
 
     ## viewport setup
     top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,

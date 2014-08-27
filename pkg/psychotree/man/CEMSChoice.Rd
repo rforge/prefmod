@@ -61,12 +61,12 @@ The Royal Statistical Society Datasets Website.
 }
 
 \references{
-Dittrich R., Hatzinger R., Katzenbeisser W. (1998).
+Dittrich R, Hatzinger R, Katzenbeisser W (1998).
   Modelling the Effect of Subject-Specific Covariates in Paired Comparison Studies
   with an Application to University Rankings,
   \emph{Journal of the Royal Statistical Society C}, \bold{47}, 511--525.
 
-Dittrich R., Hatzinger R., Katzenbeisser W. (2001).
+Dittrich R, Hatzinger R, Katzenbeisser W (2001).
   Corrigendum: Modelling the Effect of Subject-Specific Covariates in Paired Comparison
   Studies with an Application to University Rankings,
   \emph{Journal of the Royal Statistical Society C}, \bold{50}, 247--249.

@@ -67,11 +67,11 @@ A data frame containing 3584 observations on 10 variables.
 }
 
 \references{
-  Lee, P.H., & Yu, P.L.H. (2010). Distance-Based Tree Models for Ranking
+  Lee PH, Yu PLH (2010). Distance-Based Tree Models for Ranking
   Data. \emph{Computational Statistics and Data Analysis}, \bold{54},
   1672--1682.
 
-  Vermunt, J.K. (2003). Multilevel Latent Class Models.
+  Vermunt JK (2003). Multilevel Latent Class Models.
   \emph{Sociological Methodology}, \bold{33}, 213--239.
 }
 

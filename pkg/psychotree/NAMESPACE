@@ -29,15 +29,22 @@ export(
 ## methods for raschtree objects
 S3method("plot", "raschtree")
 S3method("print", "raschtree")
+S3method("predict", "raschtree")
 S3method("itempar", "raschtree")
 
 ## methods for rstree objects
 S3method("plot", "rstree")
 S3method("print", "rstree")
+S3method("predict", "rstree")
+S3method("itempar", "rstree")
+S3method("threshpar", "rstree")
 
 ## methods for pctree objects
 S3method("plot", "pctree")
 S3method("print", "pctree")
+S3method("predict", "pctree")
+S3method("itempar", "pctree")
+S3method("threshpar", "pctree")
 
 ## methods for bttree objects
 S3method("plot", "bttree")

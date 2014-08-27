@@ -1,5 +1,5 @@
 ### high-level convenience interface to mob()
-pctree <- function (formula, data, na.action = na.pass, nullcats = c("keep", "downcode", "ignore"),
+pctree <- function (formula, data, na.action, nullcats = c("keep", "downcode", "ignore"),
   reltol = 1e-10, deriv = c("sum", "diff"), maxit = 100L, ...)
 {
   ## keep call
@@ -48,53 +48,4 @@ print.pctree <- function(x,
   title = "Partial credit tree", objfun = "negative log-likelihood", ...)
 {
   partykit::print.modelparty(x, title = title, objfun = objfun, ...)
-}
-
-predict.pctree <- function(object, newdata = NULL,
-  type = c("node"), ...)
-{
-  ## type of prediction
-  type <- match.arg(type)
-  
-  ## nodes can be handled directly
-  if(type == "node") return(partykit::predict.modelparty(object, newdata = newdata, type = "node", ...))
-  
-  ## get default newdata otherwise
-  ## if(is.null(newdata)) newdata <- model.frame(object)
-  
-  ## pred <- switch(type,
-  ##   "worth" = worth,
-  ##   "rank" = function(obj, ...) rank(-worth(obj)),
-  ##   "best" = function(obj, ...) {
-  ##     wrth <- worth(obj)
-  ##     factor(names(wrth)[which.max(wrth)], levels = names(wrth))
-  ##   }
-  ## )
-  ## partykit::predict.modelparty(object, newdata = newdata, type = pred, ...)
-}
-
-## worth.pctree <- function(object, node = NULL, ...)
-## {
-##   ids <- if(is.null(node)) nodeids(object, terminal = TRUE) else node
-##   if(length(ids) == 1L) {
-##     apply_to_models(object, node = ids, FUN = worth, drop = TRUE)
-##   } else {
-##     do.call("rbind", apply_to_models(object, node = ids, FUN = worth, drop = FALSE))
-##   } 
-## }
-
-plot.pctree <- function(x, type = "regions", terminal_panel = node_regionplot,
-  tp_args = list(), tnex = NULL, drop_terminal = NULL, ...)
-{
-  if(!is.null(terminal_panel) && !missing(type)) {
-    warning("Only one of 'type' and 'terminal_panel' should be specified")
-  } else {
-    terminal_panel <- switch(match.arg(type),
-      "regions" = node_regionplot,
-      "profiles" = node_profileplot)
-  }
-  if(is.null(tnex)) tnex <- if(is.null(terminal_panel)) 1L else 2L
-  if(is.null(drop_terminal)) drop_terminal <- !is.null(terminal_panel)
-  partykit::plot.modelparty(x, terminal_panel = terminal_panel,
-    tp_args = tp_args, tnex = tnex, drop_terminal = drop_terminal, ...)
 }

@@ -2,8 +2,7 @@
 \alias{node_profileplot}
 \alias{node_raschplot}
 
-\title{Panel-Generating Function for Visualizing Rasch,
-  Rating Scale and Partial Credit Tree Models}
+\title{Panel-Generating Function for Visualizing IRT Tree Models}
 
 \description{
   Panel-generating function for visualizing the parameters
@@ -12,7 +11,7 @@
 
 \usage{
 node_profileplot(mobobj, what = c("items", "thresholds", "discriminations"),
-  paramarg = list(type = NULL, ref = NULL, alias = TRUE), id = TRUE,
+  parg = list(type = NULL, ref = NULL, alias = TRUE), id = TRUE,
   names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE, col = "black",
   linecol = "lightgray", cex = 0.5, pch = 19, xscale = NULL, yscale =
   NULL, ylines = 1.5, ...)
@@ -24,7 +23,7 @@ node_profileplot(mobobj, what = c("items", "thresholds", "discriminations"),
     fitted by \code{\link[psychotools]{rsmodel}} or partial credit
     models fitted by \code{\link[psychotools]{pcmodel}}.}
   \item{what}{character, specifying the type of parameters to be plotted.}
-  \item{paramarg}{list of arguments passed over to internal calls of
+  \item{parg}{list of arguments passed over to internal calls of
     \code{\link[psychotools]{itempar}}, \code{\link[psychotools]{threshpar}}
     or \code{\link[psychotools]{discrpar}}.}
   \item{id}{logical. Should the node ID be displayed?}

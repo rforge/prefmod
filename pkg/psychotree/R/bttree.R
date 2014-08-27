@@ -1,5 +1,5 @@
 ## high-level convenience interface to mob()
-bttree <- function(formula, data, na.action = na.pass,
+bttree <- function(formula, data, na.action,
   type = "loglin", ref = NULL, undecided = NULL, position = NULL, ...)
 {
   ## keep call
@@ -26,13 +26,12 @@ bttree <- function(formula, data, na.action = na.pass,
   return(rval)
 }
 
-## glue code for calling btReg.fit()
+## glue code for calling btmodel()
 btfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, ...,
   estfun = FALSE, object = FALSE)
 {
   if(!(is.null(x) || NCOL(x) == 0L)) warning("x not used")
   if(!is.null(offset)) warning("offset not used")
-  vcov <- object
   rval <- btmodel(y, weights = weights, ..., vcov = object)
   rval <- list(
     coefficients = rval$coefficients,
@@ -73,31 +72,8 @@ predict.bttree <- function(object, newdata = NULL,
   partykit::predict.modelparty(object, newdata = newdata, type = pred, ...)
 }
 
-apply_to_models <- function(object, node = NULL, FUN = NULL, drop = FALSE, ...) {
-  if(is.null(node)) node <- nodeids(object, terminal = FALSE)
-  if(is.null(FUN)) FUN <- function(object, ...) object  
-  rval <- if("object" %in% object$info$control$terminal) {
-    nodeapply(object, node, function(n) FUN(info_node(n)$object))
-  } else {
-    lapply(refit.modelparty(object, node, drop = FALSE), FUN)
-  }
-  names(rval) <- node
-  if(drop & length(node) == 1L) rval <- rval[[1L]]
-  return(rval)
-}
-
-itempar.bttree <- function(object, node = NULL, ...)
-{
-  ids <- if(is.null(node)) nodeids(object, terminal = TRUE) else node
-  if(length(ids) == 1L) {
-    apply_to_models(object, node = ids, FUN = itempar, drop = TRUE)
-  } else {
-    do.call("rbind", apply_to_models(object, node = ids, FUN = itempar, drop = FALSE))
-  } 
-}
-
 plot.bttree <- function(x, terminal_panel = node_btplot,
-  tp_args = list(), tnex = NULL, drop_terminal = NULL, ...)
+  tp_args = list(...), tnex = NULL, drop_terminal = NULL, ...)
 {
   if(is.null(tnex)) tnex <- if(is.null(terminal_panel)) 1L else 2L
   if(is.null(drop_terminal)) drop_terminal <- !is.null(terminal_panel)

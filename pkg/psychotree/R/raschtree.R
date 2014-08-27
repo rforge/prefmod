@@ -1,5 +1,5 @@
 ## high-level convenience interface to mob()
-raschtree <- function(formula, data, na.action = na.pass,
+raschtree <- function(formula, data, na.action,
   reltol = 1e-10, deriv = c("sum", "diff", "numeric"), maxit = 100L, ...)
 {
   ## keep call
@@ -27,16 +27,13 @@ raschtree <- function(formula, data, na.action = na.pass,
   return(rval)
 }
 
-## glue code for calling RaschModel.fit()
+## glue code for calling raschmodel()
 raschfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, ...,
   estfun = FALSE, object = FALSE)
 {
   if(!(is.null(x) || NCOL(x) == 0L)) warning("x not used")
   if(!is.null(offset)) warning("offset not used")
-  ## rval <- RaschModel.fit(y, weights = weights, start = start, ..., full = object | estfun)
   rval <- raschmodel(y, weights = weights, start = start, ..., hessian = object | estfun)
-  ## rval <- RaschModel.fit(y, weights = weights, start = NULL, ..., full = object | estfun)
-  ## rval <- RaschModel.fit(y, weights = weights, start = start, ..., full = TRUE)
   rval <- list(
     coefficients = rval$coefficients,
     objfun = -rval$loglik,
@@ -53,8 +50,12 @@ print.raschtree <- function(x,
   partykit::print.modelparty(x, title = title, objfun = objfun, ...)
 }
 
-predict.raschtree <- function(object, newdata = NULL,
-  type = c("worth", "rank", "best", "node"), ...)
+predict.raschtree <-
+predict.rstree <-
+predict.pctree <- function(object, newdata = NULL,
+  type = c("probability", "cumprobability", "mode", "median", "mean",
+    "category-information", "item-information", "test-information", "node"),
+  personpar = 0, ...)
 {
   ## type of prediction
   type <- match.arg(type)
@@ -65,15 +66,9 @@ predict.raschtree <- function(object, newdata = NULL,
   ## get default newdata otherwise
   if(is.null(newdata)) newdata <- model.frame(object)
   
-  pred <- switch(type,
-    "worth" = worth,
-    "rank" = function(obj, ...) rank(-worth(obj)),
-    "best" = function(obj, ...) {
-      wrth <- worth(obj)
-      factor(names(wrth)[which.max(wrth)], levels = names(wrth))
-    }
-  )
-  partykit::predict.modelparty(object, newdata = newdata, type = pred, ...)
+  ## predictions inherited from the basic *model object, evaluated at one person parameter
+  partykit::predict.modelparty(object, newdata = newdata,
+    type = function(obj) predict(obj, newdata = personpar[1L], type = type, ...))
 }
 
 apply_to_models <- function(object, node = NULL, FUN = NULL, drop = FALSE, ...) {
@@ -89,25 +84,29 @@ apply_to_models <- function(object, node = NULL, FUN = NULL, drop = FALSE, ...) 
   return(rval)
 }
 
-itempar.raschtree <- function(object, node = NULL, ...)
+itempar.raschtree <-
+itempar.rstree <-
+itempar.pctree <-
+itempar.bttree <- function(object, node = NULL, ...)
 {
   ids <- if(is.null(node)) nodeids(object, terminal = TRUE) else node
+  myitempar <- function(obj) coef(itempar(obj, ...))
   if(length(ids) == 1L) {
-    apply_to_models(object, node = ids, FUN = itempar, drop = TRUE)
+    apply_to_models(object, node = ids, FUN = myitempar, drop = TRUE)
   } else {
-    do.call("rbind", apply_to_models(object, node = ids, FUN = itempar, drop = FALSE))
+    do.call("rbind", apply_to_models(object, node = ids, FUN = myitempar, drop = FALSE))
   } 
 }
 
-plot.raschtree <- function(x, type = c("profiles", "regions"), terminal_panel = NULL,
+plot.raschtree <- function(x, type = c("profile", "regions"), terminal_panel = NULL,
   tp_args = list(...), tnex = 2L, drop_terminal = TRUE, ...)
 {
   if(!is.null(terminal_panel)) {
-    if(!missing(type)) warning("Only one of 'type' and 'terminal_panel' should be specified")
+    if(!missing(type)) warning("only one of 'type' and 'terminal_panel' should be specified")
   } else {
     terminal_panel <- switch(match.arg(type),
       "regions" = node_regionplot,
-      "profiles" = node_profileplot)
+      "profile" = node_profileplot)
   }
   partykit::plot.modelparty(x, terminal_panel = terminal_panel,
     tp_args = tp_args, tnex = tnex, drop_terminal = drop_terminal, ...)
