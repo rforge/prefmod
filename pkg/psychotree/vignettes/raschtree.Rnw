@@ -288,11 +288,11 @@ coef(my_first_raschtree, node = 4)
 
 where the parameter for the first item is set to zero and therefore not displayed (the call is termed \code{coef}, because that is the name of the call extracting the estimated parameters, or coefficients, from standard regression models generated, e.g., with the \code{lm} function) and 
 
-<<worth_raschtree>>=
-worth(my_first_raschtree, node = 4)
+<<itempar_raschtree>>=
+itempar(my_first_raschtree, node = 4)
 @
 
-where the parameters sum to zero (the call is termed \code{worth}, because that is the name of the call extracting the worth parameters from Bradley-Terry-trees generated with the \code{bttree} function, that also sum to zero). 
+where the item parameters by default sum to zero (other restrictions can be specified as well). 
 
 Here the item parameters have been displayed only for the subjects in node number 4 (representing female students who access the online magazine more than once per week) to save space. The item parameters for all groups can be displayed by omitting the \code{node} argument.
 
