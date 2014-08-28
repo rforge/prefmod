@@ -99,6 +99,8 @@ rstree(formula, data, na.action, reltol = 1e-10,
   \code{\link{pctree}}, \code{\link{raschtree}}}
 
 \examples{
+o <- options(digits = 4)
+
 ## verbal aggression data from package psychotools
 data("VerbalAggression", package = "psychotools")
 
@@ -128,10 +130,11 @@ itempar(rst)
 threshpar(rst)
 
 ## inspect parameter stability tests in all splitting nodes
-if(require("strucchange")) {
+library("strucchange")
 sctest(rst, node = 1)
 sctest(rst, node = 2)
-}
+
+options(digits = o$digits)
 }
 
 \keyword{tree}

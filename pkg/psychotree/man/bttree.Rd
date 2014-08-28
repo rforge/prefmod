@@ -71,6 +71,8 @@ bttree(formula, data, na.action,
 \seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{btmodel}}}
 
 \examples{
+o <- options(digits = 4)
+
 ## Germany's Next Topmodel 2007 data
 data("Topmodel2007", package = "psychotree")
 
@@ -79,9 +81,8 @@ tm_tree <- bttree(preference ~ ., data = Topmodel2007, minsize = 5, ref = "Barba
 plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
 
 ## parameter instability tests in root node
-if(require("strucchange")) {
+library("strucchange")
 sctest(tm_tree, node = 1)
-}
 
 ## worth parameters in terminal nodes
 itempar(tm_tree)
@@ -95,6 +96,8 @@ cems_tree <- bttree(preference ~ french + spanish + italian + study + work + gen
   data = CEMSChoice, minsize = 5, ref = "London")
 plot(cems_tree, abbreviate = 1, yscale = c(0, 0.5))
 itempar(cems_tree)
+
+options(digits = o$digits)
 }
 
 \keyword{tree}

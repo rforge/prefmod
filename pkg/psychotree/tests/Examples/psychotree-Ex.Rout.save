@@ -228,6 +228,8 @@ gender   FALSE TRUE
 > 
 > ### ** Examples
 > 
+> o <- options(digits = 4)
+> 
 > ## Germany's Next Topmodel 2007 data
 > data("Topmodel2007", package = "psychotree")
 > 
@@ -237,10 +239,7 @@ Loading required package: Formula
 > plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
 > 
 > ## parameter instability tests in root node
-> if(require("strucchange")) {
-+ sctest(tm_tree, node = 1)
-+ }
-Loading required package: strucchange
+> library("strucchange")
 Loading required package: zoo
 
 Attaching package: 'zoo'
@@ -250,17 +249,18 @@ The following objects are masked from 'package:base':
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-           preference      gender          age         q1          q2        q3
-statistic 22.07201658 17.08798000 3.235655e+01 12.6319505 19.83922185 6.7585592
-p.value    0.07726117  0.02573519 9.498559e-04  0.1518853  0.00801063 0.8061175
+> sctest(tm_tree, node = 1)
+          preference   gender       age      q1        q2     q3
+statistic   22.07202 17.08798 3.236e+01 12.6320 19.839222 6.7586
+p.value      0.07726  0.02574 9.499e-04  0.1519  0.008011 0.8061
 > 
 > ## worth parameters in terminal nodes
 > itempar(tm_tree)
-    Barbara       Anni      Hana     Fiona      Mandy       Anja
-3 0.1889324 0.16993451 0.3850798 0.1141502 0.09232354 0.04957957
-5 0.1745924 0.12304683 0.2624556 0.2254343 0.10187663 0.11259425
-6 0.2659190 0.21277737 0.1609186 0.1945416 0.06274756 0.10309595
-7 0.2585021 0.05572946 0.1531208 0.1604636 0.16426634 0.20791763
+  Barbara    Anni   Hana  Fiona   Mandy    Anja
+3  0.1889 0.16993 0.3851 0.1142 0.09232 0.04958
+5  0.1746 0.12305 0.2625 0.2254 0.10188 0.11259
+6  0.2659 0.21278 0.1609 0.1945 0.06275 0.10310
+7  0.2585 0.05573 0.1531 0.1605 0.16427 0.20792
 > 
 > ## CEMS university choice data
 > data("CEMSChoice", package = "psychotree")
@@ -287,12 +287,14 @@ Barcelona : Stockholm 172 41  90    0
 +   data = CEMSChoice, minsize = 5, ref = "London")
 > plot(cems_tree, abbreviate = 1, yscale = c(0, 0.5))
 > itempar(cems_tree)
-     London      Paris     Milano   StGallen  Barcelona  Stockholm
-3 0.2083439 0.12682140 0.15936388 0.06905174 0.42506488 0.01135419
-4 0.4315060 0.08629580 0.34016535 0.05204565 0.06059623 0.02939091
-7 0.3325497 0.42214899 0.05477658 0.06144424 0.09252110 0.03655937
-8 0.3988834 0.22586032 0.08578186 0.13479789 0.09107518 0.06360135
-9 0.4103637 0.09623863 0.07697455 0.15767414 0.16423847 0.09451053
+  London   Paris  Milano StGallen Barcelona Stockholm
+3 0.2083 0.12682 0.15936  0.06905   0.42506   0.01135
+4 0.4315 0.08630 0.34017  0.05205   0.06060   0.02939
+7 0.3325 0.42215 0.05478  0.06144   0.09252   0.03656
+8 0.3989 0.22586 0.08578  0.13480   0.09108   0.06360
+9 0.4104 0.09624 0.07697  0.15767   0.16424   0.09451
+> 
+> options(digits = o$digits)
 > 
 > 
 > 
@@ -313,6 +315,8 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo',
 > ### Keywords: tree
 > 
 > ### ** Examples
+> 
+> o <- options(digits = 4)
 > 
 > ## verbal aggression data from package psychotools
 > data("VerbalAggression", package = "psychotools")
@@ -338,23 +342,23 @@ Fitted party:
 [1] root
 |   [2] gender in female: n = 220
 |       s2S2WantCurse-C2   s2S2DoCurse-C1   s2S2DoCurse-C2 s2S2WantScold-C1 
-|               1.486413         1.169133         3.239457         1.097001 
+|                  1.486            1.169            3.239            1.097 
 |       s2S2WantScold-C2   s2S2DoScold-C1   s2S2DoScold-C2 s2S2WantShout-C1 
-|               2.903416         2.005683         4.790972         1.618454 
+|                  2.903            2.006            4.791            1.618 
 |       s2S2WantShout-C2   s2S2DoShout-C1   s2S2DoShout-C2 
-|               3.768047         3.198196         6.704804 
+|                  3.768            3.198            6.705 
 |   [3] gender in male: n = 67
 |       s2S2WantCurse-C2   s2S2DoCurse-C1   s2S2DoCurse-C2 s2S2WantScold-C1 
-|              0.5546748       -0.2179332       -0.1240234        0.8065186 
+|                 0.5547          -0.2179          -0.1240           0.8065 
 |       s2S2WantScold-C2   s2S2DoScold-C1   s2S2DoScold-C2 s2S2WantShout-C1 
-|              1.7020415        0.2919044        1.7719244        1.5697424 
+|                 1.7020           0.2919           1.7719           1.5697 
 |       s2S2WantShout-C2   s2S2DoShout-C1   s2S2DoShout-C2 
-|              3.6674796        2.1006053        5.4388179 
+|                 3.6675           2.1006           5.4388 
 
 Number of inner nodes:    1
 Number of terminal nodes: 2
 Number of parameters per node: 11
-Objective function (negative log-likelihood): 899.8806
+Objective function (negative log-likelihood): 899.9
 > print(pct, FUN = function(x) " *")
 Partial credit tree
 
@@ -369,7 +373,7 @@ Fitted party:
 Number of inner nodes:    1
 Number of terminal nodes: 2
 Number of parameters per node: 11
-Objective function (negative log-likelihood): 899.8806
+Objective function (negative log-likelihood): 899.9
 > 
 > ## show summary for terminal panel nodes
 > summary(pct)
@@ -379,21 +383,21 @@ Partial credit model
 
 Item category parameters:
                  Estimate Std. Error z value Pr(>|z|)    
-s2S2WantCurse-C2   1.4864     0.3034   4.900 9.58e-07 ***
-s2S2DoCurse-C1     1.1691     0.2646   4.419 9.90e-06 ***
-s2S2DoCurse-C2     3.2395     0.4781   6.776 1.23e-11 ***
-s2S2WantScold-C1   1.0970     0.2664   4.118 3.82e-05 ***
-s2S2WantScold-C2   2.9034     0.4733   6.135 8.54e-10 ***
-s2S2DoScold-C1     2.0057     0.2698   7.435 1.04e-13 ***
-s2S2DoScold-C2     4.7910     0.5076   9.439  < 2e-16 ***
-s2S2WantShout-C1   1.6185     0.2680   6.039 1.55e-09 ***
-s2S2WantShout-C2   3.7680     0.4860   7.753 8.97e-15 ***
-s2S2DoShout-C1     3.1982     0.2962  10.799  < 2e-16 ***
-s2S2DoShout-C2     6.7048     0.5753  11.655  < 2e-16 ***
+s2S2WantCurse-C2    1.486      0.303    4.90  9.6e-07 ***
+s2S2DoCurse-C1      1.169      0.265    4.42  9.9e-06 ***
+s2S2DoCurse-C2      3.239      0.478    6.78  1.2e-11 ***
+s2S2WantScold-C1    1.097      0.266    4.12  3.8e-05 ***
+s2S2WantScold-C2    2.903      0.473    6.13  8.5e-10 ***
+s2S2DoScold-C1      2.006      0.270    7.44  1.0e-13 ***
+s2S2DoScold-C2      4.791      0.508    9.44  < 2e-16 ***
+s2S2WantShout-C1    1.618      0.268    6.04  1.5e-09 ***
+s2S2WantShout-C2    3.768      0.486    7.75  9.0e-15 ***
+s2S2DoShout-C1      3.198      0.296   10.80  < 2e-16 ***
+s2S2DoShout-C2      6.705      0.575   11.66  < 2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Log-likelihood: -689.2 (df = 11) 
+Log-likelihood: -689 (df = 11) 
 Number of iterations in BFGS optimization: 17 
 
 
@@ -403,21 +407,21 @@ Partial credit model
 
 Item category parameters:
                  Estimate Std. Error z value Pr(>|z|)    
-s2S2WantCurse-C2   0.5547     0.5479   1.012 0.311363    
-s2S2DoCurse-C1    -0.2179     0.5066  -0.430 0.667088    
-s2S2DoCurse-C2    -0.1240     0.7796  -0.159 0.873608    
-s2S2WantScold-C1   0.8065     0.4637   1.739 0.081951 .  
-s2S2WantScold-C2   1.7020     0.7893   2.156 0.031052 *  
-s2S2DoScold-C1     0.2919     0.4527   0.645 0.519021    
-s2S2DoScold-C2     1.7719     0.8002   2.214 0.026807 *  
-s2S2WantShout-C1   1.5697     0.4651   3.375 0.000739 ***
-s2S2WantShout-C2   3.6675     0.8782   4.176 2.96e-05 ***
-s2S2DoShout-C1     2.1006     0.4855   4.327 1.51e-05 ***
-s2S2DoShout-C2     5.4388     1.0376   5.242 1.59e-07 ***
+s2S2WantCurse-C2    0.555      0.548    1.01  0.31136    
+s2S2DoCurse-C1     -0.218      0.507   -0.43  0.66709    
+s2S2DoCurse-C2     -0.124      0.780   -0.16  0.87361    
+s2S2WantScold-C1    0.807      0.464    1.74  0.08195 .  
+s2S2WantScold-C2    1.702      0.789    2.16  0.03105 *  
+s2S2DoScold-C1      0.292      0.453    0.64  0.51902    
+s2S2DoScold-C2      1.772      0.800    2.21  0.02681 *  
+s2S2WantShout-C1    1.570      0.465    3.37  0.00074 ***
+s2S2WantShout-C2    3.667      0.878    4.18  3.0e-05 ***
+s2S2DoShout-C1      2.101      0.485    4.33  1.5e-05 ***
+s2S2DoShout-C2      5.439      1.038    5.24  1.6e-07 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Log-likelihood: -210.7 (df = 11) 
+Log-likelihood: -211 (df = 11) 
 Number of iterations in BFGS optimization: 18 
 
 
@@ -429,34 +433,31 @@ Number of iterations in BFGS optimization: 18
 > ## extract item and threshold parameters
 > coef(pct)
   s2S2WantCurse-C2 s2S2DoCurse-C1 s2S2DoCurse-C2 s2S2WantScold-C1
-2        1.4864125      1.1691331      3.2394572        1.0970007
-3        0.5546748     -0.2179332     -0.1240234        0.8065186
+2           1.4864         1.1691          3.239           1.0970
+3           0.5547        -0.2179         -0.124           0.8065
   s2S2WantScold-C2 s2S2DoScold-C1 s2S2DoScold-C2 s2S2WantShout-C1
-2         2.903416      2.0056831       4.790972         1.618454
-3         1.702041      0.2919044       1.771924         1.569742
+2            2.903         2.0057          4.791            1.618
+3            1.702         0.2919          1.772            1.570
   s2S2WantShout-C2 s2S2DoShout-C1 s2S2DoShout-C2
-2         3.768047       3.198196       6.704804
-3         3.667480       2.100605       5.438818
+2            3.768          3.198          6.705
+3            3.667          2.101          5.439
 > itempar(pct)
   s2S2WantCurse s2S2DoCurse s2S2WantScold s2S2DoScold s2S2WantShout s2S2DoShout
-2    -1.1645528  -0.2880305    -0.4560512   0.4877272   -0.02373549    1.444643
-3    -0.8069055  -1.1462546    -0.2332222  -0.1982807    0.74949691    1.635166
+2       -1.1646      -0.288       -0.4561      0.4877      -0.02374       1.445
+3       -0.8069      -1.146       -0.2332     -0.1983       0.74950       1.635
 > threshpar(pct)
   s2S2WantCurse-C1 s2S2WantCurse-C2 s2S2DoCurse-C1 s2S2DoCurse-C2
-2        -1.907759       -0.4213466     -0.7386259      0.1625649
-3        -1.084243       -0.5295681     -1.3021761     -0.9903331
+2           -1.908          -0.4213        -0.7386         0.1626
+3           -1.084          -0.5296        -1.3022        -0.9903
   s2S2WantScold-C1 s2S2WantScold-C2 s2S2DoScold-C1 s2S2DoScold-C2
-2       -0.8107584       -0.1013439     0.09792402      0.8775303
-3       -0.2777243       -0.1887200    -0.79233854      0.3957771
+2          -0.8108          -0.1013        0.09792         0.8775
+3          -0.2777          -0.1887       -0.79234         0.3958
   s2S2WantShout-C1 s2S2WantShout-C2 s2S2DoShout-C1 s2S2DoShout-C2
-2       -0.2893054        0.2418344       1.290437       1.598848
-3        0.4854995        1.0134943       1.016362       2.253970
+2          -0.2893           0.2418          1.290          1.599
+3           0.4855           1.0135          1.016          2.254
 > 
 > ## inspect parameter stability tests in the splitting node
-> if(require("strucchange")) {
-+ sctest(pct, node = 1)
-+ }
-Loading required package: strucchange
+> library("strucchange")
 Loading required package: zoo
 
 Attaching package: 'zoo'
@@ -466,9 +467,12 @@ The following objects are masked from 'package:base':
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-               anger       gender
-statistic 16.2333631 4.354433e+01
-p.value    0.9577897 1.745895e-05
+> sctest(pct, node = 1)
+            anger    gender
+statistic 16.2334 4.354e+01
+p.value    0.9578 1.746e-05
+> 
+> options(digits = o$digits)
 > 
 > 
 > 
@@ -490,6 +494,8 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo',
 > 
 > ### ** Examples
 > 
+> o <- options(digits = 4)
+> 
 > ## artificial data
 > data("DIFSim", package = "psychotree")
 > 
@@ -500,38 +506,26 @@ Loading required package: Formula
 > 
 > ## extract item parameters
 > coef(rt)
-      resp2     resp3      resp4      resp5     resp6     resp7      resp8
-3 1.3280416 3.6397106 -0.1434936 -0.7130513 -1.650363 -0.569757 -0.2857568
-4 0.6718733 0.9678199  0.8167709  0.1959556 -1.233363 -1.081086 -0.1297545
-5 0.1705976 2.3846344  0.1705976 -0.8671601 -1.686090 -1.088208 -0.3826143
-      resp9     resp10     resp11    resp12    resp13        resp14     resp15
-3 -2.244121 -1.0063777 -0.2857568 -2.244121 -1.478676 -2.485482e+00 -1.6503629
-4 -1.477172  0.1303662 -1.0073090 -1.393512 -1.233363  5.317753e-01  0.9678199
-5 -1.818323  0.2288078  0.2878821 -2.178554 -1.559069  7.939549e-07  0.5988901
-     resp16   resp17        resp18    resp19        resp20
-3 1.5474221 1.547422 -5.697570e-01 -1.006378 -2.649220e-07
-4 1.2956655 2.020236  1.840607e-05 -1.007309 -1.946499e-01
-5 0.3478274 1.274875 -3.826143e-01 -1.032298 -7.586265e-01
+   resp2  resp3   resp4   resp5  resp6   resp7   resp8  resp9  resp10  resp11
+3 1.3280 3.6397 -0.1435 -0.7131 -1.650 -0.5698 -0.2858 -2.244 -1.0064 -0.2858
+4 0.6719 0.9678  0.8168  0.1960 -1.233 -1.0811 -0.1298 -1.477  0.1304 -1.0073
+5 0.1706 2.3846  0.1706 -0.8672 -1.686 -1.0882 -0.3826 -1.818  0.2288  0.2879
+  resp12 resp13     resp14  resp15 resp16 resp17     resp18 resp19     resp20
+3 -2.244 -1.479 -2.485e+00 -1.6504 1.5474  1.547 -5.698e-01 -1.006 -2.649e-07
+4 -1.394 -1.233  5.318e-01  0.9678 1.2957  2.020  1.841e-05 -1.007 -1.946e-01
+5 -2.179 -1.559  7.940e-07  0.5989 0.3478  1.275 -3.826e-01 -1.032 -7.586e-01
 > itempar(rt)
-       resp1     resp2    resp3     resp4      resp5     resp6      resp7
-3 0.41354287 1.7415845 4.053253 0.2700493 -0.2995084 -1.236820 -0.1562142
-4 0.05796085 0.7298341 1.025781 0.8747317  0.2539165 -1.175402 -1.0231250
-5 0.31447222 0.4850698 2.699107 0.4850698 -0.5526879 -1.371617 -0.7737354
-        resp8     resp9     resp10     resp11    resp12    resp13     resp14
-3  0.12778604 -1.830578 -0.5928348  0.1277860 -1.830578 -1.065133 -2.0719390
-4 -0.07179365 -1.419211  0.1883271 -0.9493481 -1.335551 -1.175402  0.5897361
-5 -0.06814205 -1.503851  0.5432800  0.6023543 -1.864082 -1.244597  0.3144730
-      resp15    resp16   resp17      resp18     resp19     resp20
-3 -1.2368201 1.9609649 1.960965 -0.15621418 -0.5928348  0.4135426
-4  1.0257807 1.3536263 2.078197  0.05797926 -0.9493481 -0.1366891
-5  0.9133623 0.6622996 1.589347 -0.06814205 -0.7178253 -0.4441543
+    resp1  resp2 resp3  resp4   resp5  resp6   resp7    resp8  resp9  resp10
+3 0.41354 1.7416 4.053 0.2700 -0.2995 -1.237 -0.1562  0.12779 -1.831 -0.5928
+4 0.05796 0.7298 1.026 0.8747  0.2539 -1.175 -1.0231 -0.07179 -1.419  0.1883
+5 0.31447 0.4851 2.699 0.4851 -0.5527 -1.372 -0.7737 -0.06814 -1.504  0.5433
+   resp11 resp12 resp13  resp14  resp15 resp16 resp17   resp18  resp19  resp20
+3  0.1278 -1.831 -1.065 -2.0719 -1.2368 1.9610  1.961 -0.15621 -0.5928  0.4135
+4 -0.9493 -1.336 -1.175  0.5897  1.0258 1.3536  2.078  0.05798 -0.9493 -0.1367
+5  0.6024 -1.864 -1.245  0.3145  0.9134 0.6623  1.589 -0.06814 -0.7178 -0.4442
 > 
 > ## inspect parameter stability tests in all splitting nodes
-> if(require("strucchange")) {
-+ sctest(rt, node = 1)
-+ sctest(rt, node = 2)
-+ }
-Loading required package: strucchange
+> library("strucchange")
 Loading required package: zoo
 
 Attaching package: 'zoo'
@@ -541,15 +535,22 @@ The following objects are masked from 'package:base':
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-                   age gender motivation
-statistic 6.125740e+01      0 86.2516724
-p.value   3.613254e-04     NA  0.9259663
+> sctest(rt, node = 1)
+              age    gender motivation
+statistic 43.1086 41.486403    82.0383
+p.value    0.1103  0.006221     0.9947
+> sctest(rt, node = 2)
+                age gender motivation
+statistic 6.126e+01      0     86.252
+p.value   3.613e-04     NA      0.926
 > 
 > ## highlight items 3 and 14 with DIF
 > ix <- rep(1, 20)
 > ix[c(3, 14)] <- 2
 > plot(rt, ylines = 2.5,  cex = c(0.4, 0.8)[ix], 
 +   pch = c(19, 19)[ix], col = gray(c(0.5, 0))[ix])
+> 
+> options(digits = o$digits)
 > 
 > 
 > 
@@ -570,6 +571,8 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo',
 > ### Keywords: tree
 > 
 > ### ** Examples
+> 
+> o <- options(digits = 4)
 > 
 > ## verbal aggression data from package psychotools
 > data("VerbalAggression", package = "psychotools")
@@ -596,24 +599,24 @@ Fitted party:
 |   [2] gender in female
 |   |   [3] anger <= 23: n = 173
 |   |         s1S1DoCurse s1S1WantScold   s1S1DoScold s1S1WantShout   s1S1DoShout 
-|   |           0.5054360     0.5054375     1.0954075     1.0687521     1.9562549 
+|   |              0.5054        0.5054        1.0954        1.0688        1.9563 
 |   |                  C2 
-|   |           0.8887416 
+|   |              0.8887 
 |   |   [4] anger > 23: n = 41
 |   |         s1S1DoCurse s1S1WantScold   s1S1DoScold s1S1WantShout   s1S1DoShout 
-|   |          -0.6582343     0.3610076     0.2246538     0.5921869     0.8799027 
+|   |             -0.6582        0.3610        0.2247        0.5922        0.8799 
 |   |                  C2 
-|   |          -0.7252541 
+|   |             -0.7253 
 |   [5] gender in male: n = 68
 |         s1S1DoCurse s1S1WantScold   s1S1DoScold s1S1WantShout   s1S1DoShout 
-|         -0.48159924    0.35253257   -0.06342232    1.01437786    1.60990312 
+|            -0.48160       0.35253      -0.06342       1.01438       1.60990 
 |                  C2 
-|          0.87639635 
+|             0.87640 
 
 Number of inner nodes:    2
 Number of terminal nodes: 3
 Number of parameters per node: 6
-Objective function (negative log-likelihood): 975.8134
+Objective function (negative log-likelihood): 975.8
 > print(rst, FUN = function(x) " *")
 Rating scale tree
 
@@ -630,7 +633,7 @@ Fitted party:
 Number of inner nodes:    2
 Number of terminal nodes: 3
 Number of parameters per node: 6
-Objective function (negative log-likelihood): 975.8134
+Objective function (negative log-likelihood): 975.8
 > 
 > ## show summary for terminal panel nodes
 > summary(rst)
@@ -640,16 +643,16 @@ Rating scale model
 
 Item location and threshold parameters:
               Estimate Std. Error z value Pr(>|z|)    
-s1S1DoCurse     0.5054     0.1573   3.213  0.00131 ** 
-s1S1WantScold   0.5054     0.1573   3.213  0.00131 ** 
-s1S1DoScold     1.0954     0.1664   6.582 4.65e-11 ***
-s1S1WantShout   1.0688     0.1658   6.444 1.16e-10 ***
-s1S1DoShout     1.9563     0.1941  10.076  < 2e-16 ***
-C2              0.8887     0.1574   5.646 1.64e-08 ***
+s1S1DoCurse      0.505      0.157    3.21   0.0013 ** 
+s1S1WantScold    0.505      0.157    3.21   0.0013 ** 
+s1S1DoScold      1.095      0.166    6.58  4.6e-11 ***
+s1S1WantShout    1.069      0.166    6.44  1.2e-10 ***
+s1S1DoShout      1.956      0.194   10.08  < 2e-16 ***
+C2               0.889      0.157    5.65  1.6e-08 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Log-likelihood: -612.1 (df = 6) 
+Log-likelihood: -612 (df = 6) 
 Number of iterations in BFGS optimization: 11 
 
 
@@ -659,16 +662,16 @@ Rating scale model
 
 Item location and threshold parameters:
               Estimate Std. Error z value Pr(>|z|)   
-s1S1DoCurse    -0.6582     0.3162  -2.082  0.03735 * 
-s1S1WantScold   0.3610     0.3028   1.192  0.23314   
-s1S1DoScold     0.2247     0.3007   0.747  0.45501   
-s1S1WantShout   0.5922     0.3080   1.923  0.05452 . 
-s1S1DoShout     0.8799     0.3179   2.768  0.00564 **
-C2             -0.7253     0.3471  -2.090  0.03665 * 
+s1S1DoCurse     -0.658      0.316   -2.08   0.0374 * 
+s1S1WantScold    0.361      0.303    1.19   0.2331   
+s1S1DoScold      0.225      0.301    0.75   0.4550   
+s1S1WantShout    0.592      0.308    1.92   0.0545 . 
+s1S1DoShout      0.880      0.318    2.77   0.0056 **
+C2              -0.725      0.347   -2.09   0.0367 * 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Log-likelihood: -131.9 (df = 6) 
+Log-likelihood: -132 (df = 6) 
 Number of iterations in BFGS optimization: 12 
 
 
@@ -678,16 +681,16 @@ Rating scale model
 
 Item location and threshold parameters:
               Estimate Std. Error z value Pr(>|z|)    
-s1S1DoCurse   -0.48160    0.25664  -1.877 0.060583 .  
-s1S1WantScold  0.35253    0.25480   1.384 0.166498    
-s1S1DoScold   -0.06342    0.25189  -0.252 0.801209    
-s1S1WantShout  1.01438    0.27313   3.714 0.000204 ***
-s1S1DoShout    1.60990    0.30336   5.307 1.11e-07 ***
-C2             0.87640    0.25683   3.412 0.000644 ***
+s1S1DoCurse    -0.4816     0.2566   -1.88  0.06058 .  
+s1S1WantScold   0.3525     0.2548    1.38  0.16650    
+s1S1DoScold    -0.0634     0.2519   -0.25  0.80121    
+s1S1WantShout   1.0144     0.2731    3.71  0.00020 ***
+s1S1DoShout     1.6099     0.3034    5.31  1.1e-07 ***
+C2              0.8764     0.2568    3.41  0.00064 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Log-likelihood: -231.9 (df = 6) 
+Log-likelihood: -232 (df = 6) 
 Number of iterations in BFGS optimization: 12 
 
 
@@ -698,39 +701,31 @@ Number of iterations in BFGS optimization: 12
 > 
 > ## extract item and threshold parameters
 > coef(rst)
-  s1S1DoCurse s1S1WantScold s1S1DoScold s1S1WantShout s1S1DoShout         C2
-3   0.5054360     0.5054375  1.09540747     1.0687521   1.9562549  0.8887416
-4  -0.6582343     0.3610076  0.22465384     0.5921869   0.8799027 -0.7252541
-5  -0.4815992     0.3525326 -0.06342232     1.0143779   1.6099031  0.8763964
+  s1S1DoCurse s1S1WantScold s1S1DoScold s1S1WantShout s1S1DoShout      C2
+3      0.5054        0.5054     1.09541        1.0688      1.9563  0.8887
+4     -0.6582        0.3610     0.22465        0.5922      0.8799 -0.7253
+5     -0.4816        0.3525    -0.06342        1.0144      1.6099  0.8764
 > itempar(rst)
-  s1S1WantCurse s1S1DoCurse s1S1WantScold  s1S1DoScold s1S1WantShout
-3    -0.8552147  -0.3497787    -0.3497771  0.240192794     0.2135375
-4    -0.2332528  -0.8914871     0.1277548 -0.008598947     0.3589341
-5    -0.4052987  -0.8868979    -0.0527661 -0.468720985     0.6090792
-  s1S1DoShout
-3   1.1010403
-4   0.6466499
-5   1.2046045
+  s1S1WantCurse s1S1DoCurse s1S1WantScold s1S1DoScold s1S1WantShout s1S1DoShout
+3       -0.8552     -0.3498      -0.34978    0.240193        0.2135      1.1010
+4       -0.2333     -0.8915       0.12775   -0.008599        0.3589      0.6466
+5       -0.4053     -0.8869      -0.05277   -0.468721        0.6091      1.2046
 > threshpar(rst)
   s1S1WantCurse-C1 s1S1WantCurse-C2 s1S1DoCurse-C1 s1S1DoCurse-C2
-3       -1.2995855      -0.41084388     -0.7941495      0.0945921
-4        0.1293743      -0.59587982     -0.5288601     -1.2541141
-5       -0.8434968       0.03289951     -1.3250961     -0.4486997
+3          -1.2996          -0.4108        -0.7941        0.09459
+4           0.1294          -0.5959        -0.5289       -1.25411
+5          -0.8435           0.0329        -1.3251       -0.44870
   s1S1WantScold-C1 s1S1WantScold-C2 s1S1DoScold-C1 s1S1DoScold-C2
-3       -0.7941479       0.09459366     -0.2041780     0.68456359
-4        0.4903818      -0.23487225      0.3540281    -0.37122598
-5       -0.4909643       0.38543208     -0.9069192    -0.03052281
+3          -0.7941          0.09459        -0.2042        0.68456
+4           0.4904         -0.23487         0.3540       -0.37123
+5          -0.4910          0.38543        -0.9069       -0.03052
   s1S1WantShout-C1 s1S1WantShout-C2 s1S1DoShout-C1 s1S1DoShout-C2
-3       -0.2308333      0.657908262      0.6566695      1.5454110
-4        0.7215611     -0.003692943      1.0092770      0.2840229
-5        0.1708810      1.047277368      0.7664063      1.6428026
+3          -0.2308         0.657908         0.6567          1.545
+4           0.7216        -0.003693         1.0093          0.284
+5           0.1709         1.047277         0.7664          1.643
 > 
 > ## inspect parameter stability tests in all splitting nodes
-> if(require("strucchange")) {
-+ sctest(rst, node = 1)
-+ sctest(rst, node = 2)
-+ }
-Loading required package: strucchange
+> library("strucchange")
 Loading required package: zoo
 
 Attaching package: 'zoo'
@@ -740,9 +735,16 @@ The following objects are masked from 'package:base':
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-                anger gender
-statistic 23.61166832      0
-p.value    0.01672397     NA
+> sctest(rst, node = 1)
+             anger   gender
+statistic 25.11992 17.91766
+p.value    0.01871  0.01284
+> sctest(rst, node = 2)
+             anger gender
+statistic 23.61167      0
+p.value    0.01672     NA
+> 
+> options(digits = o$digits)
 > 
 > 
 > 
@@ -750,7 +752,7 @@ p.value    0.01672397     NA
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.732 0.052 10.802 0 0 
+Time elapsed:  10.696 0.048 10.772 0 0 
 > grDevices::dev.off()
 null device 
           1 

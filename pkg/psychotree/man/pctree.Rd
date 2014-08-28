@@ -92,6 +92,8 @@ pctree(formula, data, na.action, nullcats = c("keep", "downcode", "ignore"),
   \code{\link{rstree}}, \code{\link{raschtree}}}
 
 \examples{
+o <- options(digits = 4)
+
 ## verbal aggression data from package psychotools
 data("VerbalAggression", package = "psychotools")
 
@@ -121,9 +123,10 @@ itempar(pct)
 threshpar(pct)
 
 ## inspect parameter stability tests in the splitting node
-if(require("strucchange")) {
+library("strucchange")
 sctest(pct, node = 1)
-}
+
+options(digits = o$digits)
 }
 
 \keyword{tree}
