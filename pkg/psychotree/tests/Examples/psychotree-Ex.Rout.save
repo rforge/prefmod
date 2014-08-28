@@ -1,13 +1,11 @@
 
 R version 3.1.1 (2014-07-10) -- "Sock it to Me"
 Copyright (C) 2014 The R Foundation for Statistical Computing
-Platform: x86_64-unknown-linux-gnu (64-bit)
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -24,9 +22,9 @@ Type 'q()' to quit R.
 Loading required package: partykit
 Loading required package: grid
 
-Attaching package: ‘partykit’
+Attaching package: 'partykit'
 
-The following object is masked from ‘package:grid’:
+The following object is masked from 'package:grid':
 
     depth
 
@@ -225,34 +223,39 @@ gender   FALSE TRUE
 > 
 > ### Name: bttree
 > ### Title: Bradley-Terry Tree Models
-> ### Aliases: bttree plot.bttree print.bttree predict.bttree worth.bttree
+> ### Aliases: bttree plot.bttree print.bttree predict.bttree itempar.bttree
 > ### Keywords: tree
 > 
 > ### ** Examples
 > 
 > ## Germany's Next Topmodel 2007 data
 > data("Topmodel2007", package = "psychotree")
+> 
 > ## BT tree
 > tm_tree <- bttree(preference ~ ., data = Topmodel2007, minsize = 5, ref = "Barbara")
 Loading required package: Formula
 > plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
+> 
 > ## parameter instability tests in root node
-> library("strucchange")
+> if(require("strucchange")) {
++ sctest(tm_tree, node = 1)
++ }
+Loading required package: strucchange
 Loading required package: zoo
 
-Attaching package: ‘zoo’
+Attaching package: 'zoo'
 
-The following objects are masked from ‘package:base’:
+The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-> sctest(tm_tree, node = 1)
            preference      gender          age         q1          q2        q3
 statistic 22.07201658 17.08798000 3.235655e+01 12.6319505 19.83922185 6.7585592
 p.value    0.07726117  0.02573519 9.498559e-04  0.1518853  0.00801063 0.8061175
+> 
 > ## worth parameters in terminal nodes
-> worth(tm_tree)
+> itempar(tm_tree)
     Barbara       Anni      Hana     Fiona      Mandy       Anja
 3 0.1889324 0.16993451 0.3850798 0.1141502 0.09232354 0.04957957
 5 0.1745924 0.12304683 0.2624556 0.2254343 0.10187663 0.11259425
@@ -278,11 +281,12 @@ Paris     : Stockholm 203 30  70    0
 Milano    : Stockholm 157 46 100    0
 StGallen  : Stockholm 155 50  98    0
 Barcelona : Stockholm 172 41  90    0
+> 
 > ## BT tree
 > cems_tree <- bttree(preference ~ french + spanish + italian + study + work + gender + intdegree,
 +   data = CEMSChoice, minsize = 5, ref = "London")
 > plot(cems_tree, abbreviate = 1, yscale = c(0, 0.5))
-> worth(cems_tree)
+> itempar(cems_tree)
      London      Paris     Milano   StGallen  Barcelona  Stockholm
 3 0.2083439 0.12682140 0.15936388 0.06905174 0.42506488 0.01135419
 4 0.4315060 0.08629580 0.34016535 0.05204565 0.06059623 0.02939091
@@ -294,8 +298,8 @@ Barcelona : Stockholm 172 41  90    0
 > 
 > cleanEx()
 
-detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
-  ‘package:Formula’
+detaching 'package:strucchange', 'package:sandwich', 'package:zoo',
+  'package:Formula'
 
 > nameEx("pctree")
 > ### * pctree
@@ -304,7 +308,8 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
 > 
 > ### Name: pctree
 > ### Title: Partial Credit Tree Models
-> ### Aliases: pctree plot.pctree print.pctree
+> ### Aliases: pctree plot.pctree print.pctree predict.pctree itempar.pctree
+> ###   threshpar.pctree
 > ### Keywords: tree
 > 
 > ### ** Examples
@@ -322,7 +327,7 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
 > pct <- pctree(s2 ~ anger + gender, data = VerbalAggression)
 Loading required package: Formula
 > 
-> ## just print mob object
+> ## print tree (with and without parameters)
 > print(pct)
 Partial credit tree
 
@@ -350,6 +355,21 @@ Number of inner nodes:    1
 Number of terminal nodes: 2
 Number of parameters per node: 11
 Objective function (negative log-likelihood): 899.8806
+> print(pct, FUN = function(x) " *")
+Partial credit tree
+
+Model formula:
+s2 ~ anger + gender
+
+Fitted party:
+[1] root
+|   [2] gender in female *
+|   [3] gender in male *
+
+Number of inner nodes:    1
+Number of terminal nodes: 2
+Number of parameters per node: 11
+Objective function (negative log-likelihood): 899.8806
 > 
 > ## show summary for terminal panel nodes
 > summary(pct)
@@ -371,7 +391,7 @@ s2S2WantShout-C2   3.7680     0.4860   7.753 8.97e-15 ***
 s2S2DoShout-C1     3.1982     0.2962  10.799  < 2e-16 ***
 s2S2DoShout-C2     6.7048     0.5753  11.655  < 2e-16 ***
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Log-likelihood: -689.2 (df = 11) 
 Number of iterations in BFGS optimization: 17 
@@ -395,17 +415,18 @@ s2S2WantShout-C2   3.6675     0.8782   4.176 2.96e-05 ***
 s2S2DoShout-C1     2.1006     0.4855   4.327 1.51e-05 ***
 s2S2DoShout-C2     5.4388     1.0376   5.242 1.59e-07 ***
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Log-likelihood: -210.7 (df = 11) 
 Number of iterations in BFGS optimization: 18 
 
 
 > 
-> ## plot with default terminal panel function (node_regionplot)
-> plot(pct)
+> ## visualization
+> plot(pct, type = "regions")
+> plot(pct, type = "profile")
 > 
-> ## extract item and category parameters
+> ## extract item and threshold parameters
 > coef(pct)
   s2S2WantCurse-C2 s2S2DoCurse-C1 s2S2DoCurse-C2 s2S2WantScold-C1
 2        1.4864125      1.1691331      3.2394572        1.0970007
@@ -416,19 +437,35 @@ Number of iterations in BFGS optimization: 18
   s2S2WantShout-C2 s2S2DoShout-C1 s2S2DoShout-C2
 2         3.768047       3.198196       6.704804
 3         3.667480       2.100605       5.438818
+> itempar(pct)
+  s2S2WantCurse s2S2DoCurse s2S2WantScold s2S2DoScold s2S2WantShout s2S2DoShout
+2    -1.1645528  -0.2880305    -0.4560512   0.4877272   -0.02373549    1.444643
+3    -0.8069055  -1.1462546    -0.2332222  -0.1982807    0.74949691    1.635166
+> threshpar(pct)
+  s2S2WantCurse-C1 s2S2WantCurse-C2 s2S2DoCurse-C1 s2S2DoCurse-C2
+2        -1.907759       -0.4213466     -0.7386259      0.1625649
+3        -1.084243       -0.5295681     -1.3021761     -0.9903331
+  s2S2WantScold-C1 s2S2WantScold-C2 s2S2DoScold-C1 s2S2DoScold-C2
+2       -0.8107584       -0.1013439     0.09792402      0.8775303
+3       -0.2777243       -0.1887200    -0.79233854      0.3957771
+  s2S2WantShout-C1 s2S2WantShout-C2 s2S2DoShout-C1 s2S2DoShout-C2
+2       -0.2893054        0.2418344       1.290437       1.598848
+3        0.4854995        1.0134943       1.016362       2.253970
 > 
 > ## inspect parameter stability tests in the splitting node
-> library("strucchange")
+> if(require("strucchange")) {
++ sctest(pct, node = 1)
++ }
+Loading required package: strucchange
 Loading required package: zoo
 
-Attaching package: ‘zoo’
+Attaching package: 'zoo'
 
-The following objects are masked from ‘package:base’:
+The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-> sctest(pct, node = 1)
                anger       gender
 statistic 16.2333631 4.354433e+01
 p.value    0.9577897 1.745895e-05
@@ -437,8 +474,8 @@ p.value    0.9577897 1.745895e-05
 > 
 > cleanEx()
 
-detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
-  ‘package:Formula’
+detaching 'package:strucchange', 'package:sandwich', 'package:zoo',
+  'package:Formula'
 
 > nameEx("raschtree")
 > ### * raschtree
@@ -447,7 +484,8 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
 > 
 > ### Name: raschtree
 > ### Title: Rasch Tree Models
-> ### Aliases: raschtree plot.raschtree print.raschtree worth.raschtree
+> ### Aliases: raschtree print.raschtree plot.raschtree predict.raschtree
+> ###   itempar.raschtree
 > ### Keywords: tree
 > 
 > ### ** Examples
@@ -474,7 +512,7 @@ Loading required package: Formula
 3 1.5474221 1.547422 -5.697570e-01 -1.006378 -2.649220e-07
 4 1.2956655 2.020236  1.840607e-05 -1.007309 -1.946499e-01
 5 0.3478274 1.274875 -3.826143e-01 -1.032298 -7.586265e-01
-> worth(rt)
+> itempar(rt)
        resp1     resp2    resp3     resp4      resp5     resp6      resp7
 3 0.41354287 1.7415845 4.053253 0.2700493 -0.2995084 -1.236820 -0.1562142
 4 0.05796085 0.7298341 1.025781 0.8747317  0.2539165 -1.175402 -1.0231250
@@ -489,27 +527,25 @@ Loading required package: Formula
 5  0.9133623 0.6622996 1.589347 -0.06814205 -0.7178253 -0.4441543
 > 
 > ## inspect parameter stability tests in all splitting nodes
-> library("strucchange")
+> if(require("strucchange")) {
++ sctest(rt, node = 1)
++ sctest(rt, node = 2)
++ }
+Loading required package: strucchange
 Loading required package: zoo
 
-Attaching package: ‘zoo’
+Attaching package: 'zoo'
 
-The following objects are masked from ‘package:base’:
+The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-> sctest(rt, node = 1)
-                 age       gender motivation
-statistic 43.1085690 41.486403280 82.0383078
-p.value    0.1103398  0.006221081  0.9947187
-> sctest(rt, node = 2)
                    age gender motivation
 statistic 6.125740e+01      0 86.2516724
 p.value   3.613254e-04     NA  0.9259663
 > 
 > ## highlight items 3 and 14 with DIF
-> ## FIXME: extend panel-generating function
 > ix <- rep(1, 20)
 > ix[c(3, 14)] <- 2
 > plot(rt, ylines = 2.5,  cex = c(0.4, 0.8)[ix], 
@@ -519,8 +555,8 @@ p.value   3.613254e-04     NA  0.9259663
 > 
 > cleanEx()
 
-detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
-  ‘package:Formula’
+detaching 'package:strucchange', 'package:sandwich', 'package:zoo',
+  'package:Formula'
 
 > nameEx("rstree")
 > ### * rstree
@@ -529,7 +565,8 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
 > 
 > ### Name: rstree
 > ### Title: Rating Scale Tree Models
-> ### Aliases: rstree plot.rstree print.rstree
+> ### Aliases: rstree plot.rstree print.rstree predict.rstree itempar.rstree
+> ###   threshpar.rstree
 > ### Keywords: tree
 > 
 > ### ** Examples
@@ -547,7 +584,7 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’,
 > rst <- rstree(s1 ~ anger + gender, data = VerbalAggression)
 Loading required package: Formula
 > 
-> ## just print mob object
+> ## print tree (with and without parameters)
 > print(rst)
 Rating scale tree
 
@@ -577,6 +614,23 @@ Number of inner nodes:    2
 Number of terminal nodes: 3
 Number of parameters per node: 6
 Objective function (negative log-likelihood): 975.8134
+> print(rst, FUN = function(x) " *")
+Rating scale tree
+
+Model formula:
+s1 ~ anger + gender
+
+Fitted party:
+[1] root
+|   [2] gender in female
+|   |   [3] anger <= 23 *
+|   |   [4] anger > 23 *
+|   [5] gender in male *
+
+Number of inner nodes:    2
+Number of terminal nodes: 3
+Number of parameters per node: 6
+Objective function (negative log-likelihood): 975.8134
 > 
 > ## show summary for terminal panel nodes
 > summary(rst)
@@ -593,7 +647,7 @@ s1S1WantShout   1.0688     0.1658   6.444 1.16e-10 ***
 s1S1DoShout     1.9563     0.1941  10.076  < 2e-16 ***
 C2              0.8887     0.1574   5.646 1.64e-08 ***
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Log-likelihood: -612.1 (df = 6) 
 Number of iterations in BFGS optimization: 11 
@@ -612,7 +666,7 @@ s1S1WantShout   0.5922     0.3080   1.923  0.05452 .
 s1S1DoShout     0.8799     0.3179   2.768  0.00564 **
 C2             -0.7253     0.3471  -2.090  0.03665 * 
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Log-likelihood: -131.9 (df = 6) 
 Number of iterations in BFGS optimization: 12 
@@ -631,39 +685,61 @@ s1S1WantShout  1.01438    0.27313   3.714 0.000204 ***
 s1S1DoShout    1.60990    0.30336   5.307 1.11e-07 ***
 C2             0.87640    0.25683   3.412 0.000644 ***
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Log-likelihood: -231.9 (df = 6) 
 Number of iterations in BFGS optimization: 12 
 
 
 > 
-> ## plot with default (and currently only) terminal panel function (node_regionplot)
-> plot(rst)
+> ## visualization
+> plot(rst, type = "regions")
+> plot(rst, type = "profile")
 > 
-> ## extract item and category parameters
+> ## extract item and threshold parameters
 > coef(rst)
   s1S1DoCurse s1S1WantScold s1S1DoScold s1S1WantShout s1S1DoShout         C2
 3   0.5054360     0.5054375  1.09540747     1.0687521   1.9562549  0.8887416
 4  -0.6582343     0.3610076  0.22465384     0.5921869   0.8799027 -0.7252541
 5  -0.4815992     0.3525326 -0.06342232     1.0143779   1.6099031  0.8763964
+> itempar(rst)
+  s1S1WantCurse s1S1DoCurse s1S1WantScold  s1S1DoScold s1S1WantShout
+3    -0.8552147  -0.3497787    -0.3497771  0.240192794     0.2135375
+4    -0.2332528  -0.8914871     0.1277548 -0.008598947     0.3589341
+5    -0.4052987  -0.8868979    -0.0527661 -0.468720985     0.6090792
+  s1S1DoShout
+3   1.1010403
+4   0.6466499
+5   1.2046045
+> threshpar(rst)
+  s1S1WantCurse-C1 s1S1WantCurse-C2 s1S1DoCurse-C1 s1S1DoCurse-C2
+3       -1.2995855      -0.41084388     -0.7941495      0.0945921
+4        0.1293743      -0.59587982     -0.5288601     -1.2541141
+5       -0.8434968       0.03289951     -1.3250961     -0.4486997
+  s1S1WantScold-C1 s1S1WantScold-C2 s1S1DoScold-C1 s1S1DoScold-C2
+3       -0.7941479       0.09459366     -0.2041780     0.68456359
+4        0.4903818      -0.23487225      0.3540281    -0.37122598
+5       -0.4909643       0.38543208     -0.9069192    -0.03052281
+  s1S1WantShout-C1 s1S1WantShout-C2 s1S1DoShout-C1 s1S1DoShout-C2
+3       -0.2308333      0.657908262      0.6566695      1.5454110
+4        0.7215611     -0.003692943      1.0092770      0.2840229
+5        0.1708810      1.047277368      0.7664063      1.6428026
 > 
 > ## inspect parameter stability tests in all splitting nodes
-> library("strucchange")
+> if(require("strucchange")) {
++ sctest(rst, node = 1)
++ sctest(rst, node = 2)
++ }
+Loading required package: strucchange
 Loading required package: zoo
 
-Attaching package: ‘zoo’
+Attaching package: 'zoo'
 
-The following objects are masked from ‘package:base’:
+The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-> sctest(rst, node = 1)
-                anger      gender
-statistic 25.11991731 17.91765887
-p.value    0.01870588  0.01284111
-> sctest(rst, node = 2)
                 anger gender
 statistic 23.61166832      0
 p.value    0.01672397     NA
@@ -674,7 +750,7 @@ p.value    0.01672397     NA
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  9.603 0.044 9.668 0 0 
+Time elapsed:  10.732 0.052 10.802 0 0 
 > grDevices::dev.off()
 null device 
           1 

@@ -2,10 +2,15 @@
 import(
   "stats",
   "graphics",
-  "grid",
   "psychotools",
   "partykit",
   "Formula"
+)
+importFrom("grid",
+  "gpar", "grid.layout", "unit",
+  "grid.lines", "grid.points", "grid.polyline",
+  "grid.rect", "grid.text", "grid.xaxis", "grid.yaxis",
+  "popViewport", "pushViewport", "upViewport", "viewport"
 )
 
 export(
