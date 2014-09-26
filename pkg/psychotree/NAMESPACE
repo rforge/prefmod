@@ -19,16 +19,13 @@ export(
   "rstree",
   "pctree",
   "bttree",
+  "mpttree",
 
   ## panel-generating visualization functions
   "node_profileplot",
   "node_regionplot",
-  "node_btplot"
-
-#  ## MPT tree tools
-#  "mpttree",
-#  "mptModel",
-#  "node_mptplot"
+  "node_btplot",
+  "node_mptplot"
 )
 
 ## methods for raschtree objects
@@ -57,11 +54,7 @@ S3method("predict", "bttree")
 S3method("print", "bttree")
 S3method("itempar", "bttree")
 
-# ## methods for mpttree objects
-# S3method("plot", "mpttree")
-# S3method("print", "mpttree")
+## methods for mpttree objects
+S3method("plot", "mpttree")
+S3method("print", "mpttree")
 
-# ## methods for mptModel objects
-# S3method("bread", "mptModel")
-# S3method("estfun", "mptModel")
-# S3method("reweight", "mptModel")

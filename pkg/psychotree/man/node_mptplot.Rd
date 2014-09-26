@@ -17,7 +17,7 @@ node_mptplot(mobobj, id = TRUE,
 
 \arguments{
   \item{mobobj}{an object of class \code{"mob"} based on MPT models
-    fitted by \code{\link{mptModel}}.}
+    fitted by \code{\link[psychotools]{mptmodel}}.}
   \item{id}{logical. Should the node ID be displayed?}
   \item{names}{logical or character. Should the names for the parameters be
     displayed? If character this sets the names.}
