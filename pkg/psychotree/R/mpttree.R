@@ -2,13 +2,14 @@
 mpttree <- function(formula, data, na.action,
   spec, treeid = NULL,
   optimargs = list(control = list(reltol = .Machine$double.eps^(1/1.2),
-                                  maxit = 1000)), ...)
+                                  maxit = 1000)),
+  ...)
 {
   ## keep call
   cl <- match.call(expand.dots = TRUE)
 
   ## use dots for setting up mob_control
-  control <- mob_control(...)
+  control <- mob_control(ytype = "matrix", ...)
 
   ## control options for btfit
   mptcontrol <- list(spec = spec, treeid = treeid, optimargs = optimargs)
