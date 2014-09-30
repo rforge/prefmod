@@ -67,30 +67,30 @@ mpttree(formula, data, na.action,
 \examples{
 o <- options(digits = 4)
 
-## FIX ME
-# ## Germany's Next Topmodel 2007 data
-# data("Topmodel2007", package = "psychotree")
-# 
-# ## BT tree
-# tm_tree <- bttree(preference ~ ., data = Topmodel2007, minsize = 5, ref = "Barbara")
-# plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
-# 
-# ## parameter instability tests in root node
-# library("strucchange")
-# sctest(tm_tree, node = 1)
-# 
-# ## worth parameters in terminal nodes
-# itempar(tm_tree)
-# 
-# ## CEMS university choice data
-# data("CEMSChoice", package = "psychotree")
-# summary(CEMSChoice$preference)
-# 
-# ## BT tree
-# cems_tree <- bttree(preference ~ french + spanish + italian + study + work + gender + intdegree,
-#   data = CEMSChoice, minsize = 5, ref = "London")
-# plot(cems_tree, abbreviate = 1, yscale = c(0, 0.5))
-# itempar(cems_tree)
+## Source Monitoring data
+data("SourceMonitoring", package="psychotools")
+
+## MPT tree
+sm_tree <- mpttree(y ~ sources + gender + age, data = SourceMonitoring,
+  spec = mptspec("SourceMon", .restr = list(d1 = d, d2 = d)))
+plot(sm_tree, index = c("D1", "D2", "d", "b", "g"))
+
+## extract parameter estimates
+coef(sm_tree)  # FIX ME: logit = FALSE
+
+## parameter instability tests in root node
+library("strucchange")
+sctest(sm_tree, node = 1)
+
+## storage and retrieval deficits in psychiatric patients
+data("MemoryDeficits", package = "psychotools")
+
+## MPT tree
+sr_tree <- mpttree(cbind(E1, E2, E3, E4) ~ trial + group, MemoryDeficits,
+  spec = mptspec("SR2"))
+
+## extract parameter estimates
+coef(sr_tree)
 
 options(digits = o$digits)
 }
