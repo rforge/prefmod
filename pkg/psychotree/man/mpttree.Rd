@@ -9,7 +9,7 @@
 \title{MPT Tree Models}
 
 \description{
-  Recursive partitioning based on multinomial processing tree (MPT)models.
+  Recursive partitioning based on multinomial processing tree (MPT) models.
 }
 
 \usage{
@@ -17,10 +17,10 @@ mpttree(formula, data, na.action,
   spec, treeid = NULL,
   optimargs = list(control = list(reltol = .Machine$double.eps^(1/1.2),
                                   maxit = 1000)), \dots)
+}
 
 % \method{predict}{bttree}(object, newdata = NULL,
 %   type = c("worth", "rank", "best", "node"), \dots)
-}
 
 \arguments{
   \item{formula}{a symbolic description of the model to be fit. This should be

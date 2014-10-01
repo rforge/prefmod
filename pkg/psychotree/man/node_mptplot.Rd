@@ -20,11 +20,11 @@ node_mptplot(mobobj, id = TRUE,
     fitted by \code{\link[psychotools]{mptmodel}}.}
   \item{id}{logical. Should the node ID be displayed?}
   \item{names}{logical or character. Should the names for the parameters be
-    displayed? If character this sets the names.}
+    displayed? If character, this sets the names.}
   \item{abbreviate}{logical or numeric. Should parameter names be abbreviated?
     If numeric this controls the length of the abbreviation.}
   \item{index}{logical or character. Should different indexes for different
-    parameters be used? If character this controls the order of labels given
+    parameters be used? If character, this controls the order of labels given
     in \code{names}.}
   \item{ref}{logical. Should a horizontal line for the reference level be
     drawn?}
