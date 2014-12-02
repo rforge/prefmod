@@ -436,13 +436,19 @@ node_mptplot <- function(mobobj, id = TRUE,
     colnames(cf) <- abbreviate(colnames(cf), abbreviate)
 
     if(index) {
-      x <- 1:NCOL(cf)
-      if(is.null(xscale)) xscale <- range(x) + c(-0.1, 0.1) * diff(range(x))
+      x <- seq_len(NCOL(cf))
+      if(is.null(xscale)) {
+        if (length(x) > 1) xscale <- range(x) + c(-0.1, 0.1) * diff(range(x))
+        else xscale <- c(1 - 0.1, 1 + 0.1)
+      }
     } else {
-      x <- rep(0, length(cf))
+      x <- rep(0, NCOL(cf))
       if(is.null(xscale)) xscale <- c(-1, 1)
     }
-    if(is.null(yscale)) yscale <- range(cf) + c(-0.1, 0.1) * diff(range(cf))
+    if(is.null(yscale)) {
+      if (length(cf) > 1) yscale <- range(cf) + c(-0.1, 0.1) * diff(range(cf))
+      else yscale <- c(cf - 0.1, cf + 0.1)
+    }
 
     ## panel function for mpt plots in nodes
     rval <- function(node) {
@@ -451,7 +457,7 @@ node_mptplot <- function(mobobj, id = TRUE,
       id <- id_node(node)
 
       ## dependent variable setup
-      cfi <- cf[id,]
+      cfi <- setNames(cf[id,], colnames(cf))
 
       ## viewport setup
       top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
