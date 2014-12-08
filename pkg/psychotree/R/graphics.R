@@ -351,10 +351,10 @@ node_btplot <- function(mobobj, id = TRUE, worth = TRUE, names = TRUE,
     rval <- function(node) {
 
       ## node index
-      id <- id_node(node)
+      idn <- id_node(node)
     
       ## dependent variable setup
-      cfi <- cf[id,]
+      cfi <- cf[idn, ]
 
       ## viewport setup
       top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
@@ -362,21 +362,22 @@ node_btplot <- function(mobobj, id = TRUE, worth = TRUE, names = TRUE,
                                    heights = unit(c(1, 1), c("lines", "null"))),
                                width = unit(1, "npc"), 
                                height = unit(1, "npc") - unit(2, "lines"),
-                               name = paste("node_btplot", id, sep = ""))
+                               name = paste("node_btplot", idn, sep = ""))
       pushViewport(top_vp)
       grid.rect(gp = gpar(fill = "white", col = 0))
 
       ## main title
       top <- viewport(layout.pos.col = 2, layout.pos.row = 1)
       pushViewport(top)
-      mainlab <- paste(ifelse(id, paste("Node", id, "(n = "), ""),
+      mainlab <- paste(ifelse(id, paste("Node", idn, "(n = "), ""),
         	       info_node(node)$nobs, ifelse(id, ")", ""), sep = "")
       grid.text(mainlab)
       popViewport()
 
       ## actual plot  
       plot_vpi <- viewport(layout.pos.col = 2, layout.pos.row = 2,
-        xscale = xscale, yscale = yscale, name = paste("node_btplot", id, "plot", sep = ""))
+        xscale = xscale, yscale = yscale,
+        name = paste("node_btplot", idn, "plot", sep = ""))
       pushViewport(plot_vpi)
 
       grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = refcol), default.units = "native")
@@ -454,10 +455,10 @@ node_mptplot <- function(mobobj, id = TRUE,
     rval <- function(node) {
 
       ## node index
-      id <- id_node(node)
+      idn <- id_node(node)
 
       ## dependent variable setup
-      cfi <- setNames(cf[id,], colnames(cf))
+      cfi <- setNames(cf[idn, ], colnames(cf))
 
       ## viewport setup
       top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
@@ -466,22 +467,22 @@ node_mptplot <- function(mobobj, id = TRUE,
                          heights = unit(c(1, 1), c("lines", "null"))),
                          width = unit(1, "npc"),
                          height = unit(1, "npc") - unit(2, "lines"),
-                         name = paste("node_mptplot", id, sep = ""))
+                         name = paste("node_mptplot", idn, sep = ""))
       pushViewport(top_vp)
       grid.rect(gp = gpar(fill = "white", col = 0))
 
       ## main title
       top <- viewport(layout.pos.col = 2, layout.pos.row = 1)
       pushViewport(top)
-      mainlab <- paste(ifelse(id, paste("Node", id, "(n = "), ""),
+      mainlab <- paste(ifelse(id, paste("Node", idn, "(n = "), ""),
                        info_node(node)$nobs, ifelse(id, ")", ""), sep = "")
       grid.text(mainlab)
       popViewport()
 
       ## actual plot  
       plot_vpi <- viewport(layout.pos.col = 2, layout.pos.row = 2,
-          xscale = xscale, yscale = yscale,
-          name = paste("node_mptplot", id, "plot", sep = ""))
+        xscale = xscale, yscale = yscale,
+        name = paste("node_mptplot", idn, "plot", sep = ""))
       pushViewport(plot_vpi)
 
       grid.lines(xscale, c(cf_ref, cf_ref), gp = gpar(col = linecol),
