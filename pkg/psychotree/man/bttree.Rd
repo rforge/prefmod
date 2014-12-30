@@ -14,7 +14,7 @@
 }
 
 \usage{
-bttree(formula, data, na.action,
+bttree(formula, data, na.action, cluster,
   type = "loglin", ref = NULL, undecided = NULL, position = NULL, \dots)
 
 \method{predict}{bttree}(object, newdata = NULL,
@@ -29,6 +29,9 @@ bttree(formula, data, na.action,
   \item{data}{an optional data frame containing the variables in the model.}
   \item{na.action}{A function which indicates what should happen when the data
     contain \code{NA}s, defaulting to \code{\link[stats]{na.pass}}.}
+  \item{cluster}{optional vector (typically numeric or factor) with a
+    cluster ID to be employed for clustered covariances in the parameter
+    stability tests.}
   \item{type}{character indicating the type of auxiliary model in \code{bttree} and the
     type of predictions in the \code{predict} method, respectively. For the auxiliary
     model see \code{\link[psychotools]{btmodel}}. For the \code{predict} method, four options are
@@ -77,8 +80,8 @@ o <- options(digits = 4)
 data("Topmodel2007", package = "psychotree")
 
 ## BT tree
-tm_tree <- bttree(preference ~ gender + age + q1 + q2 + a3, data = Topmodel2007,
-  minsize = 5, ref = "Barbara")
+tm_tree <- bttree(preference ~ gender + age + q1 + q2 + q3,
+  data = Topmodel2007, minsize = 5, ref = "Barbara")
 plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
 
 ## parameter instability tests in root node

@@ -13,7 +13,7 @@
 }
 
 \usage{
-mpttree(formula, data, na.action,
+mpttree(formula, data, na.action, cluster,
   spec, treeid = NULL,
   optimargs = list(control = list(reltol = .Machine$double.eps^(1/1.2),
                                   maxit = 1000)), \dots)
@@ -30,6 +30,9 @@ mpttree(formula, data, na.action,
   \item{data}{an optional data frame containing the variables in the model.}
   \item{na.action}{a function which indicates what should happen when the data
     contain \code{NA}s, defaulting to \code{\link[stats]{na.pass}}.}
+  \item{cluster}{optional vector (typically numeric or factor) with a
+    cluster ID to be employed for clustered covariances in the parameter
+    stability tests.}
   \item{spec, treeid, optimargs}{arguments for the MPT model passed on to
     \code{\link[psychotools]{mptmodel}}.}
   \item{\dots}{arguments passed to \code{\link[partykit]{mob_control}}.}
@@ -76,7 +79,7 @@ sm_tree <- mpttree(y ~ sources + gender + age, data = SourceMonitoring,
 plot(sm_tree, index = c("D1", "D2", "d", "b", "g"))
 
 ## extract parameter estimates
-coef(sm_tree)  # FIX ME: logit = FALSE
+coef(sm_tree)
 
 ## parameter instability tests in root node
 library("strucchange")
@@ -86,8 +89,8 @@ sctest(sm_tree, node = 1)
 data("MemoryDeficits", package = "psychotools")
 
 ## MPT tree
-sr_tree <- mpttree(cbind(E1, E2, E3, E4) ~ trial + group, MemoryDeficits,
-  spec = mptspec("SR2"))
+sr_tree <- mpttree(cbind(E1, E2, E3, E4) ~ trial + group,
+  data = MemoryDeficits, cluster = ID, spec = mptspec("SR2"), alpha = 0.1)
 
 ## extract parameter estimates
 coef(sr_tree)

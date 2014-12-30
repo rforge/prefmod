@@ -1,5 +1,5 @@
 ## high-level convenience interface to mob()
-mpttree <- function(formula, data, na.action,
+mpttree <- function(formula, data, na.action, cluster,
   spec, treeid = NULL,
   optimargs = list(control = list(reltol = .Machine$double.eps^(1/1.2),
                                   maxit = 1000)),
@@ -11,7 +11,7 @@ mpttree <- function(formula, data, na.action,
   ## use dots for setting up mob_control
   control <- mob_control(ytype = "matrix", ...)
 
-  ## control options for btfit
+  ## control options for mptfit
   mptcontrol <- list(spec = spec, treeid = treeid, optimargs = optimargs)
 
   ## call mob
@@ -32,7 +32,7 @@ mpttree <- function(formula, data, na.action,
 
 ## glue code for calling mptmodel()
 mptfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL,
-  ..., estfun = FALSE, object = FALSE)
+  cluster = NULL, ..., estfun = FALSE, object = FALSE)
 {
   if(!(is.null(x) || NCOL(x) == 0L)) warning("x not used")
   if(!is.null(offset)) warning("offset not used")

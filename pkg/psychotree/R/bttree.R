@@ -1,5 +1,5 @@
 ## high-level convenience interface to mob()
-bttree <- function(formula, data, na.action,
+bttree <- function(formula, data, na.action, cluster,
   type = "loglin", ref = NULL, undecided = NULL, position = NULL, ...)
 {
   ## keep call
@@ -27,8 +27,8 @@ bttree <- function(formula, data, na.action,
 }
 
 ## glue code for calling btmodel()
-btfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL, ...,
-  estfun = FALSE, object = FALSE)
+btfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL,
+  cluster = NULL, ..., estfun = FALSE, object = FALSE)
 {
   if(!(is.null(x) || NCOL(x) == 0L)) warning("x not used")
   if(!is.null(offset)) warning("offset not used")
