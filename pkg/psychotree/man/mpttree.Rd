@@ -87,6 +87,7 @@ sctest(sm_tree, node = 1)
 
 ## storage and retrieval deficits in psychiatric patients
 data("MemoryDeficits", package = "psychotools")
+MemoryDeficits$trial <- ordered(MemoryDeficits$trial)
 
 ## MPT tree
 sr_tree <- mpttree(cbind(E1, E2, E3, E4) ~ trial + group,
