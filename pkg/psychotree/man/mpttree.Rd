@@ -13,8 +13,7 @@
 }
 
 \usage{
-mpttree(formula, data, na.action, cluster,
-  spec, treeid = NULL,
+mpttree(formula, data, na.action, cluster, spec, treeid = NULL,
   optimargs = list(control = list(reltol = .Machine$double.eps^(1/1.2),
                                   maxit = 1000)), \dots)
 }
@@ -42,8 +41,9 @@ mpttree(formula, data, na.action, cluster,
 }
 
 \details{
-  MPT tree models are an application of model-based recursive partitioning
-  (implemented in \code{\link[partykit]{mob}}) to MPT models (implemented in
+  MPT tree models (Wickelmaier & Zeileis, 2013) are an application of
+  model-based recursive partitioning (implemented in
+  \code{\link[partykit]{mob}}) to MPT models (implemented in
   \code{\link[psychotools]{mptmodel}}).
   
   Various methods are provided for \code{"mpttree"} objects, most of them
@@ -64,8 +64,7 @@ mpttree(formula, data, na.action, cluster,
   Psychology, August 4-7, Potsdam, Germany.
 }
 
-\seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{mptmodel}},
-  the \pkg{mpt} package.}
+\seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{mptmodel}}.}
 
 \examples{
 o <- options(digits = 4)
