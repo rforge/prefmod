@@ -7,7 +7,7 @@ Authors@R: c(person(given = "Achim", family = "Zeileis", role = c("aut", "cre"),
              person(given = "Florian", family = "Wickelmaier", role = "aut"),
              person(given = "Basil", family = "Abou El-Komboz", role = "aut"),
              person(given = "Julia", family = "Kopf", role = "aut"))
-Depends: R (>= 2.15.0), partykit (>= 0.2-0), psychotools (>= 0.3-0)
+Depends: R (>= 2.15.0), partykit (>= 0.8-4), psychotools (>= 0.3-2)
 Suggests: colorspace, strucchange
 Imports: graphics, grid, stats, Formula
 Description: Recursive partitioning based on psychometric models,
