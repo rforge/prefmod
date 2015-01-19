@@ -1,3 +1,11 @@
+Changes in Version 0.14-1
+
+  o New function mpttree() and visualization function for model-based
+    recursive partitioning of multinomial processing tree (MPT) models. These
+    functions are somewhat experimental, and their user interface might change
+    in future releases.
+
+
 Changes in Version 0.14-0
 
   o Internals of package psychotree completely reorganized to employ
