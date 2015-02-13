@@ -1,5 +1,5 @@
 
-R version 3.1.1 (2014-07-10) -- "Sock it to Me"
+R version 3.1.2 (2014-10-31) -- "Pumpkin Helmet"
 Copyright (C) 2014 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -21,13 +21,6 @@ Type 'q()' to quit R.
 > library('psychotree')
 Loading required package: partykit
 Loading required package: grid
-
-Attaching package: 'partykit'
-
-The following object is masked from 'package:grid':
-
-    depth
-
 Loading required package: psychotools
 > 
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
@@ -235,7 +228,6 @@ gender   FALSE TRUE
 > 
 > ## BT tree
 > tm_tree <- bttree(preference ~ ., data = Topmodel2007, minsize = 5, ref = "Barbara")
-Loading required package: Formula
 > plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
 > 
 > ## parameter instability tests in root node
@@ -250,9 +242,9 @@ The following objects are masked from 'package:base':
 
 Loading required package: sandwich
 > sctest(tm_tree, node = 1)
-          preference   gender       age      q1        q2     q3
-statistic   22.07202 17.08798 3.236e+01 12.6320 19.839222 6.7586
-p.value      0.07726  0.02574 9.499e-04  0.1519  0.008011 0.8061
+            gender       age      q1       q2     q3
+statistic 17.08798 3.236e+01 12.6320 19.83922 6.7586
+p.value    0.02149 7.915e-04  0.1283  0.00668 0.7452
 > 
 > ## worth parameters in terminal nodes
 > itempar(tm_tree)
@@ -300,8 +292,77 @@ Barcelona : Stockholm 172 41  90    0
 > 
 > cleanEx()
 
-detaching 'package:strucchange', 'package:sandwich', 'package:zoo',
-  'package:Formula'
+detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
+
+> nameEx("mpttree")
+> ### * mpttree
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: mpttree
+> ### Title: MPT Tree Models
+> ### Aliases: mpttree plot.mpttree print.mpttree predict.mpttree
+> ### Keywords: tree
+> 
+> ### ** Examples
+> 
+> o <- options(digits = 4)
+> 
+> ## Source Monitoring data
+> data("SourceMonitoring", package="psychotools")
+> 
+> ## MPT tree
+> sm_tree <- mpttree(y ~ sources + gender + age, data = SourceMonitoring,
++   spec = mptspec("SourceMon", .restr = list(d1 = d, d2 = d)))
+> plot(sm_tree, index = c("D1", "D2", "d", "b", "g"))
+> 
+> ## extract parameter estimates
+> coef(sm_tree)
+      D1      d      g      b     D2
+3 0.6245 0.4417 0.6285 0.1178 0.7420
+4 0.5373 0.2643 0.5144 0.2045 0.7179
+5 0.6349 0.4456 0.4696 0.1948 0.6120
+> 
+> ## parameter instability tests in root node
+> library("strucchange")
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following objects are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: sandwich
+> sctest(sm_tree, node = 1)
+            sources gender     age
+statistic 2.848e+01 9.0034 16.9298
+p.value   8.805e-05 0.2925  0.2489
+> 
+> ## storage and retrieval deficits in psychiatric patients
+> data("MemoryDeficits", package = "psychotools")
+> MemoryDeficits$trial <- ordered(MemoryDeficits$trial)
+> 
+> ## MPT tree
+> sr_tree <- mpttree(cbind(E1, E2, E3, E4) ~ trial + group,
++   data = MemoryDeficits, cluster = ID, spec = mptspec("SR2"), alpha = 0.1)
+> 
+> ## extract parameter estimates
+> coef(sr_tree)
+       c      r      u
+3 0.4611 0.4730 0.4239
+4 0.4508 0.2438 0.3248
+7 0.3738 0.2733 0.3090
+8 0.4342 0.5557 0.4534
+9 0.5978 0.8345 0.5842
+> 
+> options(digits = o$digits)
+> 
+> 
+> 
+> cleanEx()
+
+detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
 
 > nameEx("pctree")
 > ### * pctree
@@ -329,7 +390,6 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo',
 > 
 > ## fit partial credit tree model
 > pct <- pctree(s2 ~ anger + gender, data = VerbalAggression)
-Loading required package: Formula
 > 
 > ## print tree (with and without parameters)
 > print(pct)
@@ -478,8 +538,7 @@ p.value    0.9578 1.746e-05
 > 
 > cleanEx()
 
-detaching 'package:strucchange', 'package:sandwich', 'package:zoo',
-  'package:Formula'
+detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
 
 > nameEx("raschtree")
 > ### * raschtree
@@ -501,7 +560,6 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo',
 > 
 > ## fit Rasch tree model
 > rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
-Loading required package: Formula
 > plot(rt)
 > 
 > ## extract item parameters
@@ -556,8 +614,7 @@ p.value   3.613e-04     NA      0.926
 > 
 > cleanEx()
 
-detaching 'package:strucchange', 'package:sandwich', 'package:zoo',
-  'package:Formula'
+detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
 
 > nameEx("rstree")
 > ### * rstree
@@ -585,7 +642,6 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo',
 > 
 > ## fit rating scale tree model for the first other-to-blame situation
 > rst <- rstree(s1 ~ anger + gender, data = VerbalAggression)
-Loading required package: Formula
 > 
 > ## print tree (with and without parameters)
 > print(rst)
@@ -752,7 +808,7 @@ p.value    0.01672     NA
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.696 0.048 10.772 0 0 
+Time elapsed:  13.924 0.052 13.996 0 0 
 > grDevices::dev.off()
 null device 
           1 

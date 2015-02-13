@@ -2,13 +2,6 @@
 > library("psychotree")
 Loading required package: partykit
 Loading required package: grid
-
-Attaching package: 'partykit'
-
-The following object is masked from 'package:grid':
-
-    depth
-
 Loading required package: psychotools
 
 > data("SPISA", package = "psychotree")
@@ -16,7 +9,6 @@ Loading required package: psychotools
 > if (file.exists("raschtree-spisa.rda")) load("raschtree-spisa.rda") else {
 +     my_first_raschtree <- raschtree(spisa ~ age + gender + semester + 
  .... [TRUNCATED] 
-Loading required package: Formula
 
 > file.remove("raschtree-spisa.rda")
 [1] TRUE
@@ -65,4 +57,4 @@ Loading required package: Formula
  *** Run successfully completed ***
 > proc.time()
    user  system elapsed 
- 11.276   0.092  11.397 
+ 12.384   0.152  12.548 

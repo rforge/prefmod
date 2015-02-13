@@ -1,13 +1,13 @@
 Package: psychotree
 Title: Recursive Partitioning Based on Psychometric Models
-Version: 0.14-1
-Date: 2015-01-19
+Version: 0.15-0
+Date: 2015-01-20
 Authors@R: c(person(given = "Achim", family = "Zeileis", role = c("aut", "cre"), email = "Achim.Zeileis@R-project.org"),
              person(given = "Carolin", family = "Strobl", role = "aut", email = "Carolin.Strobl@psychologie.uzh.ch"),
              person(given = "Florian", family = "Wickelmaier", role = "aut"),
              person(given = "Basil", family = "Abou El-Komboz", role = "aut"),
              person(given = "Julia", family = "Kopf", role = "aut"))
-Depends: R (>= 2.15.0), partykit (>= 0.8-4), psychotools (>= 0.3-2)
+Depends: R (>= 2.15.0), partykit (>= 0.8-4), psychotools (>= 0.4-0)
 Suggests: colorspace, strucchange
 Imports: graphics, grid, stats, Formula
 Description: Recursive partitioning based on psychometric models,

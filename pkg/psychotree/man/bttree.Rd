@@ -80,8 +80,7 @@ o <- options(digits = 4)
 data("Topmodel2007", package = "psychotree")
 
 ## BT tree
-tm_tree <- bttree(preference ~ gender + age + q1 + q2 + q3,
-  data = Topmodel2007, minsize = 5, ref = "Barbara")
+tm_tree <- bttree(preference ~ ., data = Topmodel2007, minsize = 5, ref = "Barbara")
 plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
 
 ## parameter instability tests in root node
