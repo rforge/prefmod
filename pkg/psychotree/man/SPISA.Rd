@@ -151,7 +151,7 @@ A data frame containing 1075 observations on 6 variables.
 }
 
 \references{
-  Strobl C, Kopf J, Zeileis A (2014). Rasch Trees:
+  Strobl C, Kopf J, Zeileis A (2015). Rasch Trees:
   A New Method for Detecting Differential Item Functioning in the Rasch
   Model. \emph{Psychometrika}, forthcoming. doi:10.1007/s11336-013-9388-3
 

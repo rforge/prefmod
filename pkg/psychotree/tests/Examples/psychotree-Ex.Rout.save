@@ -74,16 +74,17 @@ Stockholm            finance    other
 > 
 > ### Name: DIFSim
 > ### Title: Artificial Data with Differential Item Functioning
-> ### Aliases: DIFSim
+> ### Aliases: DIFSim DIFSimPC
 > ### Keywords: datasets
 > 
 > ### ** Examples
 > 
 > ## data
 > data("DIFSim", package = "psychotree")
+> data("DIFSimPC", package = "psychotree")
 > 
 > ## summary of covariates
-> summary(DIFSim[,-1])
+> summary(DIFSim[, -1])
       age           gender    motivation
  Min.   :16.00   male  :109   1:23      
  1st Qu.:31.00   female: 91   2:41      
@@ -91,9 +92,22 @@ Stockholm            finance    other
  Mean   :45.84                4:35      
  3rd Qu.:60.00                5:41      
  Max.   :74.00                6:15      
+> summary(DIFSimPC[, -1])
+      age           gender    motivation
+ Min.   :20.00   male  :239   1:125     
+ 1st Qu.:35.00   female:261   2: 88     
+ Median :49.00                3: 96     
+ Mean   :49.69                4: 90     
+ 3rd Qu.:64.00                5:101     
+ Max.   :80.00                          
+> 
+> ## empirical frequencies of responses
+> plot(DIFSim$resp)
+> plot(DIFSimPC$resp)
 > 
 > ## histogram of raw scores
-> hist(rowSums(DIFSim$resp), breaks = 0:19 + 0.5)
+> hist(rowSums(DIFSim$resp), breaks = 0:20 - 0.5)
+> hist(rowSums(DIFSimPC$resp), breaks = 0:17 - 0.5)
 > 
 > 
 > 
@@ -536,6 +550,7 @@ p.value    0.9578 1.746e-05
 > 
 > 
 > 
+> 
 > cleanEx()
 
 detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
@@ -808,7 +823,7 @@ p.value    0.01672     NA
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  13.924 0.052 13.996 0 0 
+Time elapsed:  14.416 0.068 14.636 0 0 
 > grDevices::dev.off()
 null device 
           1 

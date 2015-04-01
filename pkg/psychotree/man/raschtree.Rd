@@ -71,14 +71,14 @@ raschtree(formula, data, na.action,
   by default employs the \code{\link{node_profileplot}} panel-generating function and
   the \code{\link{node_regionplot}} panel-generating function is provided as an alternative.
 
-  Rasch tree models are introduced in Strobl et al. (2014), whose analysis
+  Rasch tree models are introduced in Strobl et al. (2015), whose analysis
   for the \code{\link{SPISA}} data is replicated in
   \code{vignette("raschtree", package = "psychotree")}. Their illustration
   employing artificial data is replicated below.
 }
 
 \references{
-  Strobl C, Kopf J, Zeileis A (2014). Rasch Trees:
+  Strobl C, Kopf J, Zeileis A (2015). Rasch Trees:
   A New Method for Detecting Differential Item Functioning in the Rasch
   Model. \emph{Psychometrika}, forthcoming. doi:10.1007/s11336-013-9388-3
 }

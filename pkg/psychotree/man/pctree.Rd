@@ -127,6 +127,13 @@ library("strucchange")
 sctest(pct, node = 1)
 
 options(digits = o$digits)
+
+\donttest{
+## partial credit tree on artificial data from Abou El-Komboz et al. (2014)
+data("DIFSimPC", package = "psychotree")
+pct2 <- pctree(resp ~ gender + age + motivation, data = DIFSimPC)
+plot(pct2, ylim = c(-4.5, 4.5), names = paste("I", 1:8))
+}
 }
 
 \keyword{tree}
