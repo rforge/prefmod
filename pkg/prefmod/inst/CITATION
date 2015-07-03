@@ -25,7 +25,7 @@ bibentry(
   header  = "Package Citation",
   key     = "prefmod.package",
   bibtype = "Manual",
-  title   = "{{prefmod}: Utilities to fit paired comparison models for preferences}",
+  title   = "{{prefmod}: Utilities to Fit Paired Comparison Models for Preferences}",
   author  = c(person("Reinhold", "Hatzinger"), person(c("Marco", "Johannes"), "Maier")),
   year    = year,
   note    = paste0("{", note, "}"),

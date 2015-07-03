@@ -36,7 +36,11 @@ This matrix is obtained from \code{llbt.worth} or \code{patt.worth} and is an ob
   values for all objects (as hexadecimal strings in the form \code{"#rrggbb"}), e.g., for blue \code{"#0000FF"}).
   These are usually set up using standard colour palettes (see \code{rainbow} or, e.g., the
   \pkg{RColorBrewer} package (see Examples below).
- }
+	
+	If you are still using \code{\link{plotworth}()}, please update your code!
+	As of now, the routine tries to catch errors by setting \code{class(worthmat) <- "wmat"} and passing it to \code{plot.wmat(x = worthmat, ...)}.
+  The function \code{plotworth()} is already considered defunct and will be removed in subsequent versions.
+}
 \author{Reinhold Hatzinger}
 \seealso{\code{\link{patt.worth}}}
 \examples{

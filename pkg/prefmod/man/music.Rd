@@ -41,7 +41,8 @@
   Dataset: General Social Survey 1993 [United States]\cr%
   CPANDA Identification Number: a00006\cr%
   Cultural Policy and the Arts National Data Archive\cr%
-  \url{http://www.cpanda.org/cpanda/getDDI.xq?studyID=a00006#dataDscr}\cr%
+  %http://www.cpanda.org/cpanda/getDDI.xq?studyID=a00006#dataDscr
+	\url{http://www.cpanda.org/data/profiles/gss.html}\cr%
 }
 \examples{
 summary(music)

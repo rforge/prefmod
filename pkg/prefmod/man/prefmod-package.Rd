@@ -3,7 +3,7 @@
 \alias{prefmod-package}
 \alias{prefmod}
 \docType{package}
-\title{\pkg{prefmod}: Utilities to fit paired comparison models for preferences}
+\title{\pkg{prefmod}: Utilities to Fit Paired Comparison Models for Preferences}
 \description{
 Generates design matrix for analysing real paired comparisons and derived
 paired comparison data (Likert type items / ratings or rankings) using a

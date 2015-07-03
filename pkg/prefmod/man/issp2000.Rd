@@ -32,16 +32,20 @@ were asked about their perception of environmental dangers.
     \item{\code{EDU}}{education: (1) \emph{below A-level/matrice}, (2) \emph{A-level/matrice or higher} }
   }
 }
-\source{
-    Dataset: International Social Survey Programme 2000: Environment II (ISSP 2000)\cr
-    Identification Number: 3440\cr
-    Central Archive for Empirical Social Research\cr
-   \url{http://www.gesis.org/en/data_service/issp/index.htm}\cr
-   Usage regulations:\cr
-   \url{http://www.gesis.org/en/data_service/order/usage_regulations.htm}
+\source{%
+    Dataset: International Social Survey Programme 2000: Environment II (ISSP 2000)\cr%
+    Identification Number: 3440\cr%
+    Central Archive for Empirical Social Research\cr%
+		%http://www.gesis.org/en/data_service/issp/index.htm
+    \url{http://www.gesis.org/en/issp/issp-modules-profiles/environment/2000/}\cr%
+    Usage regulations:\cr%
+    %http://www.gesis.org/en/data_service/order/usage_regulations.htm
+	  \url{http://www.gesis.org/en/services/data-analysis/data-archive-service/usage-regulations/}
 }
-\references{Dittrich, R,, Francis, B.J., Hatzinger R., Katzenbeisser, W. (2007),
-A Paired Comparison Approach for the Analysis of Sets of Likert Scale Responses. \emph{Statistical
-Modelling}, Vol. 7, No. 1, 3-28. }
+\references{%
+	Dittrich, R., Francis, B.J., Hatzinger R., Katzenbeisser, W. (2007).
+	A Paired Comparison Approach for the Analysis of Sets of Likert Scale Responses.
+	\emph{Statistical Modelling}, Vol. 7, No. 1, 3--28.
+}
 \examples{str(issp2000)}
 \keyword{datasets}
