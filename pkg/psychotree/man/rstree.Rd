@@ -7,10 +7,10 @@
 \alias{itempar.rstree}
 \alias{threshpar.rstree}
 
-\title{Rating Scale Tree Models}
+\title{Rating Scale Trees}
 
 \description{
-  Recursive partitioning based on rating scale models.
+  Recursive partitioning (also known as trees) based on rating scale models.
 }
 
 \usage{
@@ -62,7 +62,7 @@ rstree(formula, data, na.action, reltol = 1e-10,
 
 
 \details{
-  Rating scale tree models are an application of model-based recursive partitioning
+  Rating scale trees are an application of model-based recursive partitioning
   (implemented in \code{\link[partykit]{mob}}) to rating scale models
   (implemented in \code{\link[psychotools]{rsmodel}}).
   

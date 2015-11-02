@@ -7,10 +7,10 @@
 \alias{itempar.pctree}
 \alias{threshpar.pctree}
 
-\title{Partial Credit Tree Models}
+\title{Partial Credit Trees}
 
 \description{
-  Recursive partitioning based on partial credit models.
+  Recursive partitioning (also known as trees) based on partial credit models.
 }
 
 \usage{
@@ -62,7 +62,7 @@ pctree(formula, data, na.action, nullcats = c("keep", "downcode", "ignore"),
 
 
 \details{
-  Partial credit tree models are an application of model-based recursive partitioning
+  Partial credit trees are an application of model-based recursive partitioning
   (implemented in \code{\link[partykit]{mob}}) to partial credit models
   (implemented in \code{\link[psychotools]{pcmodel}}).
   

@@ -6,10 +6,10 @@
 \alias{print.mpttree}
 \alias{predict.mpttree}
 
-\title{MPT Tree Models}
+\title{MPT Trees}
 
 \description{
-  Recursive partitioning based on multinomial processing tree (MPT) models.
+  Recursive partitioning (also known as trees) based on multinomial processing tree (MPT) models.
 }
 
 \usage{
@@ -41,7 +41,7 @@ mpttree(formula, data, na.action, cluster, spec, treeid = NULL,
 }
 
 \details{
-  MPT tree models (Wickelmaier & Zeileis, 2013) are an application of
+  MPT trees (Wickelmaier & Zeileis, 2013) are an application of
   model-based recursive partitioning (implemented in
   \code{\link[partykit]{mob}}) to MPT models (implemented in
   \code{\link[psychotools]{mptmodel}}).
@@ -58,8 +58,8 @@ mpttree(formula, data, na.action, cluster, spec, treeid = NULL,
 }
 
 \references{ 
-  Wickelmaier, F., & Zeileis, A. (2013). Investigating the effects of subject
-  covariates in multinomial processing tree models by recursive partitioning.
+  Wickelmaier F, Zeileis A (2013). Investigating the Effects of Subject
+  Covariates in Multinomial Processing Tree Models by Recursive Partitioning.
   Presented at the 46th Annual Meeting of the Society of Mathematical
   Psychology, August 4-7, Potsdam, Germany.
 }

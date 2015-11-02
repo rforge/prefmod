@@ -6,10 +6,10 @@
 \alias{predict.raschtree}
 \alias{itempar.raschtree}
 
-\title{Rasch Tree Models}
+\title{Rasch Trees}
 
 \description{
-  Recursive partitioning based on Rasch models.
+  Recursive partitioning (also known as trees) based on Rasch models.
 }
 
 \usage{
@@ -58,7 +58,7 @@ raschtree(formula, data, na.action,
 }
 
 \details{
-  Rasch tree models are an application of model-based recursive partitioning
+  Rasch trees are an application of model-based recursive partitioning
   (implemented in \code{\link[partykit]{mob}}) to Rasch models
   (implemented in \code{\link[psychotools]{raschmodel}}).
   

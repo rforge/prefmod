@@ -7,10 +7,10 @@
 \alias{predict.bttree}
 \alias{itempar.bttree}
 
-\title{Bradley-Terry Tree Models}
+\title{Bradley-Terry Trees}
 
 \description{
-  Recursive partitioning based on Bradley-Terry models.
+  Recursive partitioning (also known as trees) based on Bradley-Terry models.
 }
 
 \usage{
@@ -46,7 +46,7 @@ bttree(formula, data, na.action, cluster,
 }
 
 \details{
-  Bradley-Terry tree models are an application of model-based recursive partitioning
+  Bradley-Terry trees are an application of model-based recursive partitioning
   (implemented in \code{\link[partykit]{mob}}) to Bradley-Terry models for
   paired comparison data (implemented in \code{\link[psychotools]{btmodel}}).
   Details about the underlying theory and further explanations of the
