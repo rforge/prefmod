@@ -62,8 +62,7 @@ A data frame containing 3584 observations on 10 variables.
 
 \source{
   Latent GOLD Sample Data Sets Website.
-
-  \url{http://www.statisticalinnovations.com/products/choice_datasets.html}
+  %\url{http://www.statisticalinnovations.com/products/choice_datasets.html}
 }
 
 \references{

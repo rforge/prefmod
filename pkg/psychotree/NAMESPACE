@@ -12,6 +12,7 @@ importFrom("grid",
   "grid.rect", "grid.text", "grid.xaxis", "grid.yaxis",
   "popViewport", "pushViewport", "upViewport", "viewport"
 )
+importFrom("grDevices", "extendrange", "gray.colors")
 
 export(
   ## trees

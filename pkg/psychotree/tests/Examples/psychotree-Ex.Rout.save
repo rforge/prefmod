@@ -1,6 +1,6 @@
 
-R version 3.1.2 (2014-10-31) -- "Pumpkin Helmet"
-Copyright (C) 2014 The R Foundation for Statistical Computing
+R version 3.3.1 (2016-06-21) -- "Bug in Your Hair"
+Copyright (C) 2016 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -229,7 +229,7 @@ gender   FALSE TRUE
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: bttree
-> ### Title: Bradley-Terry Tree Models
+> ### Title: Bradley-Terry Trees
 > ### Aliases: bttree plot.bttree print.bttree predict.bttree itempar.bttree
 > ### Keywords: tree
 > 
@@ -314,7 +314,7 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: mpttree
-> ### Title: MPT Tree Models
+> ### Title: MPT Trees
 > ### Aliases: mpttree plot.mpttree print.mpttree predict.mpttree
 > ### Keywords: tree
 > 
@@ -384,7 +384,7 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: pctree
-> ### Title: Partial Credit Tree Models
+> ### Title: Partial Credit Trees
 > ### Aliases: pctree plot.pctree print.pctree predict.pctree itempar.pctree
 > ###   threshpar.pctree
 > ### Keywords: tree
@@ -561,7 +561,7 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: raschtree
-> ### Title: Rasch Tree Models
+> ### Title: Rasch Trees
 > ### Aliases: raschtree print.raschtree plot.raschtree predict.raschtree
 > ###   itempar.raschtree
 > ### Keywords: tree
@@ -637,7 +637,7 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: rstree
-> ### Title: Rating Scale Tree Models
+> ### Title: Rating Scale Trees
 > ### Aliases: rstree plot.rstree print.rstree predict.rstree itempar.rstree
 > ###   threshpar.rstree
 > ### Keywords: tree
@@ -823,7 +823,7 @@ p.value    0.01672     NA
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  14.416 0.068 14.636 0 0 
+Time elapsed:  4.296 0.048 4.35 0 0 
 > grDevices::dev.off()
 null device 
           1 

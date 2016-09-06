@@ -1,3 +1,13 @@
+Changes in Version 0.15-1
+
+  o The recently added mpttree() function in now accompanied by a working
+    paper, see citation("psychotree") or ?mpttree for details.
+
+  o Properly imported grDevices in NAMESPACE.
+
+  o Basil Abou El-Komboz changed his name to Basil Komboz.
+
+
 Changes in Version 0.15-0
 
   o New function mpttree() and visualization function for model-based
