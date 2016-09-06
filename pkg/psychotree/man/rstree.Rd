@@ -84,11 +84,9 @@ rstree(formula, data, na.action, reltol = 1e-10,
 }
 
 \references{
-  Abou El-Komboz B, Zeileis A, Strobl C (2014). Detecting
-  Differential Item and Step Functioning with Rating Scale and Partial
-  Credit Trees. Technical Report 152. Department of Statistics,
-  Ludwig-Maximilians-Universitaet Muenchen.
-  \url{http://epub.ub.uni-muenchen.de/17984/}
+Komboz B, Zeileis A, Strobl C (2016).
+  Tree-Based Global Model Tests for Polytomous Rasch Models.
+  \emph{Educational and Psychological Measurement}, forthcoming.
 }
 
 \value{

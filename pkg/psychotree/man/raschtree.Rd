@@ -78,9 +78,10 @@ raschtree(formula, data, na.action,
 }
 
 \references{
-  Strobl C, Kopf J, Zeileis A (2015). Rasch Trees:
-  A New Method for Detecting Differential Item Functioning in the Rasch
-  Model. \emph{Psychometrika}, forthcoming. doi:10.1007/s11336-013-9388-3
+Strobl C, Kopf J, Zeileis A (2015). Rasch Trees: A New Method for Detecting
+  Differential Item Functioning in the Rasch Model.
+  \emph{Psychometrika}, \bold{80}(2), 289--316.
+  \doi{10.1007/s11336-013-9388-3}
 }
 
 \value{

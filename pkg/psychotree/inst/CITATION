@@ -9,7 +9,7 @@ citEntry(entry = "Article",
   year         = "2011",
   volume       = "36",
   number       = "2",
-  pages        = "135-153",
+  pages        = "135--153",
   doi          = "10.3102/1076998609359791",
 
   textVersion  =
@@ -27,37 +27,34 @@ citEntry(entry = "Article",
  		   as.person("Julia Kopf"),
 		   as.person("Achim Zeileis")),
   journal      = "Psychometrika",
-  year         = "2014",
-  note         = "Forthcoming",
+  year         = "2015",
+  volume       = "80",
+  number       = "2",
+  pages        = "289--316",
   doi	       = "10.1007/s11336-013-9388-3",
   
   textVersion  = 
-  paste("Carolin Strobl, Julia Kopf, Achim Zeileis (2014).", 
+  paste("Carolin Strobl, Julia Kopf, Achim Zeileis (2015).", 
 	"Rasch Trees: A New Method for Detecting Differential Item Functioning in the Rasch Model.",
- 	"Psychometrika, forthcoming.",
+ 	"Psychometrika, 80(2), 289-316.",
 	"doi:10.1007/s11336-013-9388-3"),
 	
   header       = "If you use Rasch trees, raschtree(), please cite:"
 )
 
-citEntry(entry = "TechReport",
-  title        = "Detecting Differential Item and Step Functioning with Rating Scale and Partial Credit Trees",
-  author       = personList(person("Basil", "Abou El-Komboz"), 
+citEntry(entry = "Article",
+  title        = "Tree-Based Global Model Tests for Polytomous {R}asch Models",
+  author       = personList(as.person("Basil Komboz"), 
  		   as.person("Achim Zeileis"),
 		   as.person("Carolin Strobl")),
-  institution  = "Department of Statistics, Ludwig-Maximilians-Universit\\\"at M\\\"unchen",
-  year         = "2014",
-  type         = "Technical Report",
-  number       = "152",
-  month        = "January",
-  url	       = "http://epub.ub.uni-muenchen.de/17984/",
+  journal      = "Educational and Psychological Measurement",
+  year         = "2016",
+  note         = "Forthcoming",
   
   textVersion  = 
-  paste("Basil Abou El-Komboz, Achim Zeileis, Carolin Strobl (2014).", 
-	"Detecting Differential Item and Step Functioning with Rating Scale and Partial Credit Trees.",
- 	"Technical Report 152.",
- 	"Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen.",
-	"URL http://epub.ub.uni-muenchen.de/17984/"),
+  paste("Basil Komboz, Achim Zeileis, Carolin Strobl (2016).", 
+	"Tree-Based Global Model Tests for Polytomous Rasch Models.",
+ 	"Educational and Psychological Measurement, forthcoming."),
 	
   header       = "If you use rating scale or partial credit trees, rstree()/pctree(), please cite:"
 )
@@ -69,16 +66,16 @@ citEntry(entry = "TechReport",
   institution  = "Working Papers in Economics and Statistics, Research Platform Empirical and Experimental Economics, Universit\\\"at Innsbruck",
   year         = "2016",
   type         = "Working Paper",
-  number       = "2016-25",
+  number       = "2016-26",
   month        = "September",
-  url	       = "http://EconPapers.RePEc.org/RePEc:inn:wpaper:2016-25",
+  url	       = "http://EconPapers.RePEc.org/RePEc:inn:wpaper:2016-26",
   
   textVersion  = 
   paste("Florian Wickelmaier, Achim Zeileis (2016).", 
 	"Using Recursive Partitioning to Account for Parameter Heterogeneity in Multinomial Processing Tree Models.",
- 	"Working Paper 2016-25.",
+ 	"Working Paper 2016-26.",
         "Working Papers in Economics and Statistics, Research Platform Empirical and Experimental Economics, Universitaet Innsbruck.",
-	"URL http://EconPapers.RePEc.org/RePEc:inn:wpaper:2016-25"),
+	"URL http://EconPapers.RePEc.org/RePEc:inn:wpaper:2016-26"),
 	
   header       = "If you use MPT trees, mpttree(), please cite:"
 )

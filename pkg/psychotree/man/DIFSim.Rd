@@ -27,21 +27,20 @@ Two data frames containing 200 and 500 observations, respectively, on 4 variable
 
 \details{  
   The data are employed for illustrations in Strobl et al. (2015)
-  and Abou El-Komboz et al. (2014). See the manual pages for
+  and Komboz et al. (2016). See the manual pages for
   \code{\link{raschtree}} and \code{\link{pctree}} for fitting the
   tree models..
 }
 
 \references{
-  Abou El-Komboz B, Zeileis A, Strobl C (2014). Detecting
-  Differential Item and Step Functioning with Rating Scale and Partial
-  Credit Trees. Technical Report 152. Department of Statistics,
-  Ludwig-Maximilians-Universitaet Muenchen.
-  \url{http://epub.ub.uni-muenchen.de/17984/}
+Komboz B, Zeileis A, Strobl C (2016).
+  Tree-Based Global Model Tests for Polytomous Rasch Models.
+  \emph{Educational and Psychological Measurement}, forthcoming.
 
-  Strobl C, Kopf J, Zeileis A (2015). Rasch Trees:
-  A New Method for Detecting Differential Item Functioning in the Rasch
-  Model. \emph{Psychometrika}, forthcoming. doi:10.1007/s11336-013-9388-3
+Strobl C, Kopf J, Zeileis A (2015). Rasch Trees: A New Method for Detecting
+  Differential Item Functioning in the Rasch Model.
+  \emph{Psychometrika}, \bold{80}(2), 289--316.
+  \doi{10.1007/s11336-013-9388-3}
 }
 
 \seealso{\code{\link{raschtree}}, \code{\link{pctree}}}

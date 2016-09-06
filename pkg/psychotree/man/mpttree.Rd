@@ -6,6 +6,8 @@
 \alias{print.mpttree}
 \alias{predict.mpttree}
 
+\encoding{latin1}
+
 \title{MPT Trees}
 
 \description{
@@ -17,9 +19,6 @@ mpttree(formula, data, na.action, cluster, spec, treeid = NULL,
   optimargs = list(control = list(reltol = .Machine$double.eps^(1/1.2),
                                   maxit = 1000)), \dots)
 }
-
-% \method{predict}{bttree}(object, newdata = NULL,
-%   type = c("worth", "rank", "best", "node"), \dots)
 
 \arguments{
   \item{formula}{a symbolic description of the model to be fit. This should be
@@ -35,13 +34,10 @@ mpttree(formula, data, na.action, cluster, spec, treeid = NULL,
   \item{spec, treeid, optimargs}{arguments for the MPT model passed on to
     \code{\link[psychotools]{mptmodel}}.}
   \item{\dots}{arguments passed to \code{\link[partykit]{mob_control}}.}
-% \item{object}{fitted model object of class \code{"bttree"}.}
-% \item{newdata}{optionally, a data frame in which to look for variables with
-%   which to predict. If omitted, the original observations are used.}
 }
 
 \details{
-  MPT trees (Wickelmaier & Zeileis, 2013) are an application of
+  MPT trees (Wickelmaier & Zeileis, 2016) are an application of
   model-based recursive partitioning (implemented in
   \code{\link[partykit]{mob}}) to MPT models (implemented in
   \code{\link[psychotools]{mptmodel}}).
@@ -58,10 +54,11 @@ mpttree(formula, data, na.action, cluster, spec, treeid = NULL,
 }
 
 \references{ 
-  Wickelmaier F, Zeileis A (2013). Investigating the Effects of Subject
-  Covariates in Multinomial Processing Tree Models by Recursive Partitioning.
-  Presented at the 46th Annual Meeting of the Society of Mathematical
-  Psychology, August 4-7, Potsdam, Germany.
+Wickelmaier F, Zeileis A (2016). \dQuote{Using Recursive Partitioning to Account
+  for Parameter Heterogeneity in Multinomial Processing Tree Models}.
+  Working Paper 2016-26. Working Papers in Economics and Statistics,
+  Research Platform Empirical and Experimental Economics, Universität Innsbruck.
+  \url{http://EconPapers.RePEc.org/RePEc:inn:wpaper:2016-26}
 }
 
 \seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{mptmodel}}.}
