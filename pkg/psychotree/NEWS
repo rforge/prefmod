@@ -1,6 +1,6 @@
 Changes in Version 0.15-1
 
-  o The recently added mpttree() function in now accompanied by a working
+  o The recently added mpttree() function is now accompanied by a working
     paper, see citation("psychotree") or ?mpttree for details.
 
   o Properly imported grDevices in NAMESPACE.
