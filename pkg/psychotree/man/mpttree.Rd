@@ -67,7 +67,7 @@ Wickelmaier F, Zeileis A (2016). \dQuote{Using Recursive Partitioning to Account
 o <- options(digits = 4)
 
 ## Source Monitoring data
-data("SourceMonitoring", package="psychotools")
+data("SourceMonitoring", package = "psychotools")
 
 ## MPT tree
 sm_tree <- mpttree(y ~ sources + gender + age, data = SourceMonitoring,
