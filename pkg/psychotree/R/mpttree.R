@@ -86,3 +86,17 @@ plot.mpttree <- function(x, terminal_panel = node_mptplot,
   partykit::plot.modelparty(x, terminal_panel = terminal_panel,
     tp_args = tp_args, tnex = tnex, drop_terminal = drop_terminal, ...)
 }
+
+## adapted from coef.modelparty() to allow for coef(..., logit = TRUE)
+coef.mpttree <- function(object, node = NULL, drop = TRUE, ...) 
+{
+  if (is.null(node)) 
+    node <- nodeids(object, terminal = TRUE)
+  cf <- do.call("rbind",
+                nodeapply(object, ids = node, FUN = function(n)
+                          coef(info_node(n)$object, ...)))
+  if (drop) 
+    drop(cf)
+  else cf
+}
+

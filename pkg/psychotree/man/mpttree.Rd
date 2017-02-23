@@ -2,6 +2,7 @@
 
 \alias{mpttree}
 
+\alias{coef.mpttree}
 \alias{plot.mpttree}
 \alias{print.mpttree}
 \alias{predict.mpttree}
