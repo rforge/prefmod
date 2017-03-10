@@ -39,9 +39,9 @@ mptfit <- function(y, x = NULL, start = NULL, weights = NULL, offset = NULL,
   rval <- mptmodel(y, weights = weights, ..., vcov = object)
   rval <- list(
     # coefficients = rval$coefficients,
-    coefficients = coef(rval),
+    coefficients = coef(rval, logit = FALSE),
     objfun = -rval$loglik,
-    estfun = if(estfun) estfun.mptmodel(rval) else NULL,
+    estfun = if(estfun) estfun.mptmodel(rval, logit = TRUE) else NULL,
     object = if(object) rval else NULL
   )
   return(rval)
