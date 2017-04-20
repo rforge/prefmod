@@ -1,7 +1,7 @@
 Package: psychotree
 Title: Recursive Partitioning Based on Psychometric Models
-Version: 0.15-1
-Date: 2017-02-23
+Version: 0.15-2
+Date: 2017-04-20
 Authors@R: c(person(given = "Achim", family = "Zeileis", role = c("aut", "cre"), email = "Achim.Zeileis@R-project.org"),
              person(given = "Carolin", family = "Strobl", role = "aut", email = "Carolin.Strobl@psychologie.uzh.ch"),
              person(given = "Florian", family = "Wickelmaier", role = "aut"),

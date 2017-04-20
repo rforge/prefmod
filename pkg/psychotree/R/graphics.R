@@ -271,7 +271,7 @@ node_regionplot <- function(mobobj, names = FALSE, abbreviate = TRUE, type = c("
     }
 
     ## add box and axis
-    grid.rect(name = paste(lab, "_plot-box", sep = ""))
+    grid.rect(name = paste(lab, "_plot-box", sep = ""), gp = gpar(fill = NA))
     grid.xaxis(at = (xi[-(m+1)] + 0.5), label = namesi, main = TRUE, name = paste(lab, "_xaxis-bottom", sep = ""))
     grid.yaxis(main = TRUE, name = paste(lab, "_yaxis-left", sep = ""))
     upViewport()

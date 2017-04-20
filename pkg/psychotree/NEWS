@@ -1,3 +1,9 @@
+Changes in Version 0.15-2
+
+  o node_regionplot() now also works correctly on devices with a default white
+    (rather than transparent) background such as png or jpeg.
+
+
 Changes in Version 0.15-1
 
   o The recently added mpttree() function is now accompanied by a working
