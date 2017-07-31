@@ -1,5 +1,9 @@
 Changes in Version 0.15-2
 
+  o The predict() method for "bttree" objects works again correctly for
+    type = "parameter" (previously called type = "worth") and type = "rank".
+    Thanks to Heather Turner for pointing out the problem.
+
   o node_regionplot() now also works correctly on devices with a default white
     (rather than transparent) background such as png or jpeg.
 

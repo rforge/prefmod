@@ -50,10 +50,11 @@ print.bttree <- function(x,
 }
 
 predict.bttree <- function(object, newdata = NULL,
-  type = c("worth", "rank", "best", "node"), ...)
+  type = c("parameter", "rank", "best", "node"), ...)
 {
   ## type of prediction
-  type <- match.arg(type)
+  type <- match.arg(type, c("parameter", "rank", "best", "node", "worth"))
+  if(type == "worth") type <- "parameter"
   
   ## nodes can be handled directly
   if(type == "node") return(partykit::predict.modelparty(object, newdata = newdata, type = "node", ...))
@@ -62,10 +63,10 @@ predict.bttree <- function(object, newdata = NULL,
   if(is.null(newdata)) newdata <- model.frame(object)
   
   pred <- switch(type,
-    "worth" = worth,
-    "rank" = function(obj, ...) rank(-worth(obj)),
+    "parameter" = function(obj, ...) rbind(itempar(obj)),
+    "rank" = function(obj, ...) rbind(rank(-itempar(obj))),
     "best" = function(obj, ...) {
-      wrth <- worth(obj)
+      wrth <- itempar(obj)
       factor(names(wrth)[which.max(wrth)], levels = names(wrth))
     }
   )

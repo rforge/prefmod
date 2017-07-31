@@ -18,7 +18,7 @@ bttree(formula, data, na.action, cluster,
   type = "loglin", ref = NULL, undecided = NULL, position = NULL, \dots)
 
 \method{predict}{bttree}(object, newdata = NULL,
-  type = c("worth", "rank", "best", "node"), \dots)
+  type = c("parameter", "rank", "best", "node"), \dots)
 }
 
 \arguments{
@@ -35,7 +35,7 @@ bttree(formula, data, na.action, cluster,
   \item{type}{character indicating the type of auxiliary model in \code{bttree} and the
     type of predictions in the \code{predict} method, respectively. For the auxiliary
     model see \code{\link[psychotools]{btmodel}}. For the \code{predict} method, four options are
-    available: the fitted \code{"worth"} for each alternative, the corresponding
+    available: the fitted worth/item \code{"parameter"} for each alternative, the corresponding
     \code{"rank"}, the \code{"best"} alternative or the predicted \code{"node"} number.}
   \item{ref, undecided, position}{arguments for the Bradley-Terry
     model passed on to \code{\link[psychotools]{btmodel}}.}
@@ -87,7 +87,7 @@ plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
 library("strucchange")
 sctest(tm_tree, node = 1)
 
-## worth parameters in terminal nodes
+## worth/item parameters in terminal nodes
 itempar(tm_tree)
 
 ## CEMS university choice data
