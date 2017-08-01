@@ -305,7 +305,7 @@ node_btplot <- function(mobobj, id = TRUE, worth = TRUE, names = TRUE,
     rownames(cf) <- node
 
     ## get one full model
-    mod <- apply_to_models(mobobj, node = 1L, FUN = NULL)
+    mod <- apply_to_models(mobobj, node = 1L, FUN = NULL, drop = TRUE)
 
     if(!worth) {
       if(is.character(ref) | is.numeric(ref)) {
