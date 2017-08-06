@@ -59,23 +59,20 @@ citEntry(entry = "Article",
   header       = "If you use rating scale or partial credit trees, rstree()/pctree(), please cite:"
 )
 
-citEntry(entry = "TechReport",
+citEntry(entry = "Article",
   title        = "Using Recursive Partitioning to Account for Parameter Heterogeneity in Multinomial Processing Tree Models",
   author       = personList(person("Florian", "Wickelmaier"), 
                    as.person("Achim Zeileis")),
-  institution  = "Working Papers in Economics and Statistics, Research Platform Empirical and Experimental Economics, Universit\\\"at Innsbruck",
-  year         = "2016",
-  type         = "Working Paper",
-  number       = "2016-26",
-  month        = "September",
-  url	       = "http://EconPapers.RePEc.org/RePEc:inn:wpaper:2016-26",
+  journal      = "Behavior Research Methods",
+  year         = "2017",
+  note         = "Forthcoming",
+  doi	       = "10.3758/s13428-017-0937-z",
   
   textVersion  = 
-  paste("Florian Wickelmaier, Achim Zeileis (2016).", 
+  paste("Florian Wickelmaier, Achim Zeileis (2017).", 
 	"Using Recursive Partitioning to Account for Parameter Heterogeneity in Multinomial Processing Tree Models.",
- 	"Working Paper 2016-26.",
-        "Working Papers in Economics and Statistics, Research Platform Empirical and Experimental Economics, Universitaet Innsbruck.",
-	"URL http://EconPapers.RePEc.org/RePEc:inn:wpaper:2016-26"),
+        "Behavior Research Methods, forthcoming.",
+	"doi:10.3758/s13428-017-0937-z"),
 	
   header       = "If you use MPT trees, mpttree(), please cite:"
 )

@@ -38,7 +38,7 @@ mpttree(formula, data, na.action, cluster, spec, treeid = NULL,
 }
 
 \details{
-  MPT trees (Wickelmaier & Zeileis, 2016) are an application of
+  MPT trees (Wickelmaier & Zeileis, 2017) are an application of
   model-based recursive partitioning (implemented in
   \code{\link[partykit]{mob}}) to MPT models (implemented in
   \code{\link[psychotools]{mptmodel}}).
@@ -55,11 +55,10 @@ mpttree(formula, data, na.action, cluster, spec, treeid = NULL,
 }
 
 \references{ 
-Wickelmaier F, Zeileis A (2016). \dQuote{Using Recursive Partitioning to Account
-  for Parameter Heterogeneity in Multinomial Processing Tree Models}.
-  Working Paper 2016-26. Working Papers in Economics and Statistics,
-  Research Platform Empirical and Experimental Economics, Universität Innsbruck.
-  \url{http://EconPapers.RePEc.org/RePEc:inn:wpaper:2016-26}
+Wickelmaier F, Zeileis A (2017). Using Recursive Partitioning to Account
+  for Parameter Heterogeneity in Multinomial Processing Tree Models.
+  \emph{Behavior Research Methods}, forthcoming.
+  \doi{10.3758/s13428-017-0937-z}
 }
 
 \seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{mptmodel}}.}

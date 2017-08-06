@@ -68,7 +68,7 @@ bttree(formula, data, na.action, cluster,
   Strobl C, Wickelmaier F, Zeileis A (2011). Accounting for
   Individual Differences in Bradley-Terry Models by Means of Recursive Partitioning.
   \emph{Journal of Educational and Behavioral Statistics}, \bold{36}(2), 135--153.
-  doi:10.3102/1076998609359791
+  \doi{10.3102/1076998609359791}
 }
 
 \seealso{\code{\link[partykit]{mob}}, \code{\link[psychotools]{btmodel}}}
