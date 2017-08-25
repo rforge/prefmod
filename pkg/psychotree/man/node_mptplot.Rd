@@ -11,7 +11,7 @@
 \usage{
 node_mptplot(mobobj, id = TRUE,
   names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
-  col = "black", linecol = "lightgray", cex = 0.5, pch = 19,
+  col = "black", linecol = "lightgray", bg = "white", cex = 0.5, pch = 19,
   xscale = NULL, yscale = c(0, 1), ylines = 1.5)
 }
 
@@ -30,6 +30,7 @@ node_mptplot(mobobj, id = TRUE,
     drawn?}
   \item{col, cex, pch}{graphical appearance of plotting symbols.}
   \item{linecol}{line color for reference line (if \code{ref}).}
+  \item{bg}{color for background filling.}
   \item{xscale, yscale}{x and y axis limits.}
   \item{ylines}{numeric. Number of lines used for y-axis labels.}
 }

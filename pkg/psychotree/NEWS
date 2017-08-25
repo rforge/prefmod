@@ -10,6 +10,9 @@ Changes in Version 0.15-2
   o node_regionplot() now also works correctly on devices with a default white
     (rather than transparent) background such as png or jpeg.
 
+  o node_* panel functions gained bg = "white" argument to enable different
+    background filling color.
+
 
 Changes in Version 0.15-1
 

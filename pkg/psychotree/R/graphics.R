@@ -4,7 +4,8 @@
 node_profileplot <- function(mobobj, what = c("items", "thresholds", "discriminations"),
   parg = list(type = NULL, ref = NULL, alias = TRUE), id = TRUE, names = FALSE,
   abbreviate = TRUE, index = TRUE, ref = TRUE, col = "black", border = col,
-  linecol = "black", refcol = "lightgray", cex = 0.5, pch = 21, xscale = NULL, yscale = NULL, ylines = 2, ...)
+  linecol = "black", refcol = "lightgray", bg = "white", cex = 0.5, pch = 21,
+  xscale = NULL, yscale = NULL, ylines = 2, ...)
 {
   ## check input
   what <- match.arg(what)
@@ -91,7 +92,7 @@ node_profileplot <- function(mobobj, what = c("items", "thresholds", "discrimina
                        width = unit(1, "npc"), height = unit(1, "npc") - unit(2, "lines"),
                        name = paste("node_profileplot", idn, sep = ""))
     pushViewport(top_vp)
-    grid.rect(gp = gpar(fill = "white", col = 0))
+    grid.rect(gp = gpar(fill = bg, col = 0))
 
     ## main title
     top <- viewport(layout.pos.col = 2, layout.pos.row = 1)
@@ -137,7 +138,7 @@ class(node_profileplot) <- "grapcon_generator"
 
 ## region plot visualization function
 node_regionplot <- function(mobobj, names = FALSE, abbreviate = TRUE, type = c("mode", "median", "mean"),
-  ref = NULL, ylim = NULL, off = 0.1, col_fun = gray.colors,
+  ref = NULL, ylim = NULL, off = 0.1, col_fun = gray.colors, bg = "white",
   uo_show = TRUE, uo_col = "red", uo_lty = 2, uo_lwd = 1.25, ylines = 2)    
 {
   ## check input
@@ -229,7 +230,7 @@ node_regionplot <- function(mobobj, names = FALSE, abbreviate = TRUE, type = c("
     top.vp <- viewport(layout = grid.layout(nrow = 2, ncol = 1, widths = unit(1, "null"), heights = unit(c(1, 1), c("lines", "null"))),
         		     width = unit(1, "npc"), height = unit(1, "npc") - unit(2, "lines"), name = paste(lab, "_effects", sep = ""))
     pushViewport(top.vp)
-    grid.rect(gp = gpar(fill = "white", col = 0), name = paste(lab, "_border", sep = ""))
+    grid.rect(gp = gpar(fill = bg, col = 0), name = paste(lab, "_border", sep = ""))
 
     ## main title
     pushViewport(viewport(layout.pos.col = 1, layout.pos.row = 1, name = paste(lab, "_title_vp", sep = "")))
@@ -293,7 +294,7 @@ class(node_regionplot) <- "grapcon_generator"
 ## bradley-terry plot visualization function
 node_btplot <- function(mobobj, id = TRUE, worth = TRUE, names = TRUE,
   abbreviate = TRUE, index = TRUE, ref = TRUE,col = "black", refcol = "lightgray",
-  cex = 0.5, pch = 19, xscale = NULL, yscale = NULL, ylines = 1.5)
+  bg = "white", cex = 0.5, pch = 19, xscale = NULL, yscale = NULL, ylines = 1.5)
 {
     ## node ids
     node <- nodeids(mobobj, terminal = FALSE)
@@ -364,7 +365,7 @@ node_btplot <- function(mobobj, id = TRUE, worth = TRUE, names = TRUE,
                                height = unit(1, "npc") - unit(2, "lines"),
                                name = paste("node_btplot", idn, sep = ""))
       pushViewport(top_vp)
-      grid.rect(gp = gpar(fill = "white", col = 0))
+      grid.rect(gp = gpar(fill = bg, col = 0))
 
       ## main title
       top <- viewport(layout.pos.col = 2, layout.pos.row = 1)
@@ -403,7 +404,7 @@ class(node_btplot) <- "grapcon_generator"
 ## MPT plot visualization function
 node_mptplot <- function(mobobj, id = TRUE,
   names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
-  col = "black", linecol = "lightgray", cex = 0.5, pch = 19, xscale = NULL,
+  col = "black", linecol = "lightgray", bg = "white", cex = 0.5, pch = 19, xscale = NULL,
   yscale = c(0, 1), ylines = 1.5)
 {
     ## node ids
@@ -469,7 +470,7 @@ node_mptplot <- function(mobobj, id = TRUE,
                          height = unit(1, "npc") - unit(2, "lines"),
                          name = paste("node_mptplot", idn, sep = ""))
       pushViewport(top_vp)
-      grid.rect(gp = gpar(fill = "white", col = 0))
+      grid.rect(gp = gpar(fill = bg, col = 0))
 
       ## main title
       top <- viewport(layout.pos.col = 2, layout.pos.row = 1)

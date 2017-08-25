@@ -13,8 +13,8 @@
 node_profileplot(mobobj, what = c("items", "thresholds", "discriminations"),
   parg = list(type = NULL, ref = NULL, alias = TRUE), id = TRUE,
   names = FALSE, abbreviate = TRUE, index = TRUE, ref = TRUE, col = "black",
-  border = col, linecol = "black", refcol = "lightgray", cex = 0.5, pch = 21,
-  xscale = NULL, yscale = NULL, ylines = 2, ...)
+  border = col, linecol = "black", refcol = "lightgray", bg = "white",
+  cex = 0.5, pch = 21, xscale = NULL, yscale = NULL, ylines = 2, ...)
 }
 
 \arguments{
@@ -38,6 +38,7 @@ node_profileplot(mobobj, what = c("items", "thresholds", "discriminations"),
   \item{col, border, pch, cex}{graphical appearance of plotting symbols.}
   \item{linecol, refcol}{character, specifying the line color to use for the
     profile lines and reference line, respectively.}
+  \item{bg}{color for background filling.}
   \item{xscale, yscale}{x and y axis limits.}
   \item{ylines}{numeric. Number of lines used for y-axis labels.}
   \item{\dots}{further arguments currently not used.}

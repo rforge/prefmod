@@ -14,7 +14,7 @@
 \usage{
 node_regionplot(mobobj, names = FALSE, abbreviate = TRUE,
   type = c("mode", "median", "mean"), ref = NULL, ylim = NULL,
-  off = 0.1, col_fun = gray.colors, uo_show = TRUE, uo_col = "red",
+  off = 0.1, col_fun = gray.colors, bg = "white", uo_show = TRUE, uo_col = "red",
   uo_lty = 2, uo_lwd = 1.25, ylines = 2)
 }
 
@@ -42,6 +42,7 @@ node_regionplot(mobobj, names = FALSE, abbreviate = TRUE,
     palettes for the rectangles. Per default \code{gray.colors} is
     used. Be aware that \code{col_fun} should accept as first argument an
     integer specifying the number of colors to create.}
+  \item{bg}{color for background filling.}
   \item{uo_show}{logical. If set to \code{TRUE} (the default),
     disordered absolute item threshold parameters are indicated by a
     horizontal line (only if \code{type} is set to \code{"mode"}).}

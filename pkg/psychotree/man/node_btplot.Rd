@@ -11,7 +11,7 @@
 \usage{
 node_btplot(mobobj, id = TRUE,
   worth = TRUE, names = TRUE, abbreviate = TRUE, index = TRUE, ref = TRUE,
-  col = "black", refcol = "lightgray", cex = 0.5, pch = 19,
+  col = "black", refcol = "lightgray", bg = "white", cex = 0.5, pch = 19,
   xscale = NULL, yscale = NULL, ylines = 1.5)
 }
 
@@ -27,6 +27,7 @@ node_btplot(mobobj, id = TRUE,
   \item{ref}{logical. Should a horizontal line for the reference level be drawn?}
   \item{col, cex, pch}{graphical appearance of plotting symbols.}
   \item{refcol}{line color for reference line (if \code{ref}).}
+  \item{bg}{color for background filling.}
   \item{xscale, yscale}{x and y axis limits.}
   \item{ylines}{numeric. Number of lines used for y-axis labels.}
 }
