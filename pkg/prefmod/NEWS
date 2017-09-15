@@ -1,0 +1,13 @@
+News for Package 'prefmod'
+
+Changes in Version 0.8-34:
+
+  • Corrected the coding of the rating-scale items of the ISSP 2000.
+    'CAR', 'IND', 'FARM', 'WATER', 'TEMP', and 'GENE' were coded 0
+    (dangerous) to 4 (not dangerous) instead of 1 (dangerous) to 5 (not
+    dangerous).
+
+  • 'plotworth()' is defunct - use 'plot()' (or 'plot.wmat') instead.
+
+  • Minor fixes and improvements.
+

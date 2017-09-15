@@ -3,13 +3,14 @@
 \alias{dat4}
 \docType{data}
 \title{Data (paired comparisons): dat4}
-\description{
+\description{%
   A fictitious dataset with 100 observations on 6 paired comparisons.
-  The responses get the value 1 if the first object in a comparison is preferred and -1 otherwise.                                                                                                     
+  The responses get the value \eqn{1} if the first object in a comparison is preferred and \eqn{-1} otherwise.
+
   For the arrangement of objects and comparisons see \code{\link{llbt.design}}.
 }
 \usage{dat4}
-\format{
+\format{%
   A data frame with 100 observations on 6 comparisons (\code{comp1} to \code{comp6})
 }
 \examples{

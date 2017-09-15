@@ -1,20 +1,17 @@
 plotworth <- function(
   worthmat,
-  main = "Preferences",
-  ylab = "Estimate",
+  main  = "Preferences",
+  ylab  = "Estimate",
   psymb = NULL,
-  pcol = NULL,
-  ylim = range(worthmat),
+  pcol  = NULL,
+  ylim  = range(worthmat),
   ...
 ){
-  
-  if(!("wmat" %in% class(worthmat))) class(worthmat) <- "wmat"
-  res <- try(plot.wmat(x = worthmat, main = main, ylab = ylab, psymb = psymb, pcol = pcol, ylim = ylim, log = log, ...), silent = TRUE)
-  if((!is.null(class(res))) && ("try-error" %in% class(res))){
-    writeLines("Error: 'plotworth(...)' is defunct.\nUse 'plot(...)' or 'plot.wmat(...)' instead.")
-  } else {
-    writeLines(c("Error: 'plotworth(...)' is defunct.", strwrap("Looks like the error was caught. Adapt your code as outlined in '?plot.wmat'", exdent = 4L, indent = 4L)))
-  }
+  stop(paste(sep = "\n",
+    "'plotworth' is defunct.",   # extended from .Defunct(new = "plotworth", package = "prefmod")
+    "Use 'plot()' or 'plot.wmat()' instead.",
+    "See help(\"Defunct\") and help(\"prefmod-defunct\")."
+  ), call. = FALSE)
 }
 ##
 ## plot ranking

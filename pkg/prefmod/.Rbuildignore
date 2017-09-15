@@ -1,3 +1,10 @@
-.*\.dumptruck$
+^.*\.Rproj$
+^\.Rproj\.user$
+inst\/NEWSRd2txt\.R
+.*\.aux$
+.*\.log$
 .*\.bat$
-.*NEWSRd2txt\.R$
+.*\.out$
+.*\.o$
+.*\.dll$
+.*\.bak$

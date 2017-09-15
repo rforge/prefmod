@@ -29,5 +29,5 @@ bibentry(
   author  = c(person("Reinhold", "Hatzinger"), person(c("Marco", "Johannes"), "Maier")),
   year    = year,
   note    = paste0("{", note, "}"),
-  url     = "http://CRAN.R-project.org/package=prefmod"
+  url     = "https://CRAN.R-project.org/package=prefmod"
 )

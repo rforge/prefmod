@@ -2,31 +2,25 @@
 \name{checkMIS}
 \alias{checkMIS}
 \title{Function to check/report missing values in paired comparison studies}
-\description{
-For a given paired comparisons data set the function calculates and prints the
-number of missing comparisons and the number of times objects are
-missing.  It can also be used to avoid failure of nonresponse-parameter
-for nonresponse models in
+\description{%
+  For a given paired comparisons data set the function calculates and prints the number of missing comparisons and the number of times objects are missing.
+  It can also be used to avoid failure of nonresponse-parameter for nonresponse models in
 }
-\usage{
-checkMIS(obj, nitems, MISmodel="obj", obj.names = NULL, verbose = FALSE)
+\usage{%
+checkMIS(obj, nitems, MISmodel = "obj", obj.names = NULL, verbose = FALSE)
 }
-\arguments{
+\arguments{%
   \item{obj}{dataframe or datafile path/name (like \code{\link{pattPC.fit}}).}
-  \item{nitems}{the number of compared objects, not the number of comparisons
-       (like \code{\link{pattPC.fit}}).}
-  \item{MISmodel}{specifies the nonresponse model, either \code{obj} (default) for
-        missing mechanisms based on objects, or \code{comp} based on comparisons. This
-        argument is only relevant for the (invisible) output of \code{checkMIS}.}
-  \item{obj.names}{character vector with names for objects.
-        }
-  \item{verbose}{if \code{TRUE} printed output, otherwise only invisible output
-        to be used, e.g., in the specification of \code{MISalpha} and \code{MISbeta}
-        in \code{\link{pattPC.fit}}.}
+  \item{nitems}{the number of compared objects, not the number of comparisons (like \code{\link{pattPC.fit}}).}
+  \item{MISmodel}{
+    specifies the nonresponse model, either \code{obj} (default) for missing mechanisms based on objects, or \code{comp} based on comparisons.
+    This argument is only relevant for the (invisible) output of \code{checkMIS}.
+  }
+  \item{obj.names}{character vector with names for objects.}
+  \item{verbose}{if \code{TRUE} printed output, otherwise only invisible output to be used, e.g., in the specification of \code{MISalpha} and \code{MISbeta} in \code{\link{pattPC.fit}}.}
 }
-\value{
-  a logical vector (returned invisibly) specifying for which object/comparison
-  there are NA responses in the data (\code{obj)}.
+\value{%
+  a logical vector (returned invisibly) specifying for which object/comparison there are \code{NA} responses in the data (\code{obj)}.
 }
 \seealso{\code{\link{pattPC.fit}}}
 \examples{
@@ -37,11 +31,11 @@ checkMIS(dat4, nitems = 4, verbose = TRUE)
 # comparison (23), column 3, then there are no NAs for object 1
 data3 <- dat4[, 1:3]
 idx3  <- sample(1:100, 10)
-data3[idx3,3] <- NA
+data3[idx3, 3] <- NA
 checkMIS(data3, nitems = 3, verbose = TRUE)
 
 # estimate MCAR PC pattern model for data3 with NA indicators alpha1
-# cannot be estimated being accomodated by using checkMIS
+# cannot be estimated being accommodated by using checkMIS
 pattPC.fit(data3, nitems = 3, MISalpha = checkMIS(data3, nitems = 3))
 }
 \keyword{models}

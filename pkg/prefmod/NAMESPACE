@@ -1,4 +1,4 @@
-useDynLib("prefmod")
+useDynLib("prefmod", .registration = TRUE)
 
 import("stats", "graphics", "gnm", "colorspace")
 importFrom("grDevices", "xy.coords")

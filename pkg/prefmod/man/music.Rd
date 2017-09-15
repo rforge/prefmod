@@ -9,9 +9,9 @@
   Missing values have been removed from the subject variables.
 }
 \usage{music}
-\format{
+\format{%
   A data frame with 1597 observations.
-  The variables \code{bigb} through \code{hvym} are are responses to items asking for liking/disliking of type of music:
+  The variables \code{bigb} through \code{hvym} are responses to items asking for liking/disliking of type of music:
   Do you like it very much (1), like it (2), have mixed feelings (3), dislike it (4), dislike it very much (5).
   \describe{
     \item{\code{bigb}}{like or dislike bigband music}
