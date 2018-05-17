@@ -1,11 +1,13 @@
 
-R version 3.3.1 (2016-06-21) -- "Bug in Your Hair"
-Copyright (C) 2016 The R Foundation for Statistical Computing
+R version 3.4.4 (2018-03-15) -- "Someone to Lean On"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -21,6 +23,9 @@ Type 'q()' to quit R.
 > library('psychotree')
 Loading required package: partykit
 Loading required package: grid
+Loading required package: libcoin
+Loading required package: mvtnorm
+Loading required package: rpart
 Loading required package: psychotools
 > 
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
@@ -248,9 +253,9 @@ gender   FALSE TRUE
 > library("strucchange")
 Loading required package: zoo
 
-Attaching package: 'zoo'
+Attaching package: ‘zoo’
 
-The following objects are masked from 'package:base':
+The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
@@ -260,7 +265,7 @@ Loading required package: sandwich
 statistic 17.08798 3.236e+01 12.6320 19.83922 6.7586
 p.value    0.02149 7.915e-04  0.1283  0.00668 0.7452
 > 
-> ## worth parameters in terminal nodes
+> ## worth/item parameters in terminal nodes
 > itempar(tm_tree)
   Barbara    Anni   Hana  Fiona   Mandy    Anja
 3  0.1889 0.16993 0.3851 0.1142 0.09232 0.04958
@@ -306,7 +311,7 @@ Barcelona : Stockholm 172 41  90    0
 > 
 > cleanEx()
 
-detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
+detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’
 
 > nameEx("mpttree")
 > ### * mpttree
@@ -315,7 +320,8 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
 > 
 > ### Name: mpttree
 > ### Title: MPT Trees
-> ### Aliases: mpttree plot.mpttree print.mpttree predict.mpttree
+> ### Aliases: mpttree coef.mpttree plot.mpttree print.mpttree
+> ###   predict.mpttree
 > ### Keywords: tree
 > 
 > ### ** Examples
@@ -323,7 +329,7 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
 > o <- options(digits = 4)
 > 
 > ## Source Monitoring data
-> data("SourceMonitoring", package="psychotools")
+> data("SourceMonitoring", package = "psychotools")
 > 
 > ## MPT tree
 > sm_tree <- mpttree(y ~ sources + gender + age, data = SourceMonitoring,
@@ -341,9 +347,9 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
 > library("strucchange")
 Loading required package: zoo
 
-Attaching package: 'zoo'
+Attaching package: ‘zoo’
 
-The following objects are masked from 'package:base':
+The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
@@ -376,7 +382,7 @@ p.value   8.805e-05 0.2925  0.2489
 > 
 > cleanEx()
 
-detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
+detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’
 
 > nameEx("pctree")
 > ### * pctree
@@ -469,7 +475,7 @@ s2S2WantShout-C2    3.768      0.486    7.75  9.0e-15 ***
 s2S2DoShout-C1      3.198      0.296   10.80  < 2e-16 ***
 s2S2DoShout-C2      6.705      0.575   11.66  < 2e-16 ***
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 Log-likelihood: -689 (df = 11) 
 Number of iterations in BFGS optimization: 17 
@@ -493,7 +499,7 @@ s2S2WantShout-C2    3.667      0.878    4.18  3.0e-05 ***
 s2S2DoShout-C1      2.101      0.485    4.33  1.5e-05 ***
 s2S2DoShout-C2      5.439      1.038    5.24  1.6e-07 ***
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 Log-likelihood: -211 (df = 11) 
 Number of iterations in BFGS optimization: 18 
@@ -534,9 +540,9 @@ Number of iterations in BFGS optimization: 18
 > library("strucchange")
 Loading required package: zoo
 
-Attaching package: 'zoo'
+Attaching package: ‘zoo’
 
-The following objects are masked from 'package:base':
+The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
@@ -553,7 +559,7 @@ p.value    0.9578 1.746e-05
 > 
 > cleanEx()
 
-detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
+detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’
 
 > nameEx("raschtree")
 > ### * raschtree
@@ -601,9 +607,9 @@ detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
 > library("strucchange")
 Loading required package: zoo
 
-Attaching package: 'zoo'
+Attaching package: ‘zoo’
 
-The following objects are masked from 'package:base':
+The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
@@ -629,7 +635,7 @@ p.value   3.613e-04     NA      0.926
 > 
 > cleanEx()
 
-detaching 'package:strucchange', 'package:sandwich', 'package:zoo'
+detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’
 
 > nameEx("rstree")
 > ### * rstree
@@ -721,7 +727,7 @@ s1S1WantShout    1.069      0.166    6.44  1.2e-10 ***
 s1S1DoShout      1.956      0.194   10.08  < 2e-16 ***
 C2               0.889      0.157    5.65  1.6e-08 ***
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 Log-likelihood: -612 (df = 6) 
 Number of iterations in BFGS optimization: 11 
@@ -740,7 +746,7 @@ s1S1WantShout    0.592      0.308    1.92   0.0545 .
 s1S1DoShout      0.880      0.318    2.77   0.0056 **
 C2              -0.725      0.347   -2.09   0.0367 * 
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 Log-likelihood: -132 (df = 6) 
 Number of iterations in BFGS optimization: 12 
@@ -759,7 +765,7 @@ s1S1WantShout   1.0144     0.2731    3.71  0.00020 ***
 s1S1DoShout     1.6099     0.3034    5.31  1.1e-07 ***
 C2              0.8764     0.2568    3.41  0.00064 ***
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 Log-likelihood: -232 (df = 6) 
 Number of iterations in BFGS optimization: 12 
@@ -799,9 +805,9 @@ Number of iterations in BFGS optimization: 12
 > library("strucchange")
 Loading required package: zoo
 
-Attaching package: 'zoo'
+Attaching package: ‘zoo’
 
-The following objects are masked from 'package:base':
+The following objects are masked from ‘package:base’:
 
     as.Date, as.Date.numeric
 
@@ -823,7 +829,7 @@ p.value    0.01672     NA
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  4.296 0.048 4.35 0 0 
+Time elapsed:  7.286 0.066 7.374 0 0 
 > grDevices::dev.off()
 null device 
           1 
