@@ -55,7 +55,7 @@ mpttree(formula, data, na.action, cluster, spec, treeid = NULL,
 }
 
 \references{ 
-Wickelmaier F, Zeileis A (2017). Using Recursive Partitioning to Account
+Wickelmaier F, Zeileis A (2018). Using Recursive Partitioning to Account
   for Parameter Heterogeneity in Multinomial Processing Tree Models.
   \emph{Behavior Research Methods}, forthcoming.
   \doi{10.3758/s13428-017-0937-z}
