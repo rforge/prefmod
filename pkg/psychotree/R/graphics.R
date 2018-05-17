@@ -315,8 +315,9 @@ node_btplot <- function(mobobj, id = TRUE, worth = TRUE, names = TRUE,
       } else {
         reflab <- mod$ref
       }
-      if(is.character(reflab)) reflab <- match(reflab, mod$labels)
-      cf <- cf - cf[,reflab]
+      if(is.character(reflab)) reflab <- match(reflab,
+        if(!is.null(mod$labels)) mod$labels else colnames(cf))
+      cf <- cf - cf[, reflab]
     }
 
     ## reference

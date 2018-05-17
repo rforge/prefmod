@@ -24,7 +24,9 @@ node_btplot(mobobj, id = TRUE,
   \item{abbreviate}{logical or numeric. Should object names be abbreviated?
     If numeric this controls the length of the abbreviation.}
   \item{index}{logical. Should different indexes for different stimuli be used?}
-  \item{ref}{logical. Should a horizontal line for the reference level be drawn?}
+  \item{ref}{logical. Should a horizontal line for the reference level be drawn?
+    Alternatively, \code{ref} can also be numeric or character to employ
+    a reference level different from that stored in the model object.}
   \item{col, cex, pch}{graphical appearance of plotting symbols.}
   \item{refcol}{line color for reference line (if \code{ref}).}
   \item{bg}{color for background filling.}

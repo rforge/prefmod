@@ -9,6 +9,9 @@ Changes in Version 0.15-2
 
   o node_btplot() used to fail for worth=FALSE or ref=<character> but works
     now correctly again. Thanks to Heather Turner for pointing out the problem.
+    Also ref=<character> now either matches to <object>$labels or (if not available)
+    to colnames(<coefficients>) to facilitate usage with the PlackettLuce
+    package.
 
   o node_regionplot() now also works correctly on devices with a default white
     (rather than transparent) background such as png or jpeg.
