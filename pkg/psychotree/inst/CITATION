@@ -61,7 +61,7 @@ citEntry(entry = "Article",
 
 citEntry(entry = "Article",
   title        = "Using Recursive Partitioning to Account for Parameter Heterogeneity in Multinomial Processing Tree Models",
-  author       = personList(as.person("Florian", "Wickelmaier"), 
+  author       = personList(as.person("Florian Wickelmaier"), 
                    as.person("Achim Zeileis")),
   journal      = "Behavior Research Methods",
   year         = "2018",
