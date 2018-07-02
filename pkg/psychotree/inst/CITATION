@@ -61,17 +61,19 @@ citEntry(entry = "Article",
 
 citEntry(entry = "Article",
   title        = "Using Recursive Partitioning to Account for Parameter Heterogeneity in Multinomial Processing Tree Models",
-  author       = personList(person("Florian", "Wickelmaier"), 
+  author       = personList(as.person("Florian", "Wickelmaier"), 
                    as.person("Achim Zeileis")),
   journal      = "Behavior Research Methods",
   year         = "2018",
-  note         = "Forthcoming",
+  volume       = "50",
+  number       = "3",
+  pages        = "1217--1233",
   doi	       = "10.3758/s13428-017-0937-z",
   
   textVersion  = 
-  paste("Florian Wickelmaier, Achim Zeileis (2018).",
+  paste("Florian Wickelmaier, Achim Zeileis (2018).", 
 	"Using Recursive Partitioning to Account for Parameter Heterogeneity in Multinomial Processing Tree Models.",
-        "Behavior Research Methods, forthcoming.",
+        "Behavior Research Methods, 50(3), 1217-1233.",
 	"doi:10.3758/s13428-017-0937-z"),
 	
   header       = "If you use MPT trees, mpttree(), please cite:"
