@@ -1,6 +1,6 @@
 Changes in Version 0.15-2
 
-  o The method behind mpttree() has now been published online by 
+  o The method behind mpttree() has now been published by 
     Behavior Research Methods, see doi:10.3758/s13428-017-0937-z
 
   o The predict() method for "bttree" objects works again correctly for
