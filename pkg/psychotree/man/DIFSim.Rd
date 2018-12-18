@@ -27,15 +27,16 @@ Two data frames containing 200 and 500 observations, respectively, on 4 variable
 
 \details{  
   The data are employed for illustrations in Strobl et al. (2015)
-  and Komboz et al. (2016). See the manual pages for
+  and Komboz et al. (2018). See the manual pages for
   \code{\link{raschtree}} and \code{\link{pctree}} for fitting the
   tree models..
 }
 
 \references{
-Komboz B, Zeileis A, Strobl C (2016).
+Komboz B, Zeileis A, Strobl C (2018).
   Tree-Based Global Model Tests for Polytomous Rasch Models.
-  \emph{Educational and Psychological Measurement}, forthcoming.
+  \emph{Educational and Psychological Measurement}, \bold{78}(1), 128--166.
+  \doi{10.1177/0013164416664394}
 
 Strobl C, Kopf J, Zeileis A (2015). Rasch Trees: A New Method for Detecting
   Differential Item Functioning in the Rasch Model.

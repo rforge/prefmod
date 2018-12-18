@@ -77,9 +77,10 @@ pctree(formula, data, na.action, nullcats = c("keep", "downcode", "ignore"),
 }
 
 \references{
-Komboz B, Zeileis A, Strobl C (2016).
+Komboz B, Zeileis A, Strobl C (2018).
   Tree-Based Global Model Tests for Polytomous Rasch Models.
-  \emph{Educational and Psychological Measurement}, forthcoming.
+  \emph{Educational and Psychological Measurement}, \bold{78}(1), 128--166.
+  \doi{10.1177/0013164416664394}
 }
 
 \value{
@@ -127,7 +128,7 @@ sctest(pct, node = 1)
 options(digits = o$digits)
 
 \donttest{
-## partial credit tree on artificial data from Komboz et al. (2016)
+## partial credit tree on artificial data from Komboz et al. (2018)
 data("DIFSimPC", package = "psychotree")
 pct2 <- pctree(resp ~ gender + age + motivation, data = DIFSimPC)
 plot(pct2, ylim = c(-4.5, 4.5), names = paste("I", 1:8))

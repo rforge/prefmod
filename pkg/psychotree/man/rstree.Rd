@@ -84,9 +84,10 @@ rstree(formula, data, na.action, reltol = 1e-10,
 }
 
 \references{
-Komboz B, Zeileis A, Strobl C (2016).
+Komboz B, Zeileis A, Strobl C (2018).
   Tree-Based Global Model Tests for Polytomous Rasch Models.
-  \emph{Educational and Psychological Measurement}, forthcoming.
+  \emph{Educational and Psychological Measurement}, \bold{78}(1), 128--166.
+  \doi{10.1177/0013164416664394}
 }
 
 \value{
