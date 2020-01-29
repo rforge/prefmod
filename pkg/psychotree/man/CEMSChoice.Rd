@@ -56,8 +56,6 @@ A data frame containing 303 observations on 10 variables.
 
 \source{
 The Royal Statistical Society Datasets Website.
-
-\url{http://www.blackwellpublishing.com/rss/Readmefiles/dittrich.htm}
 }
 
 \references{

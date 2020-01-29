@@ -122,8 +122,7 @@ itempar(pct)
 threshpar(pct)
 
 ## inspect parameter stability tests in the splitting node
-library("strucchange")
-sctest(pct, node = 1)
+if(require("strucchange")) sctest(pct, node = 1)
 
 options(digits = o$digits)
 

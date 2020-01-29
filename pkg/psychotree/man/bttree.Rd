@@ -84,8 +84,7 @@ tm_tree <- bttree(preference ~ ., data = Topmodel2007, minsize = 5, ref = "Barba
 plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
 
 ## parameter instability tests in root node
-library("strucchange")
-sctest(tm_tree, node = 1)
+if(require("strucchange")) sctest(tm_tree, node = 1)
 
 ## worth/item parameters in terminal nodes
 itempar(tm_tree)

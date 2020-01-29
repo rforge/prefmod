@@ -129,9 +129,10 @@ itempar(rst)
 threshpar(rst)
 
 ## inspect parameter stability tests in all splitting nodes
-library("strucchange")
+if(require("strucchange")) {
 sctest(rst, node = 1)
 sctest(rst, node = 2)
+}
 
 options(digits = o$digits)
 }

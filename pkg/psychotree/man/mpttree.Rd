@@ -78,8 +78,7 @@ plot(sm_tree, index = c("D1", "D2", "d", "b", "g"))
 coef(sm_tree)
 
 ## parameter instability tests in root node
-library("strucchange")
-sctest(sm_tree, node = 1)
+if(require("strucchange")) sctest(sm_tree, node = 1)
 
 ## storage and retrieval deficits in psychiatric patients
 data("MemoryDeficits", package = "psychotools")

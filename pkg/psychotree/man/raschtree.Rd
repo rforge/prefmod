@@ -106,9 +106,10 @@ coef(rt)
 itempar(rt)
 
 ## inspect parameter stability tests in all splitting nodes
-library("strucchange")
+if(require("strucchange")) {
 sctest(rt, node = 1)
 sctest(rt, node = 2)
+}
 
 ## highlight items 3 and 14 with DIF
 ix <- rep(1, 20)
