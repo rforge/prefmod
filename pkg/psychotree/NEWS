@@ -1,3 +1,9 @@
+Changes in Version 0.15-3
+
+  o Added "IGNORE_RDIFF" flags in some examples in order to avoid showing
+    diffs due to small numeric deviations in some checks (especially on CRAN).
+
+
 Changes in Version 0.15-2
 
   o The method behind mpttree() has now been published by 

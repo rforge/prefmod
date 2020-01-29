@@ -102,7 +102,6 @@ rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
 plot(rt)
 
 ## extract item parameters
-coef(rt)
 itempar(rt)
 
 ## inspect parameter stability tests in all splitting nodes

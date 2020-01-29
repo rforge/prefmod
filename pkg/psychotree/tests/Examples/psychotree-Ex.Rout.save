@@ -1,6 +1,6 @@
 
-R version 3.4.4 (2018-03-15) -- "Someone to Lean On"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -25,10 +25,10 @@ Loading required package: partykit
 Loading required package: grid
 Loading required package: libcoin
 Loading required package: mvtnorm
-Loading required package: rpart
 Loading required package: psychotools
 > 
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
 > cleanEx()
 > nameEx("CEMSChoice")
 > ### * CEMSChoice
@@ -250,7 +250,8 @@ gender   FALSE TRUE
 > plot(tm_tree, abbreviate = 1, yscale = c(0, 0.5))
 > 
 > ## parameter instability tests in root node
-> library("strucchange")
+> if(require("strucchange")) sctest(tm_tree, node = 1)
+Loading required package: strucchange
 Loading required package: zoo
 
 Attaching package: ‘zoo’
@@ -260,7 +261,6 @@ The following objects are masked from ‘package:base’:
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-> sctest(tm_tree, node = 1)
             gender       age      q1       q2     q3
 statistic 17.08798 3.236e+01 12.6320 19.83922 6.7586
 p.value    0.02149 7.915e-04  0.1283  0.00668 0.7452
@@ -344,7 +344,8 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’
 5 0.6349 0.4456 0.4696 0.1948 0.6120
 > 
 > ## parameter instability tests in root node
-> library("strucchange")
+> if(require("strucchange")) sctest(sm_tree, node = 1)
+Loading required package: strucchange
 Loading required package: zoo
 
 Attaching package: ‘zoo’
@@ -354,7 +355,6 @@ The following objects are masked from ‘package:base’:
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-> sctest(sm_tree, node = 1)
             sources gender     age
 statistic 2.848e+01 9.0034 16.9298
 p.value   8.805e-05 0.2925  0.2489
@@ -537,7 +537,8 @@ Number of iterations in BFGS optimization: 18
 3           0.4855           1.0135          1.016          2.254
 > 
 > ## inspect parameter stability tests in the splitting node
-> library("strucchange")
+> if(require("strucchange")) sctest(pct, node = 1)
+Loading required package: strucchange
 Loading required package: zoo
 
 Attaching package: ‘zoo’
@@ -547,7 +548,6 @@ The following objects are masked from ‘package:base’:
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-> sctest(pct, node = 1)
             anger    gender
 statistic 16.2334 4.354e+01
 p.value    0.9578 1.746e-05
@@ -584,15 +584,6 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’
 > plot(rt)
 > 
 > ## extract item parameters
-> coef(rt)
-   resp2  resp3   resp4   resp5  resp6   resp7   resp8  resp9  resp10  resp11
-3 1.3280 3.6397 -0.1435 -0.7131 -1.650 -0.5698 -0.2858 -2.244 -1.0064 -0.2858
-4 0.6719 0.9678  0.8168  0.1960 -1.233 -1.0811 -0.1298 -1.477  0.1304 -1.0073
-5 0.1706 2.3846  0.1706 -0.8672 -1.686 -1.0882 -0.3826 -1.818  0.2288  0.2879
-  resp12 resp13     resp14  resp15 resp16 resp17     resp18 resp19     resp20
-3 -2.244 -1.479 -2.485e+00 -1.6504 1.5474  1.547 -5.698e-01 -1.006 -2.649e-07
-4 -1.394 -1.233  5.318e-01  0.9678 1.2957  2.020  1.841e-05 -1.007 -1.946e-01
-5 -2.179 -1.559  7.940e-07  0.5989 0.3478  1.275 -3.826e-01 -1.032 -7.586e-01
 > itempar(rt)
     resp1  resp2 resp3  resp4   resp5  resp6   resp7    resp8  resp9  resp10
 3 0.41354 1.7416 4.053 0.2700 -0.2995 -1.237 -0.1562  0.12779 -1.831 -0.5928
@@ -604,7 +595,11 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’
 5  0.6024 -1.864 -1.245  0.3145  0.9134 0.6623  1.589 -0.06814 -0.7178 -0.4442
 > 
 > ## inspect parameter stability tests in all splitting nodes
-> library("strucchange")
+> if(require("strucchange")) {
++ sctest(rt, node = 1)
++ sctest(rt, node = 2)
++ }
+Loading required package: strucchange
 Loading required package: zoo
 
 Attaching package: ‘zoo’
@@ -614,11 +609,6 @@ The following objects are masked from ‘package:base’:
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-> sctest(rt, node = 1)
-              age    gender motivation
-statistic 43.1086 41.486403    82.0383
-p.value    0.1103  0.006221     0.9947
-> sctest(rt, node = 2)
                 age gender motivation
 statistic 6.126e+01      0     86.252
 p.value   3.613e-04     NA      0.926
@@ -650,6 +640,7 @@ detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’
 > 
 > ### ** Examples
 > 
+> ## IGNORE_RDIFF_BEGIN
 > o <- options(digits = 4)
 > 
 > ## verbal aggression data from package psychotools
@@ -802,7 +793,11 @@ Number of iterations in BFGS optimization: 12
 5           0.1709         1.047277         0.7664          1.643
 > 
 > ## inspect parameter stability tests in all splitting nodes
-> library("strucchange")
+> if(require("strucchange")) {
++ sctest(rst, node = 1)
++ sctest(rst, node = 2)
++ }
+Loading required package: strucchange
 Loading required package: zoo
 
 Attaching package: ‘zoo’
@@ -812,24 +807,24 @@ The following objects are masked from ‘package:base’:
     as.Date, as.Date.numeric
 
 Loading required package: sandwich
-> sctest(rst, node = 1)
-             anger   gender
-statistic 25.11992 17.91766
-p.value    0.01871  0.01284
-> sctest(rst, node = 2)
              anger gender
 statistic 23.61167      0
 p.value    0.01672     NA
 > 
 > options(digits = o$digits)
+> ## IGNORE_RDIFF_END
 > 
 > 
 > 
 > ### * <FOOTER>
 > ###
+> cleanEx()
+
+detaching ‘package:strucchange’, ‘package:sandwich’, ‘package:zoo’
+
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  7.286 0.066 7.374 0 0 
+Time elapsed:  10.333 2.854 9.365 0 0 
 > grDevices::dev.off()
 null device 
           1 
