@@ -158,7 +158,7 @@ Strobl C, Kopf J, Zeileis A (2015). Rasch Trees: A New Method for Detecting
 
 SPIEGEL Online (2009). Studentenpisa -- Alle Fragen, alle Antworten.
   In German. Accessed 2010-10-26.
-  \url{http://www.spiegel.de/unispiegel/studium/0,1518,620101,00.html}
+  \url{https://www.spiegel.de/lebenundlernen/uni/studentenpisa-alle-fragen-alle-antworten-a-620101.html}
   
 Trepte S, Verbeet M (2010). Allgemeinbildung in Deutschland --
   Erkenntnisse aus dem SPIEGEL-Studentenpisa-Test.
