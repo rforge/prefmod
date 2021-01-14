@@ -2,7 +2,7 @@
 
 \usepackage[utf8]{inputenc}
 %% need no \usepackage{Sweave}
-\SweaveOpts{engine = R, keep.source=TRUE, eps = FALSE, echo = TRUE}
+\SweaveOpts{concordance=FALSE, engine = R, keep.source=TRUE, eps = FALSE, echo = TRUE}
 
 %\VignetteIndexEntry{Using the raschtree Function for Detecting Differential Item Functioning in the Rasch Model}
 %\VignetteDepends{psychotree, colorspace}
@@ -27,19 +27,21 @@
 \newcommand{\fixme}[1]{\textcolor{red}{#1}}
 
 
-\title{Using the \code{raschtree} function for detecting differential item functioning in the Rasch model}
+\title{Using the \code{raschtree} function for detecting differential item functioning in the Rasch model\\ 
+{\small Updated 1/2021, including new section on Stability Assessment}}
 \Plaintitle{Using the raschtree function for detecting differential item functioning in the Rasch model}
 \Shorttitle{Using \texttt{raschtree} for detecting DIF in the Rasch model}
 \author{Carolin Strobl\\Universit\"at Z\"urich
-\And Julia Kopf\\Ludwig-Maximilians-\\Universit\"at M\"unchen
+\And Lennart Schneider\\Ludwig-Maximilians-\\Universit\"at M\"unchen 
+\And Julia Kopf\\Universit\"at Z\"urich
 \And Achim Zeileis\\Universit\"at Innsbruck}
-\Plainauthor{Carolin Strobl, Julia Kopf, Achim Zeileis}
+\Plainauthor{Carolin Strobl, Lennart Schneider, Julia Kopf, Achim Zeileis}
 
 
 \Abstract{
 The \pkg{psychotree} package contains the function \code{raschtree}, that can be used to detect differential item functioning (\dif ) in the Rasch model.  
 The \dif\ detection method implemented in \code{raschtree} is based on the
-\mob\ framework of \citet{Zeietal:2008} and employs generalized M-fluctuation tests \citep{ZeiHor:2007} for detecting differences in the item parameters between different groups of subjects. The statistical methodology behind \code{raschtree} is described in detail in \citet{Stretal:2010:raschtree:techreport}.
+\mob\ framework of \citet{Zeietal:2008} and employs generalized M-fluctuation tests \citep{ZeiHor:2007} for detecting differences in the item parameters between different groups of subjects. The statistical methodology behind \code{raschtree} is described in detail in \citet{Stretal:2015:raschtree}.
 The main advantage of this approach is that it allows to detect groups of subjects exhibiting \dif , that are not pre-specified, but are detected automatically from combinations of covariates. 
 In this vignette, the practical usage of \code{raschtree} is illustrated.
 }
@@ -52,15 +54,23 @@ In this vignette, the practical usage of \code{raschtree} is illustrated.
   Universit\"at Z\"urich\\
   Binzm\"uhlestr.~14\\
   8050 Z\"urich, Switzerland\\
-  E-mail: \email{Carolin.Strobl@psychologie.uzh.ch}\\
+  E-mail: \email{Carolin.Strobl@uzh.ch}\\
   URL: \url{http://www.psychologie.uzh.ch/fachrichtungen/methoden.html}\\
 
-  Julia Kopf\\
+  Lennart Schneider\\
   Department of Statistics\\
   Ludwig-Maximilians-Universit\"at M\"unchen\\
   Ludwigstra{\ss}e 33\\
   80539 M\"unchen, Germany\\
-  E-mail: \email{Julia.Kopf@stat.uni-muenchen.de}\\
+  \fixme{E-mail: \email{lennart.sch@web.de}}\\
+
+  Julia Kopf\\
+  Department of Psychology\\
+  Universit\"at Z\"urich\\
+  Binzm\"uhlestr.~14\\
+  8050 Z\"urich, Switzerland\\
+  E-mail: \email{Julia.Kopf@uzh.ch}\\
+
 
   Achim Zeileis\\
   Department of Statistics\\
@@ -87,13 +97,13 @@ the method, as described below. Then the following steps are conducted:
   \item This process is repeated as long as there is further \dif\ (and the subsample is still large enough).
 \end{enumerate}
 
-For details on the underlying statistical framework implemented in \code{raschtree} see \citet{Stretal:2010:raschtree:techreport}. 
+For details on the underlying statistical framework implemented in \code{raschtree} see \citet{Stretal:2015:raschtree}. 
 
 The main advantage of the \rt\ approach is that \dif\ can be detected between groups of subjects created by more than one covariate. For example, certain items may be easier for male subjects over the age of 40 as opposed to all other subjects. In this case \dif\ is associated with an interaction of the variables gender and age, rather than any one variable alone. 
 
 Moreover, with this approach it is not necessary to pre-define cutpoints in continuous variables, as would be the standard approach when using, e.g., a
 likelihood ratio or Wald test: Usually, age groups are pre-specified, for example by means of splitting at the median. However, the median may not be where the actual parameter change occurs -- it could be that only very young or very old subjects find certain items particularly easy or hard. By splitting at the median this effect may be disguised.
-Therefore, the Rasch tree method searches for the value corresponding to the strongest parameter change and splits the sample at that value. Certain statistical techniques are necessary for doing this in a statistically sound way, as described in detail in \citet{Stretal:2010:raschtree:techreport}.
+Therefore, the Rasch tree method searches for the value corresponding to the strongest parameter change and splits the sample at that value. Certain statistical techniques are necessary for doing this in a statistically sound way, as described in detail in \citet{Stretal:2015:raschtree}.
  
 Now the practical application of \code{raschtree} is outlined, starting with the data preparation. 
 
@@ -167,8 +177,8 @@ If your own data set, termed for example \code{mydata}, is in a different format
 
 \medskip
 
-You can bring them into more convenient format by first defining a new variable \code{resp} that contains the matrix of item responses
-(i.e., first five columns of \code{mydata}):
+You can bring them into a more convenient format by first defining a new variable \code{resp} that contains the matrix of item responses
+(i.e., the first five columns of \code{mydata}):
 %
 <<recode, eval=FALSE>>=
 mydata$resp <- as.matrix(mydata[ , 1:5])
@@ -182,39 +192,10 @@ mydata <- mydata[ , -(1:5)]
 %
 The data set then contains both the complete matrix of item responses -- termed \code{resp} -- and the covariates as individual columns, so that later it is easier to address the complete matrix of item responses in the function call.  
 
-If the item responses include cases where all observed item responses are 0 or all observed item responses are 1, these cases need to be excluded prior to
-model fitting. (These cases do not contribute to the Rasch model anyway, because they do not contain any information on which items are easier or harder to solve, and the corresponding person parameters are not identified.)
-For example, the cases
-indicated by arrows in the example below would need to be excluded, because all observed item responses are either 0 or 1:
-
-
-\begin{center}
-\begin{tabular}{c|cccccccccc|}
-\cline{2-11}
-&\multicolumn{10}{|c|}{Item reponses} \\ 
-&\multicolumn{10}{|c|}{\code{resp}} \\
-\cline{2-11}
-             & 1  & NA  &  0  &  1  &  1  &  1  &  0  &  1  &  1  &  1  \\ 
-$\Rightarrow$& 1  &  1  &  1  &  1  &  NA  &  1  &  1  &  1  &  1 &  1  \\
-$\Rightarrow$& 0  &  0  &  NA  &  0  &  0  &  0  &  0  &  0  &  NA  &  0  \\
-             & 0  &  0  &  1  &  1  &  1  &  0  &  1  &  0  &  1  &  0  \\
-$\Rightarrow$& 1  &  1  &  1  &  1  &  1  &  1  &  1  &  1  &  1  &  1  \\
-\cline{2-11}
-\end{tabular}
-\end{center}
-
-\medskip
-
-To exclude rows where all observed item responses are either 0 or 1, we select only the subset of cases for which the proportion of correct item responses is strictly between 0 and 1 for futher analysis.
-%
-<<delete_cases, eval=FALSE>>=
-mydata <- subset(mydata, rowMeans(resp, na.rm = TRUE) > 0 &
-  rowMeans(resp, na.rm = TRUE) < 1)
-@
-%
 Now the data preparation is done and we can fit a \rt .
 
 \section{Model fitting, plotting and extraction of parameter values}
+\label{raschtree}
 
 The idea of \rt s is to model differences in the \rm\ for the item responses by means of the covariates. This idea translates intuitively into the formula
 interface that is commonly used in \proglang{R} functions, such as \code{lm} for linear models: In a linear model, where the response variable \code{y} is
@@ -237,14 +218,6 @@ my_first_raschtree <- raschtree(spisa ~ age + gender +
   semester + elite + spon, data = SPISA)
 @
 %
-<<fit_raschtree_cache, echo=FALSE, results=hide>>=
-if(file.exists("raschtree-spisa.rda")) load("raschtree-spisa.rda") else {
-<<fit_raschtree>>
-save(my_first_raschtree, file = "raschtree-spisa.rda")
-}
-file.remove("raschtree-spisa.rda")
-@
-%
 Note that the model is not only fitted, but also saved under the name \code{my_first_raschtree}, so that we can later extract information from the fitted model object and plot the \rt .
 
 As a shortcut, when all other variables in the data set are to be used as covariates, as in our example, the covariates do not have to be listed explicitly
@@ -255,6 +228,23 @@ Moreover, if you want to see the process of the \rt\ fitting, including the comp
 \code{raschtree(spisa ~ ., data = SPISA, verbose = TRUE)}.
 The \code{verbose} option also has the advantage that you can see something happening on your screen when \code{raschtree} takes a while to complete -- which may be the case if there are many variables with \dif\ and if these variables offer many possible cutpoints, like continuous variables and factors with many categories.
 
+In case you receive an error message, one possible cause is that
+certain nodes in the \rt\ contain too few observations to actually fit a Rasch model. In this case it might be necessary to restrict the minimum number of observations per node to a higher value by means of the \code{minsize} argument:
+%
+<<fit_raschtree_minsize, eval=FALSE>>=
+my_first_raschtree <- raschtree(spisa ~ age + gender +
+  semester + elite + spon, data = SPISA, minsize = 30)
+@
+<<fit_raschtree_cache, echo=FALSE, results=hide>>=
+if(file.exists("raschtree-spisa.rda")) load("raschtree-spisa.rda") else {
+<<fit_raschtree_minsize>>
+save(my_first_raschtree, file = "raschtree-spisa.rda")
+}
+file.remove("raschtree-spisa.rda")
+@
+%
+Note that while the minimum number of observations per node, \code{minsize}, should be chosen large enough to fit the model, it should not be chosen unnecessarily large, because otherwise splits at the margins of the feature space cannot be selected.
+
 The resulting \rt\ can then be plotted with the generic \code{plot} call:
 %
 \setkeys{Gin}{width=\textwidth}
@@ -264,34 +254,30 @@ plot(my_first_raschtree)
 @
 \end{center}
 
-The plot function also accepts many options for standard plot functions, including coloring. Here, a set of ``rainbow''
-colors \citep[from package \pkg{colorspace}, see][]{Zeietal:2009} is employed to indicate the blocks of nine items
-from each of the five different topics covered in the quiz: politics, history, economy, culture and natural sciences:
+The plot function also accepts many options for standard plot functions, including coloring. Here, a qualitative color palette is employed to indicate the blocks of nine items from each of the five different topics covered in the quiz: politics, history, economy, culture and natural sciences:
 %
 \begin{center}
 <<plot_raschtree_col, eval=TRUE, eps=FALSE, fig=TRUE, height=6, width=14>>=
-library("colorspace")
 plot(my_first_raschtree, 
-      col = rep(rainbow_hcl(5, c = 65, l = 65), each = 9))
+      col = rep(palette.colors(5), each = 9))
 @
+\label{raschtree:fig}
 \end{center}
 
 
 For extracting the estimated item parameters for each group, there are two different calls corresponding to the two different ways to scale the item parameters: The parameters of a \rm\ are unique only up to linear transformations. In particular, the origin of the scale is not fixed but chosen arbitrarily. There are two common ways to choose the origin: setting one item parameter to zero or setting the sum of all item parameters to zero. 
 Accordingly, there are two calls to extract the item parameters from \code{raschtree} one way or the other:
-
-\newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VORSICHT kuenstlicher Seitenwechsel! %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%
 <<coef_raschtree>>=
 coef(my_first_raschtree, node = 4)
 @
-
+%
 where the parameter for the first item is set to zero and therefore not displayed (the call is termed \code{coef}, because that is the name of the call extracting the estimated parameters, or coefficients, from standard regression models generated, e.g., with the \code{lm} function) and 
-
+%
 <<itempar_raschtree>>=
 itempar(my_first_raschtree, node = 4)
 @
-
+%
 where the item parameters by default sum to zero (other restrictions can be specified as well). 
 
 Here the item parameters have been displayed only for the subjects in node number 4 (representing female students who access the online magazine more than once per week) to save space. The item parameters for all groups can be displayed by omitting the \code{node} argument.
@@ -299,26 +285,131 @@ Here the item parameters have been displayed only for the subjects in node numbe
 
 \section{Interpretation}
 
-Ideally, if none of the items showed \dif , we would find a tree with only one single node. In this case, one joint, unidimensional \rm\ would be appropriate to describe the entire data set. 
+Ideally, if none of the items showed \dif , we would find a tree with only one single node. In this case, one joint \rm\ would be appropriate to describe the entire data set. (But note that -- like all statistical methods based on significance tests -- \rt s have power to detect \dif\ only if the sample size is large enough.)
 
-If however, the \rt\ shows at least one split, \dif\ is present and it is not appropriate to compare the different groups of subjects with the test. 
-The \dif\ may be caused by certain characteristics of the items, such as their wording, but may also be an indicator of multidimensionality: 
+If, however, the \rt\ shows at least one split, this indicates that \dif\ is present and that it is not appropriate to compare the different groups of subjects with the test without accounting for it. \dif\ may be caused by certain characteristics of the items, such as their wording. 
+In practice, items showing \dif\ are often excluded from the test. Sometimes it may also be possible to rephrase the items to resolve the \dif .
 
-If, for example, certain groups of subjects are disadvantaged by the wording or content of certain items, it would be unfair to compare the different groups with the test including those items. 
-In practice, items showing \dif\ will then be excluded from the test before rating the subjects' performance. Sometimes it is also possible to rephrase the items, for example when \dif\ is present only for subjects who are not native speakers of the test language.
+If several items show the same \dif\ pattern, this may also indicate that they measure a secondary dimension in addition to the primary dimension. An example could be word problems in a math test, that also measure reading ability. If multiple dimensions are of interest, a multidimensional model can be used \citep[see packages \texttt{mirt} and \texttt{TAM},][]{mirt:pkg,mirt:paper,TAM:pkg}. Note, however, that whether multidimensionality can be detected always depends not only on the items, but also on whether the persons in the sample used for validating the test actually show variation on the different dimensions.
 
-If, however, in a general knowledge quiz, e.g., all history items are easier for a particular group of subjects, this may indicate that history knowledge should be considered as a sub-dimension of general knowledge (in which the particular group happens to outperform the others). In this case, a multidimensional \rm\ would be called for (that is unfortunately not  available in \proglang{R} yet). 
+Finally note that when one joint, unidimensional \rm\ is not appropriate to describe the entire test, this also means that a ranking of the subjects based on the raw scores (i.e., the number of items that each subject answered correctly) is not appropriate either, because this would also assume that the test is unidimensional. 
 
-Note in particular that when one joint, unidimensional \rm\ is not appropriate to describe the test, this also means that a ranking of the subjects based on the raw scores (i.e., the number of items that each subject answered correctly) is not appropriate either, because this would also assume that the test is unidimensional. 
 
-\section{Outlook}
+\section{Stability Assessment}
+\label{stability}
 
-We are currently working on functionality for facilitating the interpretation of the \rt s by means of summarizing in tables which items show the strongest
-\dif\ with respect to which groups, and on generalizations of the method to, e.g., the partial credit model for items with more than two response categories. 
+A tree based on a single sample does not provide any assessment of the confidence we should have in its interpretation (like we are used to, e.g., from confidence intervals for parameter estimates in parametric models). However, a toolkit for assessing the stability of trees based on resampling is now provided by the \pkg{stablelearner} package.
+
+From version 0.1-2, \pkg{stablelearner} offers 
+descriptive and graphical analyses of the variable and cutpoint selection of trees for psychometric models, including \rt s, fitted via the \pkg{psychotree} package (note that
+this requires version 0.5-2 or higher of the \pkg{psychotools} package, which is used internally for fitting the models).
+
+This descriptive and graphical analysis of the variable and cutpoint selection
+can be performed by using the \code{stabletree} function, which repeatedly draws random samples from the
+training data, refits the tree, and displays a summary of the variable and cutpoint selection over the samples. This can give us an intuition of how similar or dissimilar the results would have been for different random samples. 
+
+After installing the package before the first usage 
+
+<<eval=FALSE>>=
+install.packages("stablelearner")
+@
+
+and activating it for the current session
+
+<<>>=
+library("stablelearner")
+@
+
+we can easily assess the stability of \code{my_first_raschtree} by using the
+\code{stabletree} function. 
+
+We set a seed for the random number generator to make the analysis based on random draws from the training data reproducible. By default, \code{stabletree} performs subsampling with a fraction of \code{v =
+0.632} and refits 500 trees. Here, we only refit \code{B = 100} trees to save time, but still this computation can take a while.
+%
+<<eval=FALSE>>=
+set.seed(4321)
+my_first_raschtree_st <- stabletree(my_first_raschtree, B = 100)
+@
+%
+In case you receive an error message, again this may be due to a too small sample size for fitting the model in certain nodes. Even if in the original tree all nodes were big enough to estimate the model, due to the random sampling in \code{stabletree}, smaller nodes can result in some random samples. In order to prevent this, the minimum node size \code{minsize} needs to be increased already in the \code{raschtree} command (cf.~Section \ref{raschtree}), before applying \code{stabletree}, because the settings of the original \rt\ are passed on to \code{stabletree}.
+
+<<stabletree_fit, echo=FALSE>>=
+if(!file.exists("my_first_raschtree_st.Rdata")){
+set.seed(4321)
+my_first_raschtree_st <- stabletree(my_first_raschtree, B = 100)
+save(my_first_raschtree_st, file = "my_first_raschtree_st.Rdata")
+} else{
+load("my_first_raschtree_st.Rdata")
+}
+@
+%
+The function \code{stabletree} returns an object of class \code{stabletree}, for which a
+\code{summary} method and several \code{plot} methods exist:
+%
+<<stabletree_summary>>=
+summary(my_first_raschtree_st)
+@
+%
+The summary prints the relative variable selection frequencies (\code{freq}) as well as
+the average number of splits in each variable (\code{mean}) over all 100 trees. A relative variable selection frequency of one means that a variable was selected in each of the 100 trees. The average number of splits can show values greater than one if the same variable is used more than once in the same tree. 
+The asterisk columns indicate whether this variable was selected in
+the original tree, and how often.
+For example, the variable \code{gender} was selected as a splitting variable once in every
+tree, including the original tree. The variable \code{spon}, on the other had, was selected in 60\% of the trees, also in the orignal tree, on average 0.77 times, but twice in the original tree. 
+
+By using \code{barplot}, we can also visualize the variable selection frequencies:
+%
+\setkeys{Gin}{width=.5\textwidth}
+\begin{center}
+<<stabletree_barplot, fig=TRUE>>=
+barplot(my_first_raschtree_st)
+@
+\end{center}
+%
+Here the variables that were included in the original tree are marked by darker shading and underlined variable names. We see again that most trees agreed on the two most relevant splitting variables, \code{gender} and \code{spon}.
+
+The additional function \code{image} allows for a more detailed visualization of the variable selection
+patterns, that are displayed as one row on the y-axis for each of the 100 trees:
+%
+\setkeys{Gin}{width=.5\textwidth}
+\begin{center}
+<<stabletree_image, fig=TRUE>>=
+image(my_first_raschtree_st)
+@
+\end{center}
+
+We observe again that the largest group of around 50 of the 100 trees have selected the same combination of variables, \code{gender} and \code{spon}, that was also selected in the original tree. This combination of variables selected by the original tree is framed in red. Other combinations that were selected by larger groups of trees were, e.g., \code{gender} alone, \code{gender} and \code{semester}, \code{gender}, \code{spon} and \code{age} as well as \code{gender}, \code{spon} and \code{semester}.
+
+Finally, the \code{plot} function allows us to inspect the cutpoints and resulting
+partitions for each variable over all 100 trees, with the variables included in the original tree again marked by underlined variable names and the cutpoints from the original trees indicated in red:
+%
+\setkeys{Gin}{width=\textwidth}
+\begin{center}
+<<stabletree_plot, fig=TRUE, width=10, height=10>>=
+plot(my_first_raschtree_st)
+@
+\end{center}
+%
+Regarding the variable \code{gender}, that is binarily coded here, there is only one possible cutpoint, which is used whenever the variable is used for splitting (including the first split in the original tree, as indicated in red). Looking at the ordered factor \code{spon}, we observe that a
+cutpoint between \code{2-3/week} and \code{4-5/week} occurred most frequently, followed by the neighboring
+cutpoint between \code{1/week} and \code{2-3/week}. These two cutpoints
+were also chosen in the original tree (as indicated by the red vertical lines; the number two indicates that this variable was used for the second split in each branch of the tree, cf.~the illustration of the original tree on p.~\pageref{raschtree:fig}).
+Other cutpoints only occurred very rarely. Finally, regarding the other
+variables \code{semester}, \code{age}, and \code{elite} (which were not
+selected in the original tree), we observe cutpoints between \code{5} and \code{8} for the variable \code{semester}, quite heterogenous cutpoints for the variable \code{age}, and the only possible cutpoint for the binary variable \code{elite}, that is used only in very few trees, as we saw above. 
+
+To conclude, the summary table and plots can help us gain some
+insight into the stability of our original \rt\ by means of a resampling approach. Here, the \dif\ effects of
+\code{gender} and \code{spon} appear to be quite stable.
+
 
 \section*{Acknowledgements}
 The work of Carolin Strobl was supported by grant STR1142/1-1 (``Methods to Account for Subject-Co\-vari\-ates
-in IRT-Models'') from the German Research Foundation (Deutsche Forschungsgemeinschaft). The authors would like to thank Reinhold Hatzinger for important
+in IRT-Models'') from the German Research Foundation (DFG). 
+The work of Lennart Schneider was supported in part by grant 100019\_152548
+(``Detecting Heterogeneity in Complex IRT Models for Measuring Latent Traits'')
+from the Swiss National Science Foundation (SNF).
+The authors would like to thank the late Reinhold Hatzinger for important
 insights stimulated by conversations and the \proglang{R}~package \pkg{eRm} 
 \citep{MaiHat:2007,eRm:pkg}. 
 

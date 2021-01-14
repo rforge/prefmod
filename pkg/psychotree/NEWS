@@ -1,3 +1,10 @@
+Changes in Version 0.15-4
+
+  o Updated the 'Using the raschtree function for detecting differential item
+    functioning in the Rasch model' vignette. This vignette now also includes a
+    section regarding stability assessment via the stablelearner (>= 0.1-3)
+    package.
+
 Changes in Version 0.15-3
 
   o Added "IGNORE_RDIFF" flags in some examples in order to avoid showing

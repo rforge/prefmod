@@ -2,6 +2,8 @@
 > library("psychotree")
 Loading required package: partykit
 Loading required package: grid
+Loading required package: libcoin
+Loading required package: mvtnorm
 Loading required package: psychotools
 
 > data("SPISA", package = "psychotree")
@@ -15,10 +17,8 @@ Loading required package: psychotools
 
 > plot(my_first_raschtree)
 
-> library("colorspace")
-
-> plot(my_first_raschtree, col = rep(rainbow_hcl(5, 
-+     c = 65, l = 65), each = 9))
+> plot(my_first_raschtree, col = rep(palette.colors(5), 
++     each = 9))
 
 > coef(my_first_raschtree, node = 4)
     spisa2     spisa3     spisa4     spisa5     spisa6     spisa7     spisa8 
@@ -54,7 +54,40 @@ Loading required package: psychotools
     spisa43     spisa44     spisa45 
 -1.49282653  0.23281497 -1.87831571 
 
+> library("stablelearner")
+
+> if (!file.exists("my_first_raschtree_st.Rdata")) {
++     set.seed(4321)
++     my_first_raschtree_st <- stabletree(my_first_raschtree, B = 100)
++     .... [TRUNCATED] 
+
+> summary(my_first_raschtree_st)
+
+Call:
+raschtree(formula = spisa ~ age + gender + semester + elite + 
+    spon, data = SPISA, minsize = 30)
+
+Sampler:
+B = 100 
+Method = Subsampling with 63.2% data
+
+Variable selection overview:
+
+         freq * mean *
+gender   1.00 1 1.00 1
+spon     0.60 1 0.77 2
+semester 0.14 0 0.15 0
+age      0.08 0 0.09 0
+elite    0.02 0 0.02 0
+(* = original tree)
+
+> barplot(my_first_raschtree_st)
+
+> image(my_first_raschtree_st)
+
+> plot(my_first_raschtree_st)
+
  *** Run successfully completed ***
 > proc.time()
    user  system elapsed 
- 12.384   0.152  12.548 
+142.454   0.608 136.276 
