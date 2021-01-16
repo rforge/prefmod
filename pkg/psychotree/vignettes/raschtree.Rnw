@@ -5,7 +5,7 @@
 \SweaveOpts{concordance=FALSE, engine = R, keep.source=TRUE, eps = FALSE, echo = TRUE}
 
 %\VignetteIndexEntry{Using the raschtree Function for Detecting Differential Item Functioning in the Rasch Model}
-%\VignetteDepends{psychotree, colorspace}
+%\VignetteDepends{psychotree, stablelearner}
 %\VignetteKeywords{item response theory, IRT, Rasch model, differential item functioning, DIF, structural change, multidimensionality}
 %\VignettePackage{psychotree}
 
@@ -55,7 +55,7 @@ In this vignette, the practical usage of \code{raschtree} is illustrated.
   Binzm\"uhlestr.~14\\
   8050 Z\"urich, Switzerland\\
   E-mail: \email{Carolin.Strobl@uzh.ch}\\
-  URL: \url{http://www.psychologie.uzh.ch/fachrichtungen/methoden.html}\\
+  URL: \url{https://www.psychologie.uzh.ch/fachrichtungen/methoden.html}\\
 
   Lennart Schneider\\
   Department of Statistics\\
@@ -79,6 +79,7 @@ In this vignette, the practical usage of \code{raschtree} is illustrated.
   Universit\"atsstr.~15\\
   6020 Innsbruck, Austria\\
   E-mail: \email{Achim.Zeileis@R-project.org}\\
+  URL: \url{https://www.zeileis.org/}
 }
 
 \begin{document}
@@ -298,7 +299,7 @@ Finally note that when one joint, unidimensional \rm\ is not appropriate to desc
 \section{Stability Assessment}
 \label{stability}
 
-A tree based on a single sample does not provide any assessment of the confidence we should have in its interpretation (like we are used to, e.g., from confidence intervals for parameter estimates in parametric models). However, a toolkit for assessing the stability of trees based on resampling is now provided by the \pkg{stablelearner} package.
+A tree based on a single sample does not provide any assessment of the confidence we should have in its interpretation (like we are used to, e.g., from confidence intervals for parameter estimates in parametric models). However, a toolkit for assessing the stability of trees based on resampling is now provided by the \pkg{stablelearner} package \citep{PhiZeiStr:2016}.
 
 From version 0.1-2, \pkg{stablelearner} offers 
 descriptive and graphical analyses of the variable and cutpoint selection of trees for psychometric models, including \rt s, fitted via the \pkg{psychotree} package (note that
